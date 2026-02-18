@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VAT on Property – Decision Tool</title>
+<style>
+  :root {
+    --primary: #1a56db;
+    --primary-light: #e8effd;
+    --green: #059669;
+    --green-light: #d1fae5;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --amber: #d97706;
+    --amber-light: #fef3c7;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--gray-100);
+    color: var(--gray-800);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 16px 80px;
+  }
+
+  header {
+    background: linear-gradient(135deg, #1e3a5f 0%, #1a56db 100%);
+    color: white;
+    padding: 32px 24px;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  header p {
+    opacity: 0.85;
+    font-size: 0.95rem;
+  }
+
+  .progress-bar {
+    background: var(--gray-200);
+    border-radius: 999px;
+    height: 6px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    background: linear-gradient(90deg, #1a56db, #059669);
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  /* Question Cards */
+  .question-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+
+  .question-card.active {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md), 0 0 0 3px var(--primary-light);
+  }
+
+  .question-card.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .question-card.answered-yes {
+    border-color: var(--green);
+  }
+
+  .question-card.answered-no {
+    border-color: var(--gray-300);
+  }
+
+  .question-card.hidden {
+    display: none;
+  }
+
+  .question-header {
+    padding: 20px 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .question-number {
+    background: var(--primary);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .question-card.answered-yes .question-number {
+    background: var(--green);
+  }
+
+  .question-card.answered-no .question-number {
+    background: var(--gray-400);
+  }
+
+  .question-card.disabled .question-number {
+    background: var(--gray-300);
+  }
+
+  .question-content { flex: 1; }
+
+  .question-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+  }
+
+  .question-description {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    margin-top: 4px;
+  }
+
+  .question-body {
+    padding: 0 24px 20px;
+    padding-left: 72px;
+  }
+
+  /* Toggle Switch */
+  .toggle-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .toggle-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 2px solid var(--gray-200);
+    background: white;
+    color: var(--gray-600);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+    text-align: center;
+  }
+
+  .toggle-btn:hover:not(.selected) {
+    border-color: var(--gray-300);
+    background: var(--gray-50);
+  }
+
+  .toggle-btn.yes-btn.selected {
+    background: var(--green-light);
+    border-color: var(--green);
+    color: #065f46;
+  }
+
+  .toggle-btn.no-btn.selected {
+    background: var(--red-light);
+    border-color: var(--red);
+    color: #991b1b;
+  }
+
+  /* Info expandable */
+  .info-toggle {
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .info-toggle:hover { text-decoration: underline; }
+
+  .info-panel {
+    display: none;
+    background: var(--gray-50);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    border: 1px solid var(--gray-200);
+    line-height: 1.65;
+  }
+
+  .info-panel.open { display: block; }
+
+  /* Answer Panel */
+  .answer-panel {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    margin-top: 32px;
+    overflow: hidden;
+    border: 2px solid var(--primary);
+    position: relative;
+  }
+
+  .answer-panel-header {
+    background: linear-gradient(135deg, #1e3a5f 0%, #1a56db 100%);
+    color: white;
+    padding: 20px 24px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .answer-panel-body {
+    padding: 24px;
+  }
+
+  .answer-placeholder {
+    text-align: center;
+    padding: 40px 24px;
+    color: var(--gray-400);
+  }
+
+  .answer-placeholder .icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+  }
+
+  .answer-placeholder p {
+    font-size: 1rem;
+  }
+
+  .answer-text {
+    font-size: 0.925rem;
+    line-height: 1.75;
+    color: var(--gray-700);
+  }
+
+  .answer-text p {
+    margin-bottom: 14px;
+  }
+
+  .answer-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .answer-text ul {
+    margin: 8px 0 14px 20px;
+  }
+
+  .answer-text ul li {
+    margin-bottom: 4px;
+  }
+
+  .answer-text strong {
+    color: var(--gray-900);
+  }
+
+  .answer-text .highlight {
+    background: var(--amber-light);
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 4px solid var(--amber);
+    margin: 14px 0;
+    font-size: 0.875rem;
+  }
+
+  .answer-text .info-box {
+    background: var(--primary-light);
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+    margin: 14px 0;
+    font-size: 0.875rem;
+  }
+
+  .answer-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .tag-exempt {
+    background: var(--green-light);
+    color: #065f46;
+  }
+
+  .tag-taxable {
+    background: var(--amber-light);
+    color: #92400e;
+  }
+
+  .tag-reduced {
+    background: #dbeafe;
+    color: #1e40af;
+  }
+
+  .tag-nine {
+    background: #ede9fe;
+    color: #5b21b6;
+  }
+
+  /* Summary trail */
+  .summary-trail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .trail-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .trail-chip.yes {
+    background: var(--green-light);
+    color: #065f46;
+  }
+
+  .trail-chip.no {
+    background: var(--red-light);
+    color: #991b1b;
+  }
+
+  /* Reset button */
+  .reset-btn {
+    display: block;
+    margin: 24px auto 0;
+    padding: 12px 32px;
+    background: white;
+    color: var(--gray-600);
+    border: 2px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover {
+    border-color: var(--red);
+    color: var(--red);
+    background: var(--red-light);
+  }
+
+  /* Links */
+  a { color: var(--primary); }
+
+  /* Status badge on card */
+  .status-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 999px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .status-badge.yes-badge {
+    background: var(--green-light);
+    color: #065f46;
+  }
+
+  .status-badge.no-badge {
+    background: var(--red-light);
+    color: #991b1b;
+  }
+
+  @media (max-width: 640px) {
+    .question-body { padding-left: 24px; }
+    .toggle-group { flex-direction: column; }
+    header h1 { font-size: 1.35rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>🏠 VAT on Property – Land Sale Decision Tool</h1>
+    <p>Answer the questions below to determine the VAT treatment on the sale of land. Questions unlock as you progress.</p>
+  </header>
+
+  <div class="progress-bar">
+    <div class="progress-bar-fill" id="progressFill"></div>
+  </div>
+
+  <!-- Q1: Development Agreement -->
+  <div class="question-card active" id="q1-card" data-question="q1">
+    <div class="question-header">
+      <div class="question-number">1</div>
+      <div class="question-content">
+        <div class="question-title">Is the land being sold in connection with a development agreement?</div>
+        <div class="question-description">Consider whether a development agreement is being entered into with the purchaser or a connected person.</div>
+      </div>
+      <span class="status-badge" id="q1-badge" style="display:none"></span>
+    </div>
+    <div class="question-body">
+      <div class="toggle-group">
+        <button class="toggle-btn yes-btn" onclick="answerQuestion('q1','Yes')">✅ Yes, there is a development agreement</button>
+        <button class="toggle-btn no-btn" onclick="answerQuestion('q1','No')">❌ No development agreement</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q1A: 9% Qualifying (after Dev Agreement = Yes) -->
+  <div class="question-card disabled hidden" id="q1a-card" data-question="q1a">
+    <div class="question-header">
+      <div class="question-number">2</div>
+      <div class="question-content">
+        <div class="question-title">Will the site qualify for the 9% VAT rate (Finance Act 2025)?</div>
+        <div class="question-description">Specific criteria must be met for the 9% rate to apply to a qualifying apartment or apartment block.</div>
+      </div>
+      <span class="status-badge" id="q1a-badge" style="display:none"></span>
+    </div>
+    <div class="question-body">
+      <button class="info-toggle" onclick="toggleInfo('q1a-info')">📖 What are the criteria?</button>
+      <div class="info-panel" id="q1a-info">
+        An <strong>"apartment block"</strong> is defined as a <em>"multi-storey building that comprises, or will comprise, not less than 3 apartments with grouped or common access"</em>. It must: be a multi-storey building (min 2 floors); comprise not less than 3 apartments; have grouped or common access.<br><br>
+        <a href="https://www.irishstatutebook.ie/eli/2025/act/2/enacted/en/html" target="_blank">Finance Act 2025</a> |
+        <a href="https://www.revenue.ie/en/tax-professionals/tdm/value-added-tax/part11-immovable-goods/supply-of-property/supply-of-property.pdf" target="_blank">Revenue Guidance</a>
+      </div>
+      <div class="toggle-group">
+        <button class="toggle-btn yes-btn" onclick="answerQuestion('q1a','Yes')">✅ Yes, qualifies for 9%</button>
+        <button class="toggle-btn no-btn" onclick="answerQuestion('q1a','No')">❌ No, does not qualify</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2: Partially Developed -->
+  <div class="question-card disabled hidden" id="q2-card" data-question="q2">
+    <div class="question-header">
+      <div class="question-number">2</div>
+      <div class="question-content">
+        <div class="question-title">Is the land partially developed?</div>
+        <div class="question-description">Has development been carried out but not completed for VAT purposes?</div>
+      </div>
+      <span class="status-badge" id="q2-badge" style="display:none"></span>
+    </div>
+    <div class="question-body">
+      <button class="info-toggle" onclick="toggleInfo('q2-info')">🙋‍♂️ What is "development"?</button>
+      <div class="info-panel" id="q2-info">
+        <strong>"Development"</strong> in relation to any land means:<br>
+        (a) the construction, demolition, extension, alteration or reconstruction of any building on the land, or<br>
+        (b) the carrying out of any engineering or other operation in, on, over or under the land to adapt it for materially altered use.
+      </div>
+      <div class="toggle-group">
+        <button class="toggle-btn yes-btn" onclick="answerQuestion('q2','Yes')">✅ Yes, partially developed</button>
+        <button class="toggle-btn no-btn" onclick="answerQuestion('q2','No')">❌ No, not partially developed</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2A: 9% Qualifying (after Partially Developed = Yes) -->
+  <div class="question-card disabled hidden" id="q2a-card" data-question="q2a">
+    <div class="question-header">
+      <div class="question-number">3</div>
+      <div class="question-content">
+        <div class="question-title">Will the site qualify for the 9% VAT rate (Finance Act 2025)?</div>
+        <div class="question-description">Specific criteria must be met for the 9% rate to apply to a qualifying apartment or apartment block.</div>
+      </div>
+      <span class="status-badge" id="q2a-badge" style="display:none"></span>
+    </div>
+    <div class="question-body">
+      <button class="info-toggle" onclick="toggleInfo('q2a-info')">📖 What are the criteria?</button>
+      <div class="info-panel" id="q2a-info">
+        An <strong>"apartment block"</strong> is defined as a <em>"multi-storey building that comprises, or will comprise, not less than 3 apartments with grouped or common access"</em>. It must: be a multi-storey building (min 2 floors); comprise not less than 3 apartments; have grouped or common access.<br><br>
+        <a href="https://www.irishstatutebook.ie/eli/2025/act/2/enacted/en/html" target="_blank">Finance Act 2025</a> |
+        <a href="https://www.revenue.ie/en/tax-professionals/tdm/value-added-tax/part11-immovable-goods/supply-of-property/supply-of-property.pdf" target="_blank">Revenue Guidance</a>
+      </div>
+      <div class="toggle-group">
+        <button class="toggle-btn yes-btn" onclick="answerQuestion('q2a','Yes')">✅ Yes, qualifies for 9%</button>
+        <button class="toggle-btn no-btn" onclick="answerQuestion('q2a','No')">❌ No, does not qualify</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3: Developed to completion in last 5 years -->
+  <div class="question-card disabled hidden" id="q3-card" data-question="q3">
+    <div class="question-header">
+      <div class="question-number">3</div>
+      <div class="question-content">
+        <div class="question-title">Has the land been developed to completion in the last 5 years?</div>
+        <div class="question-description"></div>
+      </div>
+      <span class="status-badge" id="q3-badge" style="display:none"></span>
+    </div>
+    <div class="question-body">
+      <button class="info-toggle" onclick="toggleInfo('q3-info1')">🙋‍♂️ What does "completed" mean?</button>
+      <div class="info-panel" id="q3-info1">
+        <strong>"Completed"</strong>, in respect of immovable goods, means that the development of those goods has reached the state, apart from only such furnishings or fitting work that would normally be carried out by or on behalf of the person who will use them, where the goods can effectively be used for the purposes for which the goods were designed, and the utility services required for those purposes are connected to the goods.
+      </div>
+      <button class="info-toggle" onclick="toggleInfo('q3-info2')">🙋‍♂️ What is "development"?</button>
+      <div class="info-panel" id="q3-info2">
+        <strong>"Development"</strong> in relation to any land means:<br>
+        (a) the construction, demolition, extension, alteration or reconstruction of any building on the land, or<br>
+        (b) the carrying out of any engineering or other operation in, on, over or under the land to adapt it for materially altered use.
+      </div>
+      <div class="toggle-group">
+        <button class="toggle-btn yes-btn" onclick="answerQuestion('q3','Yes')">✅ Yes, completed in last 5 years</button>
+        <button class="toggle-btn no-btn" onclick="answerQuestion('q3','No')">❌ No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4: Land status (developed >5 yrs ago / never developed) -->
+  <div class="question-card disabled hidden" id="q4-card" data-question="q4">
+    <div class="question-header">
+      <div class="question-number">4</div>
+      <div class="question-content">
+        <div class="question-title">Which of the following applies?</div>
+      </div>
+      <span class="status-badge" id="q4-badge" style="display:none"></span>
+    </div>
+    <div class="question-body">
+      <div class="toggle-group">
+        <button class="toggle-btn yes-btn" onclick="answerQuestion('q4','developedMoreThan5YearsAgo')">Developed to completion more than 5 years ago</button>
+        <button class="toggle-btn no-btn" onclick="answerQuestion('q4','neverDeveloped')">The land has never been developed</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5: Confirm no dev agreement (for never developed path) -->
+  <div class="question-card disabled hidden" id="q5-card" data-question="q5">
+    <div class="question-header">
+      <div class="question-number">5</div>
+      <div class="question-content">
+        <div class="question-title">Confirm: You are selling undeveloped land that is NOT being sold in connection with a development agreement?</div>
+      </div>
+      <span class="status-badge" id="q5-badge" style="display:none"></span>
+    </div>
+    <div class="question-body">
+      <div class="toggle-group">
+        <button class="toggle-btn yes-btn" onclick="answerQuestion('q5','Yes')">✅ Yes, I confirm — no development agreement</button>
+        <button class="toggle-btn no-btn" onclick="answerQuestion('q5','No')">❌ No, there IS a development agreement</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6: Joint Option to Tax -->
+  <div class="question-card disabled hidden" id="q6-card" data-question="q6">
+    <div class="question-header">
+      <div class="question-number">6</div>
+      <div class="question-content">
+        <div class="question-title">Will the Joint Option to Tax (JOTT) be exercised?</div>
+      </div>
+      <span class="status-badge" id="q6-badge" style="display:none"></span>
+    </div>
+    <div class="question-body">
+      <div class="toggle-group">
+        <button class="toggle-btn yes-btn" onclick="answerQuestion('q6','Yes')">✅ Yes, JOTT will be exercised</button>
+        <button class="toggle-btn no-btn" onclick="answerQuestion('q6','No')">❌ No, JOTT will NOT be exercised</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7: Purchaser VAT cost from JOTT -->
+  <div class="question-card disabled hidden" id="q7-card" data-question="q7">
+    <div class="question-header">
+      <div class="question-number">7</div>
+      <div class="question-content">
+        <div class="question-title">Will the purchaser suffer a VAT cost as a result of the JOTT being exercised?</div>
+        <div class="question-description">Consider whether the purchaser intends to use the land for fully taxable, exempt or mixed activities.</div>
+      </div>
+      <span class="status-badge" id="q7-badge" style="display:none"></span>
+    </div>
+    <div class="question-body">
+      <div class="toggle-group">
+        <button class="toggle-btn yes-btn" onclick="answerQuestion('q7','Yes')">✅ Yes, there is a VAT cost</button>
+        <button class="toggle-btn no-btn" onclick="answerQuestion('q7','No')">❌ No VAT cost</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8: No JOTT - Clawback risk -->
+  <div class="question-card disabled hidden" id="q8-card" data-question="q8">
+    <div class="question-header">
+      <div class="question-number">7</div>
+      <div class="question-content">
+        <div class="question-title">If the JOTT is not exercised, is there a risk of clawback?</div>
+        <div class="question-description">Did the Vendor recover VAT on acquisition of the land (or self-account for VAT under JOTT)?</div>
+      </div>
+      <span class="status-badge" id="q8-badge" style="display:none"></span>
+    </div>
+    <div class="question-body">
+      <div class="toggle-group">
+        <button class="toggle-btn yes-btn" onclick="answerQuestion('q8','Yes')">✅ Yes, risk of clawback</button>
+        <button class="toggle-btn no-btn" onclick="answerQuestion('q8','No')">❌ No risk of clawback</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANSWER PANEL -->
+  <div class="answer-panel" id="answerPanel">
+    <div class="answer-panel-header">
+      <span>📋</span> VAT Analysis & Outcome
+    </div>
+    <div class="answer-panel-body" id="answerBody">
+      <div class="answer-placeholder" id="answerPlaceholder">
+        <div class="icon">🤔</div>
+        <p>I don't have enough information yet.<br>Please answer the questions above to determine the VAT treatment.</p>
+      </div>
+      <div class="answer-text" id="answerText" style="display:none"></div>
+    </div>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">🔄 Start Over</button>
+</div>
+
+<script>
+const state = {};
+
+const allQuestions = ['q1','q1a','q2','q2a','q3','q4','q5','q6','q7','q8'];
+
+function answerQuestion(qId, value) {
+  // Store answer
+  state[qId] = value;
+
+  // Update button visuals
+  const card = document.getElementById(qId + '-card');
+  const btns = card.querySelectorAll('.toggle-btn');
+  btns.forEach(btn => btn.classList.remove('selected'));
+
+  // Find and select the clicked one
+  btns.forEach(btn => {
+    const btnText = btn.textContent;
+    if (qId === 'q4') {
+      // Special handling for q4 which has non-Yes/No values
+      if (value === 'developedMoreThan5YearsAgo' && btn.classList.contains('yes-btn')) btn.classList.add('selected');
+      if (value === 'neverDeveloped' && btn.classList.contains('no-btn')) btn.classList.add('selected');
+    } else {
+      if (value === 'Yes' && btn.classList.contains('yes-btn')) btn.classList.add('selected');
+      if (value === 'No' && btn.classList.contains('no-btn')) btn.classList.add('selected');
+    }
+  });
+
+  // Update card styling
+  if (qId === 'q4') {
+    card.classList.remove('answered-yes', 'answered-no');
+    card.classList.add(value === 'neverDeveloped' ? 'answered-no' : 'answered-yes');
+  } else {
+    card.classList.remove('answered-yes', 'answered-no');
+    card.classList.add(value === 'Yes' ? 'answered-yes' : 'answered-no');
+  }
+
+  // Update badge
+  updateBadge(qId, value);
+
+  // Clear downstream answers
+  clearDownstream(qId);
+
+  // Recalculate visibility
+  recalculate();
+}
+
+function updateBadge(qId, value) {
+  const badge = document.getElementById(qId + '-badge');
+  if (!badge) return;
+  badge.style.display = 'inline-block';
+  if (qId === 'q4') {
+    badge.textContent = value === 'neverDeveloped' ? 'Never Developed' : 'Developed >5 yrs';
+    badge.className = 'status-badge ' + (value === 'neverDeveloped' ? 'no-badge' : 'yes-badge');
+  } else {
+    badge.textContent = value === 'Yes' ? 'YES' : 'NO';
+    badge.className = 'status-badge ' + (value === 'Yes' ? 'yes-badge' : 'no-badge');
+  }
+}
+
+function clearDownstream(fromQId) {
+  const order = getQuestionFlow();
+  const idx = order.indexOf(fromQId);
+  if (idx === -1) return;
+  for (let i = idx + 1; i < order.length; i++) {
+    const qId = order[i];
+    delete state[qId];
+    const card = document.getElementById(qId + '-card');
+    if (card) {
+      card.classList.remove('answered-yes', 'answered-no');
+      const btns = card.querySelectorAll('.toggle-btn');
+      btns.forEach(b => b.classList.remove('selected'));
+      const badge = document.getElementById(qId + '-badge');
+      if (badge) badge.style.display = 'none';
+    }
+  }
+  // Also clear questions not in current flow
+  allQuestions.forEach(qId => {
+    if (!order.includes(qId) && state[qId] !== undefined) {
+      delete state[qId];
+      const card = document.getElementById(qId + '-card');
+      if (card) {
+        card.classList.remove('answered-yes', 'answered-no');
+        const btns = card.querySelectorAll('.toggle-btn');
+        btns.forEach(b => b.classList.remove('selected'));
+        const badge = document.getElementById(qId + '-badge');
+        if (badge) badge.style.display = 'none';
+      }
+    }
+  });
+}
+
+function getQuestionFlow() {
+  // Returns the ordered list of question IDs that are relevant based on current answers
+  const flow = ['q1'];
+
+  if (state.q1 === 'Yes') {
+    flow.push('q1a');
+    return flow;
+  }
+  if (state.q1 === 'No') {
+    flow.push('q2');
+    if (state.q2 === 'Yes') {
+      flow.push('q2a');
+      return flow;
+    }
+    if (state.q2 === 'No') {
+      flow.push('q3');
+      if (state.q3 === 'Yes') {
+        return flow;
+      }
+      if (state.q3 === 'No') {
+        flow.push('q4');
+        if (state.q4 === 'developedMoreThan5YearsAgo') {
+          return flow;
+        }
+        if (state.q4 === 'neverDeveloped') {
+          flow.push('q5');
+          if (state.q5 === 'No') {
+            return flow; // contradicted themselves, redirect
+          }
+          if (state.q5 === 'Yes') {
+            flow.push('q6');
+            if (state.q6 === 'Yes') {
+              flow.push('q7');
+              return flow;
+            }
+            if (state.q6 === 'No') {
+              flow.push('q8');
+              return flow;
+            }
+          }
+        }
+      }
+    }
+  }
+  return flow;
+}
+
+function recalculate() {
+  const flow = getQuestionFlow();
+
+  // Determine which question is the "next unanswered"
+  let nextUnanswered = null;
+  for (const qId of flow) {
+    if (state[qId] === undefined) {
+      nextUnanswered = qId;
+      break;
+    }
+  }
+
+  // Show/hide and enable/disable cards
+  allQuestions.forEach(qId => {
+    const card = document.getElementById(qId + '-card');
+    if (!card) return;
+
+    if (flow.includes(qId)) {
+      card.classList.remove('hidden');
+      const isAnswered = state[qId] !== undefined;
+      const isNext = qId === nextUnanswered;
+
+      if (isAnswered || isNext) {
+        card.classList.remove('disabled');
+        if (isNext) {
+          card.classList.add('active');
+        } else {
+          card.classList.remove('active');
+        }
+      } else {
+        card.classList.add('disabled');
+        card.classList.remove('active');
+      }
+    } else {
+      card.classList.add('hidden');
+      card.classList.remove('active');
+    }
+  });
+
+  // Progress
+  const answeredCount = flow.filter(q => state[q] !== undefined).length;
+  const totalInFlow = flow.length;
+  const hasAnswer = getAnswer() !== null;
+  const pct = hasAnswer ? 100 : (answeredCount / Math.max(totalInFlow, 1)) * 80;
+  document.getElementById('progressFill').style.width = pct + '%';
+
+  // Answer
+  renderAnswer();
+}
+
+function getAnswer() {
+  // Determine which terminal answer we've reached
+  if (state.q1 === 'Yes' && state.q1a === 'Yes') return 'devAgreement9pct';
+  if (state.q1 === 'Yes' && state.q1a === 'No') return 'devAgreement13pct';
+  if (state.q1 === 'No' && state.q2 === 'Yes' && state.q2a === 'Yes') return 'partiallyDev9pct';
+  if (state.q1 === 'No' && state.q2 === 'Yes' && state.q2a === 'No') return 'partiallyDev13pct';
+  if (state.q1 === 'No' && state.q2 === 'No' && state.q3 === 'Yes') return 'completedLast5';
+  if (state.q1 === 'No' && state.q2 === 'No' && state.q3 === 'No' && state.q4 === 'developedMoreThan5YearsAgo') return 'developedOver5';
+  if (state.q1 === 'No' && state.q2 === 'No' && state.q3 === 'No' && state.q4 === 'neverDeveloped' && state.q5 === 'No') return 'contradictionDevAgreement';
+  if (state.q1 === 'No' && state.q2 === 'No' && state.q3 === 'No' && state.q4 === 'neverDeveloped' && state.q5 === 'Yes' && state.q6 === 'Yes' && state.q7 === 'Yes') return 'jottPurchaserVATCost';
+  if (state.q1 === 'No' && state.q2 === 'No' && state.q3 === 'No' && state.q4 === 'neverDeveloped' && state.q5 === 'Yes' && state.q6 === 'Yes' && state.q7 === 'No') return 'jottNoVATCost';
+  if (state.q1 === 'No' && state.q2 === 'No' && state.q3 === 'No' && state.q4 === 'neverDeveloped' && state.q5 === 'Yes' && state.q6 === 'No' && state.q8 === 'Yes') return 'noJottClawback';
+  if (state.q1 === 'No' && state.q2 === 'No' && state.q3 === 'No' && state.q4 === 'neverDeveloped' && state.q5 === 'Yes' && state.q6 === 'No' && state.q8 === 'No') return 'noJottNoClawback';
+  return null;
+}
+
+function buildSummaryTrail() {
+  const flow = getQuestionFlow();
+  const labels = {
+    q1: ['Dev. Agreement', state.q1],
+    q1a: ['9% Qualifying', state.q1a],
+    q2: ['Partially Developed', state.q2],
+    q2a: ['9% Qualifying', state.q2a],
+    q3: ['Completed <5 yrs', state.q3],
+    q4: ['Land Status', state.q4 === 'neverDeveloped' ? 'Never Developed' : (state.q4 === 'developedMoreThan5YearsAgo' ? 'Dev >5 yrs' : state.q4)],
+    q5: ['No Dev. Agmt Confirmed', state.q5],
+    q6: ['JOTT', state.q6],
+    q7: ['Purchaser VAT Cost', state.q7],
+    q8: ['Clawback Risk', state.q8]
+  };
+
+  let html = '<div class="summary-trail">';
+  flow.forEach(qId => {
+    if (state[qId] !== undefined) {
+      const [label, val] = labels[qId] || [qId, state[qId]];
+      const isYes = val === 'Yes' || val === 'Dev >5 yrs';
+      html += `<span class="trail-chip ${isYes ? 'yes' : 'no'}">${label}: <strong>${val}</strong></span>`;
+    }
+  });
+  html += '</div>';
+  return html;
+}
+
+function renderAnswer() {
+  const answerKey = getAnswer();
+  const placeholder = document.getElementById('answerPlaceholder');
+  const textDiv = document.getElementById('answerText');
+
+  if (!answerKey) {
+    placeholder.style.display = 'block';
+    textDiv.style.display = 'none';
+    return;
+  }
+
+  placeholder.style.display = 'none';
+  textDiv.style.display = 'block';
+  textDiv.innerHTML = buildSummaryTrail() + getAnswerHTML(answerKey);
+}
+
+function getAnswerHTML(key) {
+  const answers = {
+
+    devAgreement9pct: `
+      <span class="answer-tag tag-nine">VAT @ 9%</span>
+      <p>Irish VAT legislation contains anti-avoidance provisions that apply where undeveloped land is sold (which ordinarily would be exempt from VAT) in connection with a development agreement. In accordance with <strong>Section 94(3) VATCA 2010</strong>, where undeveloped land is sold and, in connection with that sale, an agreement is entered into with the purchaser (or with a person connected to the purchaser) to develop the land, the sale of the land becomes subject to VAT.</p>
+      <p>As a result of <strong>Finance Act 2025</strong>, the <strong>9% rate of VAT</strong> applies to the sale of land which, when developed, will be one, or more than one, apartment used or to be used for residential purposes in an "apartment block" (as defined) or an "apartment block" used or to be used for residential purposes but excluding any part of the apartment block that is not used or to be used for residential purposes.</p>
+      <p>An <strong>"apartment block"</strong> is defined as a <em>"multi-storey building that comprises, or will comprise, not less than 3 apartments with grouped or common access"</em>. Therefore, in order for an "apartment block" to be qualifying, it must:</p>
+      <ul>
+        <li>be a multi-storey building (minimum of 2 floors);</li>
+        <li>comprise not less than 3 apartments;</li>
+        <li>have grouped or common access.</li>
+      </ul>
+      <p>On the basis that the Land is being sold in connection with a development agreement and the intention is for the land to be developed into one or more qualifying apartments / an apartment block, <strong>the sale of the land should be subject to VAT at 9%</strong>.</p>
+      <div class="highlight">⚠️ If the above criteria for the 9% rate are not satisfied, the sale of the land should be subject to VAT at the reduced rate of <strong>13.5%</strong>. The 9% rate will apply until <strong>31 December 2030</strong> (unless further extended).</div>
+      <p>A valid VAT invoice should be issued by the Vendor on completion (or, at the latest, by the 15th day of the month following the month in which the sale completes). The VAT arising should be included in the Vendor's VAT return (Box T1) for the VAT period in which the sale completes (or the period in which the invoice is issued, if later).</p>
+      <p>As the sale of the Land is subject to VAT, the Vendor will be entitled to VAT recovery in respect of sale's related costs (e.g. legal fees, professional fees, etc.).</p>
+      <p>The Vendor will be required to complete <strong>Pre-Contract VAT Enquiries ("PCVE's")</strong> and provide these to the Purchaser. The Vendor will also be required to include a VAT charging clause in the Contract for Sale.</p>
+    `,
+
+    devAgreement13pct: `
+      <span class="answer-tag tag-reduced">VAT @ 13.5%</span>
+      <p>Irish VAT legislation contains anti-avoidance provisions that apply where undeveloped land is sold (which ordinarily would be exempt from VAT) in connection with a development agreement. In accordance with <strong>Section 94(3) VATCA 2010</strong>, where undeveloped land is sold and, in connection with that sale, an agreement is entered into with the purchaser (or with a person connected to the purchaser) to develop the land, the sale of the land becomes subject to VAT at the reduced rate (currently <strong>13.5%</strong>).</p>
+      <p>On the basis that the Land is being sold in connection with a development agreement, <strong>the sale of the land should be subject to VAT at 13.5%</strong>. The Vendor should therefore account for VAT at the reduced rate on the sale.</p>
+      <p>A valid VAT invoice should be issued by the Vendor on completion (or, at the latest, by the 15th day of the month following the month in which the sale completes). The VAT arising should be included in the Vendor's VAT return (Box T1) for the VAT period in which the sale completes (or the period in which the invoice is issued, if later).</p>
+      <p>As the sale of the Land is subject to VAT, the Vendor will be entitled to VAT recovery in respect of sales related costs (e.g. legal fees, professional fees, etc.).</p>
+      <p>The Vendor will be required to complete <strong>Pre-Contract VAT Enquiries ("PCVE's")</strong> and provide these to the Purchaser. The Vendor will also be required to include a VAT charging clause in the Contract for Sale.</p>
+    `,
+
+    partiallyDev9pct: `
+      <span class="answer-tag tag-nine">VAT @ 9%</span>
+      <p>The sale of partially developed land is subject to VAT. Partially developed land is land that has been developed for VAT purposes in the last 20 years but the development is not completed (i.e. the development has not reached the stage where the land can be used for the purposes for which the development was designed).</p>
+      <p>As a result of <strong>Finance Act 2025</strong>, the <strong>9% rate of VAT</strong> applies to the sale of land which, when developed, will be one, or more than one, apartment used or to be used for residential purposes in an "apartment block" (as defined). An <strong>"apartment block"</strong> is defined as a <em>"multi-storey building that comprises, or will comprise, not less than 3 apartments with grouped or common access"</em>. Therefore, in order for an "apartment block" to be qualifying, it must:</p>
+      <ul>
+        <li>be a multi-storey building (minimum of 2 floors);</li>
+        <li>comprise not less than 3 apartments;</li>
+        <li>have grouped or common access.</li>
+      </ul>
+      <p>On the basis that the land is partially developed and the intention is for the land to be developed into one or more qualifying apartments / an apartment block, <strong>the sale of the land should be subject to VAT at 9%</strong>.</p>
+      <div class="highlight">⚠️ If the above criteria for the 9% rate are not satisfied, the sale of the land should be subject to VAT at the reduced rate of <strong>13.5%</strong>. The 9% rate will apply until <strong>31 December 2030</strong> (unless further extended).</div>
+      <p>A valid VAT invoice should be issued by the Vendor on completion (or, at the latest, by the 15th day of the month following the month in which the sale completes). The VAT arising should be included in the Vendor's VAT return (Box T1) for the VAT period in which the sale completes (or the period in which the invoice is issued, if later).</p>
+      <p>As the sale of the Land is subject to VAT, the Vendor will be entitled to VAT recovery in respect of sales related costs (e.g. legal fees, professional fees, etc.).</p>
+      <p>The Vendor will be required to complete <strong>Pre-Contract VAT Enquiries ("PCVE's")</strong> and provide these to the Purchaser. The Vendor will also be required to include a VAT charging clause in the Contract for Sale.</p>
+    `,
+
+    partiallyDev13pct: `
+      <span class="answer-tag tag-reduced">VAT @ 13.5%</span>
+      <p>The sale of partially developed land is subject to VAT at the reduced rate (currently <strong>13.5%</strong>). Partially developed land is land that has been developed for VAT purposes in the last 20 years but the development is not completed (i.e. the development has not reached the stage where the land can be used for the purposes for which the development was designed).</p>
+      <p>On the basis that the land is partially developed, the sale will be subject to VAT and the Vendor should account for VAT at the reduced rate on the sale.</p>
+      <p>A valid VAT invoice should be issued by the Vendor on completion (or, at the latest, by the 15th day of the month following the month in which the sale completes). The VAT arising should be included in the Vendor's VAT return (Box T1) for the VAT period in which the sale completes (or the period in which the invoice is issued, if later).</p>
+      <p>As the sale of the Land is subject to VAT, the Vendor will be entitled to VAT recovery in respect of sales related costs (e.g. legal fees, professional fees, etc.).</p>
+      <p>The Vendor will be required to complete <strong>Pre-Contract VAT Enquiries ("PCVE's")</strong> and provide these to the Purchaser. The Vendor will also be required to include a VAT charging clause in the Contract for Sale.</p>
+    `,
+
+    completedLast5: `
+      <span class="answer-tag tag-reduced">VAT @ 13.5%</span>
+      <div class="highlight">⚠️ This answer assumes the land has not been developed into a building (commercial or residential) but rather some other form of development completed for VAT purposes in the last 5 years (e.g. a car park, a road, etc.). You should also consider whether the provisions of <strong>Section 94(2)(c) VATCA 2010</strong> apply regarding the 24 month occupation rule. <a href="https://www.irishstatutebook.ie/eli/2010/act/31/section/94/enacted/en/html" target="_blank">Section 94 VATCA 2010</a></div>
+      <p>Land which has been developed to completion in the 5 years prior to sale is subject to VAT at the reduced rate (currently <strong>13.5%</strong>).</p>
+      <p>On the basis that the Land was developed to completion in [YEAR], the sale of the land will be subject to VAT at the reduced rate and the Vendor should account for VAT on sale.</p>
+      <p>A valid VAT invoice should be issued by the Vendor on completion (or, at the latest, by the 15th day of the month following the month in which the sale completes). The VAT arising should be included in the Vendor's VAT return (Box T1) for the VAT period in which the sale completes (or the period in which the invoice is issued, if later).</p>
+      <p>As the sale of the Land is subject to VAT, the Vendor will be entitled to VAT recovery in respect of sales related costs (e.g. legal fees, professional fees, etc.).</p>
+      <p>The Vendor will be required to complete <strong>Pre-Contract VAT Enquiries ("PCVE's")</strong> and provide these to the Purchaser. The Vendor will also be required to include a VAT charging clause in the Contract for Sale.</p>
+    `,
+
+    developedOver5: `
+      <span class="answer-tag tag-exempt">Exempt (in first instance)</span>
+      <p>On the basis that the Land was developed to completion (within the VAT meaning) more than 5 years ago and assuming it has not undergone any "significant development" in the last 5 years, <strong>the sale of the Land should, in the first instance, be exempt from VAT</strong>.</p>
+      <p>Where the sale of immovable property is exempt from VAT, a clawback can arise for the Vendor under the <strong>Capital Goods Scheme ("CGS")</strong> where the property is sold within the 'adjustment period' (i.e. the "tax-life") of any capital goods inherent in the property. The CGS regulates VAT incurred on the acquisition or development of immovable property over the term of its adjustment period — <strong>20 intervals (c. 20 years)</strong> for acquisition or development and <strong>10 intervals (c. 10 years)</strong> for refurbishment. This means that a clawback of VAT can arise in respect of any VAT deducted on acquisition or development of the property during the adjustment period.</p>
+      <p>If VAT was deducted by the Vendor on acquisition/development of the Land, a VAT exempt sale may trigger a clawback. However, in accordance with <strong>Section 94(5) VATCA 2010</strong>, where immovable goods are sold which would be exempt from VAT, the vendor can seek the purchaser's agreement to exercise the <strong>Joint Option to Tax ("JOTT")</strong> to render the sale taxable. This would prevent a clawback arising under the CGS.</p>
+      <p>It will be necessary to consider whether the Vendor has deducted VAT on the development of the Land within its adjustment period in order to advise appropriately. Even if there is no risk of a clawback, the JOTT would also permit the Vendor to recover VAT incurred on sale's related costs. The purchaser's intended use of the Land will also be relevant — if the Purchaser intends to use the land for VAT exempt or partially exempt activities, the Purchaser may not agree to the JOTT as the VAT self-accounted for under the reverse-charge mechanism will not be fully deductible.</p>
+      <p>If the sale is exempt from VAT, the Vendor will not be entitled to recover VAT on sale's related costs. If the JOTT is exercised, the Vendor will be entitled to deduct VAT on those costs.</p>
+      <div class="info-box">ℹ️ <strong>Significant development</strong> refers to development work that would bring the land back within the scope of VAT — please review the relevant legislation for the precise definition.</div>
+    `,
+
+    contradictionDevAgreement: `
+      <span class="answer-tag" style="background:#fee2e2;color:#991b1b;">⚠️ Contradiction</span>
+      <p>You previously indicated that there is <strong>no development agreement</strong>, but have now indicated that there <strong>is</strong> a development agreement.</p>
+      <p>Please review the previous questions to determine the correct position. You may wish to <strong>Start Over</strong> using the button below.</p>
+    `,
+
+    jottPurchaserVATCost: `
+      <span class="answer-tag tag-exempt">Exempt → JOTT → VAT @ 13.5% (Purchaser VAT Cost)</span>
+      <p>On the basis that the Land is undeveloped and is not being sold in connection with a development agreement, <strong>the sale should be exempt from VAT</strong>.</p>
+      <p>In accordance with <strong>Section 94(5) VATCA 2010</strong>, where immovable goods are sold which would ordinarily be exempt from VAT, the vendor can seek to exercise the <strong>Joint Option to Tax ("JOTT")</strong> to render the sale taxable. Where the JOTT is exercised, the purchaser is required to self-account for VAT at the reduced rate (currently <strong>13.5%</strong>) under the reverse-charge mechanism.</p>
+      <p>In order to exercise the JOTT, the vendor and purchaser must be taxable persons and must enter into a written agreement by the 15th day of the month following the month in which the sale takes place. In practice, the JOTT is exercised by including the relevant VAT clause in the contract for sale.</p>
+      <p>Exercising the JOTT will prevent a clawback arising for the Vendor under the <strong>Capital Goods Scheme ("CGS")</strong> in respect of VAT recovered (or self-accounted) on acquisition of the land (if any). The CGS adjustment period for acquisition or development of immovable goods is <strong>20 intervals (c. 20 years)</strong>. When the JOTT is exercised, the vendor is deemed to have put the immovable goods to a fully taxable use for the remaining intervals, thus preventing a clawback. Exercising the JOTT will also permit the Vendor to recover VAT incurred on sales related costs.</p>
+      <div class="highlight">⚠️ On the basis that the Purchaser intends to use the Land for <strong>[VAT EXEMPT / PARTIALLY EXEMPT ACTIVITIES]</strong>, the Purchaser may not agree to exercising the JOTT as the VAT self-accounted for under the reverse-charge mechanism will not be fully deductible (i.e. an irrecoverable VAT cost will arise). If the Purchaser does not agree, the Vendor should consider whether, commercially, it would be feasible to increase the sales price by the VAT cost that will arise for the Vendor — i.e. the VAT clawback in respect of acquisition (if any) and irrecoverable VAT on sales related costs.</div>
+      <p>The Vendor will be required to complete <strong>Pre-Contract VAT Enquiries ("PCVE's")</strong> and provide these to the Purchaser. The Purchaser should complete page 3 of the PCVEs and return same to the Vendor. The Vendor will be required to include a VAT clause in the Contract for Sale.</p>
+    `,
+
+    jottNoVATCost: `
+      <span class="answer-tag tag-exempt">Exempt → JOTT → VAT @ 13.5% (No Purchaser VAT Cost)</span>
+      <p>On the basis that the Land is undeveloped and is not being sold in connection with a development agreement, <strong>the sale should be exempt from VAT</strong>.</p>
+      <p>In accordance with <strong>Section 94(5) VATCA 2010</strong>, where immovable goods are sold which would ordinarily be exempt from VAT, the vendor can seek to exercise the <strong>Joint Option to Tax ("JOTT")</strong> to render the sale taxable. Where the JOTT is exercised, the purchaser is required to self-account for VAT at the reduced rate (currently <strong>13.5%</strong>) under the reverse-charge mechanism.</p>
+      <p>In order to exercise the JOTT, the vendor and purchaser must be taxable persons and must enter into a written agreement by the 15th day of the month following the month in which the sale takes place. In practice, the JOTT is exercised by including the relevant VAT clause in the contract for sale.</p>
+      <p>Exercising the JOTT will prevent a clawback arising for the Vendor under the <strong>Capital Goods Scheme ("CGS")</strong> in respect of VAT recovered (or self-accounted) on acquisition of the land (if any). The adjustment period is <strong>20 intervals (c. 20 years)</strong>. When the JOTT is exercised, the vendor is deemed to have put the immovable goods to a fully taxable use for the remaining intervals, thus preventing a clawback. Exercising the JOTT will also permit the Vendor to recover VAT incurred on sales related costs.</p>
+      <div class="info-box">ℹ️ On the basis that the Purchaser intends to use the Land for <strong>fully taxable purposes</strong>, we would not expect the Purchaser to object to the JOTT being exercised as the VAT self-accounted for under the reverse-charge mechanism should be fully deductible.</div>
+      <p>The Vendor will be required to complete <strong>Pre-Contract VAT Enquiries ("PCVE's")</strong> and provide these to the Purchaser. The Purchaser should complete page 3 of the PCVEs and return same to the Vendor. The Vendor will be required to include a VAT clause in the Contract for Sale.</p>
+    `,
+
+    noJottClawback: `
+      <span class="answer-tag tag-exempt">Exempt — No JOTT — Clawback Risk</span>
+      <p>On the basis that the Land is undeveloped and is not being sold in connection with a development agreement, <strong>the sale of the Land should be exempt from VAT</strong>.</p>
+      <p>As VAT was recovered by the Vendor on acquisition of the Land, <strong>a clawback of VAT will arise</strong> for the Vendor under the <strong>Capital Goods Scheme ("CGS")</strong> as a result of the VAT exempt sale. The CGS adjustment period for acquisition or development of immovable goods is <strong>20 intervals (c. 20 years)</strong>. The clawback is computed using a formula prescribed in VAT legislation and is based on the VAT recovered on acquisition as a proportion of the number of intervals remaining in the adjustment period when the VAT exempt sale is made.</p>
+      <div class="highlight">⚠️ Based on the information provided, the clawback arising in respect of the VAT recovered on acquisition of the Land should be computed as <strong>[INSERT AMOUNT]</strong>.</div>
+      <p>The VAT clawback can be avoided where the Vendor agrees with the purchaser to exercise the <strong>Joint Option to Tax ("JOTT")</strong>. However, we understand that the JOTT will not be exercised as [INSERT REASON]. The Vendor should consider whether, commercially, it would be feasible to adjust the sales price of the Land to take account of the VAT clawback.</p>
+      <p>On the basis that the sale of the Land will be exempt from VAT, the Vendor will <strong>not</strong> be entitled to recover VAT on sales related costs (e.g. legal fees, professional fees, etc.).</p>
+      <p>The Vendor will be required to complete <strong>Pre-Contract VAT Enquiries ("PCVE's")</strong> and provide these to the Purchaser. No VAT clause is required in the Contract for Sale on the basis that the sale is exempt from VAT but, for completeness, a sentence may be included to the effect that <em>"the transfer is not subject to VAT"</em>.</p>
+    `,
+
+    noJottNoClawback: `
+      <span class="answer-tag tag-exempt">Exempt — No JOTT — No Clawback</span>
+      <p>On the basis that the Land is undeveloped and is not being sold in connection with a development agreement, <strong>the sale should be exempt from VAT</strong>.</p>
+      <p>As VAT was <strong>not</strong> incurred/recovered by the Vendor on acquisition of the Land, <strong>no clawback should arise</strong> for the Vendor under the Capital Goods Scheme ("CGS") as a result of the VAT exempt sale.</p>
+      <p>On the basis that the sale of the Land will be exempt from VAT, the Vendor will <strong>not</strong> be entitled to recover VAT on sales related costs (e.g. legal fees, professional fees, etc.).</p>
+      <p>The Vendor will be required to complete <strong>Pre-Contract VAT Enquiries ("PCVE's")</strong> and provide these to the Purchaser. No VAT clause is required in the Contract for Sale on the basis that the sale is exempt from VAT but, for completeness, a sentence may be included to the effect that <em>"the transfer is not subject to VAT"</em>.</p>
+    `
+  };
+
+  return answers[key] || '<p>No answer available for this combination.</p>';
+}
+
+function toggleInfo(id) {
+  const panel = document.getElementById(id);
+  if (panel) panel.classList.toggle('open');
+}
+
+function resetAll() {
+  allQuestions.forEach(qId => {
+    delete state[qId];
+    const card = document.getElementById(qId + '-card');
+    if (card) {
+      card.classList.remove('answered-yes', 'answered-no', 'active');
+      const btns = card.querySelectorAll('.toggle-btn');
+      btns.forEach(b => b.classList.remove('selected'));
+      const badge = document.getElementById(qId + '-badge');
+      if (badge) badge.style.display = 'none';
+    }
+  });
+  recalculate();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Initialize
+recalculate();
+</script>
+</body>
+</html>
