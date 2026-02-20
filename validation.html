@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EU VAT Number Validator</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 560px;
+            padding: 20px;
+        }
+
+        .card {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            border: 1px solid #334155;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 6px;
+            color: #f8fafc;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .input {
+            flex: 1;
+            padding: 14px 16px;
+            border-radius: 10px;
+            border: 2px solid #334155;
+            background: #0f172a;
+            color: #f8fafc;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .input:focus {
+            border-color: #6366f1;
+        }
+
+        .input::placeholder {
+            color: #475569;
+            font-weight: 400;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border-radius: 10px;
+            border: none;
+            background: #6366f1;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: #818cf8;
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+
+        .hint code {
+            background: #334155;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .method-tag {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #334155;
+            color: #94a3b8;
+        }
+
+        .spinner-wrap {
+            text-align: center;
+            padding: 32px 0 16px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            border: 3px solid #334155;
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            vertical-align: middle;
+        }
+
+        .spinner-btn {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            vertical-align: middle;
+        }
+
+        .spinner-text {
+            margin-top: 12px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .result-card {
+            border-radius: 12px;
+            padding: 24px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-valid {
+            background: #064e3b;
+            border: 1px solid #059669;
+        }
+
+        .result-invalid {
+            background: #7f1d1d;
+            border: 1px solid #dc2626;
+        }
+
+        .result-error {
+            background: #78350f;
+            border: 1px solid #d97706;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .badge-valid {
+            background: #059669;
+            color: #ecfdf5;
+        }
+
+        .badge-invalid {
+            background: #dc2626;
+            color: #fef2f2;
+        }
+
+        .badge-error {
+            background: #d97706;
+            color: #fffbeb;
+        }
+
+        .result-row {
+            display: flex;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            width: 120px;
+            flex-shrink: 0;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #94a3b8;
+            padding-top: 2px;
+        }
+
+        .result-value {
+            font-size: 14px;
+            color: #f1f5f9;
+            line-height: 1.5;
+            word-break: break-word;
+            white-space: pre-line;
+        }
+
+        .result-value.empty {
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .raw-toggle {
+            margin-top: 16px;
+            font-size: 12px;
+            color: #6366f1;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-weight: 600;
+        }
+
+        .raw-toggle:hover {
+            color: #818cf8;
+        }
+
+        .raw-data {
+            margin-top: 12px;
+            background: #0f172a;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #94a3b8;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useRef, useEffect } = React;
+
+        // ── All available CORS proxies to try ──
+        const PROXIES = [
+            {
+                name: "corsproxy.io",
+                wrap: (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+            },
+            {
+                name: "allorigins",
+                wrap: (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+            },
+            {
+                name: "cors-anywhere (demo)",
+                wrap: (url) => `https://cors-anywhere.herokuapp.com/${url}`,
+            },
+        ];
+
+        const VIES_REST = (cc, num) =>
+            `https://ec.europa.eu/taxation_customs/vies/rest-api/ms/${cc}/vat/${num}`;
+
+        // ── Try fetching with timeout ──
+        async function fetchWithTimeout(url, opts = {}, ms = 8000) {
+            const ctrl = new AbortController();
+            const timer = setTimeout(() => ctrl.abort(), ms);
+            try {
+                const res = await fetch(url, { ...opts, signal: ctrl.signal });
+                clearTimeout(timer);
+                return res;
+            } catch (e) {
+                clearTimeout(timer);
+                throw e;
+            }
+        }
+
+        // ── Main App ──
+        function App() {
+            const [vatInput, setVatInput] = useState("");
+            const [loading, setLoading] = useState(false);
+            const [statusMsg, setStatusMsg] = useState("");
+            const [result, setResult] = useState(null);
+            const [showRaw, setShowRaw] = useState(false);
+            const inputRef = useRef(null);
+
+            useEffect(() => { inputRef.current?.focus(); }, []);
+
+            const splitVAT = (raw) => {
+                const cleaned = raw.replace(/[\s.\-]/g, "").toUpperCase();
+                return {
+                    countryCode: cleaned.substring(0, 2),
+                    vatNumber: cleaned.substring(2),
+                    full: cleaned,
+                };
+            };
+
+            const normalizeResult = (data, cc, num) => {
+                const isValid =
+                    data.isValid === true ||
+                    data.valid === true ||
+                    data.isValid === "true" ||
+                    data.valid === "true";
+                return {
+                    countryCode: data.countryCode || cc,
+                    vatNumber: data.vatNumber || num,
+                    requestDate: data.requestDate || new Date().toISOString().split("T")[0],
+                    valid: isValid,
+                    name: data.name || data.traderName || "",
+                    address: data.address || data.traderAddress || "",
+                    _raw: data,
+                };
+            };
+
+            const validateVAT = async (e) => {
+                e.preventDefault();
+                const trimmed = vatInput.trim();
+                if (!trimmed) return;
+
+                setLoading(true);
+                setResult(null);
+                setShowRaw(false);
+                setStatusMsg("");
+
+                const { countryCode, vatNumber } = splitVAT(trimmed);
+
+                if (!/^[A-Z]{2}$/.test(countryCode)) {
+                    setResult({
+                        type: "error",
+                        message:
+                            "VAT number must start with a 2-letter EU country code (e.g. DE, FR, IE, NL).",
+                    });
+                    setLoading(false);
+                    return;
+                }
+
+                const directUrl = VIES_REST(countryCode, vatNumber);
+
+                // ── Attempt 1: Direct fetch (works if CORS headers present or same-origin) ──
+                try {
+                    setStatusMsg("Trying VIES API directly…");
+                    const res = await fetchWithTimeout(directUrl, {
+                        headers: { Accept: "application/json" },
+                    }, 6000);
+                    const text = await res.text();
+                    const data = JSON.parse(text);
+                    const norm = normalizeResult(data, countryCode, vatNumber);
+                    setResult({
+                        type: norm.valid ? "valid" : "invalid",
+                        data: norm,
+                        raw: JSON.stringify(data, null, 2),
+                        method: "VIES REST (direct)",
+                    });
+                    setLoading(false);
+                    return;
+                } catch (err) {
+                    console.log("Direct failed:", err.message);
+                }
+
+                // ── Attempt 2: Try each CORS proxy ──
+                for (const proxy of PROXIES) {
+                    try {
+                        setStatusMsg(`Trying via ${proxy.name}…`);
+                        const proxyUrl = proxy.wrap(directUrl);
+                        const res = await fetchWithTimeout(proxyUrl, {
+                            headers: { Accept: "application/json" },
+                        }, 8000);
+                        const text = await res.text();
+                        const data = JSON.parse(text);
+                        const norm = normalizeResult(data, countryCode, vatNumber);
+                        setResult({
+                            type: norm.valid ? "valid" : "invalid",
+                            data: norm,
+                            raw: JSON.stringify(data, null, 2),
+                            method: `VIES REST via ${proxy.name}`,
+                        });
+                        setLoading(false);
+                        return;
+                    } catch (err) {
+                        console.log(`${proxy.name} failed:`, err.message);
+                    }
+                }
+
+                // ── Attempt 3: JSONP-style with allorigins /get (returns wrapper JSON) ──
+                try {
+                    setStatusMsg("Trying allorigins wrapper…");
+                    const wrapped = `https://api.allorigins.win/get?url=${encodeURIComponent(directUrl)}`;
+                    const res = await fetchWithTimeout(wrapped, {}, 8000);
+                    const wrapper = await res.json();
+                    if (wrapper.contents) {
+                        const data = JSON.parse(wrapper.contents);
+                        const norm = normalizeResult(data, countryCode, vatNumber);
+                        setResult({
+                            type: norm.valid ? "valid" : "invalid",
+                            data: norm,
+                            raw: JSON.stringify(data, null, 2),
+                            method: "VIES REST via allorigins (wrapped)",
+                        });
+                        setLoading(false);
+                        return;
+                    }
+                } catch (err) {
+                    console.log("allorigins wrapped failed:", err.message);
+                }
+
+                // ── All failed ──
+                setResult({
+                    type: "error",
+                    message:
+                        "Could not reach the EU VIES service. All connection methods were blocked.\n\nTry:\n• Open this file via a local web server (e.g. npx serve) instead of file://\n• Or visit https://cors-anywhere.herokuapp.com/corsdemo and click 'Request temporary access'",
+                });
+                setLoading(false);
+            };
+
+            const resultCard = () => {
+                if (!result) return null;
+
+                if (result.type === "error") {
+                    return (
+                        <div className="result-card result-error">
+                            <span className="result-badge badge-error">⚠ Error</span>
+                            <p style={{ fontSize: 14, lineHeight: 1.8, whiteSpace: "pre-line" }}>
+                                {result.message}
+                            </p>
+                        </div>
+                    );
+                }
+
+                const d = result.data;
+                const fields = [
+                    { label: "Country", value: d.countryCode },
+                    { label: "VAT Number", value: d.vatNumber },
+                    { label: "Status", value: d.valid ? "✅ Valid" : "❌ Invalid" },
+                    { label: "Name", value: d.name },
+                    { label: "Address", value: d.address },
+                    { label: "Request Date", value: d.requestDate },
+                ];
+
+                // Grab any extra keys the API sent
+                const skip = new Set([
+                    "countryCode","vatNumber","valid","isValid","name","traderName",
+                    "address","traderAddress","requestDate","userError","_raw",
+                ]);
+                const extras = Object.entries(d._raw || {}).filter(
+                    ([k, v]) => !skip.has(k) && v !== "" && v != null
+                );
+                extras.forEach(([k, v]) =>
+                    fields.push({
+                        label: k.replace(/([A-Z])/g, " $1").trim(),
+                        value: typeof v === "object" ? JSON.stringify(v) : String(v),
+                    })
+                );
+
+                return (
+                    <div className={`result-card ${result.type === "valid" ? "result-valid" : "result-invalid"}`}>
+                        <span className={`result-badge ${result.type === "valid" ? "badge-valid" : "badge-invalid"}`}>
+                            {result.type === "valid" ? "✓ Valid" : "✗ Invalid"}
+                        </span>
+
+                        {fields.map((f, i) => (
+                            <div className="result-row" key={i}>
+                                <div className="result-label">{f.label}</div>
+                                <div className={`result-value ${!f.value ? "empty" : ""}`}>
+                                    {f.value || "—"}
+                                </div>
+                            </div>
+                        ))}
+
+                        {result.method && (
+                            <span className="method-tag">via {result.method}</span>
+                        )}
+
+                        {result.raw && (
+                            <>
+                                <button className="raw-toggle" onClick={() => setShowRaw(!showRaw)}>
+                                    {showRaw ? "▾ Hide" : "▸ Show"} raw API response
+                                </button>
+                                {showRaw && <div className="raw-data">{result.raw}</div>}
+                            </>
+                        )}
+                    </div>
+                );
+            };
+
+            return (
+                <div className="container">
+                    <div className="card">
+                        <div className="title">🇪🇺 EU VAT Validator</div>
+                        <div className="subtitle">
+                            Validate any EU VAT number against the official VIES database
+                        </div>
+
+                        <form onSubmit={validateVAT}>
+                            <div className="form-group">
+                                <input
+                                    ref={inputRef}
+                                    className="input"
+                                    type="text"
+                                    placeholder="e.g. IE6388047V"
+                                    value={vatInput}
+                                    onChange={(e) => setVatInput(e.target.value)}
+                                    disabled={loading}
+                                    spellCheck={false}
+                                    autoComplete="off"
+                                />
+                                <button
+                                    className="btn"
+                                    type="submit"
+                                    disabled={loading || !vatInput.trim()}
+                                >
+                                    {loading ? <span className="spinner-btn"></span> : "Validate"}
+                                </button>
+                            </div>
+                        </form>
+
+                        <div className="hint">
+                            Format: <code>CC</code> + number — e.g.{" "}
+                            <code>IE6388047V</code> <code>NL123456789B01</code>{" "}
+                            <code>DE123456789</code> <code>FR40303265045</code>
+                        </div>
+
+                        {loading && (
+                            <div className="spinner-wrap">
+                                <div className="spinner"></div>
+                                <div className="spinner-text">{statusMsg}</div>
+                            </div>
+                        )}
+
+                        {resultCard()}
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(<App />);
+    </script>
+</body>
+</html>
