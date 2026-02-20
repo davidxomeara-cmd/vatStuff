@@ -1,30 +1,39 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>VAT on Property – Tool Suite</title>
+<title>VAT on Property – Tool Suite | PwC</title>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --orange: #e8600a;
-  --orange-hover: #f06d18;
-  --orange-dark: #c45008;
-  --orange-soft: #fff3eb;
-  --orange-softer: #fffaf6;
+  --pwc-orange: #d04a02;
+  --pwc-orange-hover: #e05512;
+  --pwc-orange-dark: #b03d00;
+  --pwc-orange-light: #f26b2a;
+  --pwc-orange-soft: #fff4ee;
+  --pwc-orange-softer: #fffaf6;
+  --pwc-black: #2d2d2d;
+  --pwc-dark: #1a1a1a;
+  --pwc-warm-grey: #f5f0eb;
+  --pwc-tan: #d4c4b0;
+  --pwc-rose: #e8927c;
   --green: #16a34a;
   --green-soft: #f0fdf4;
   --green-muted: #bbf7d0;
   --red: #dc2626;
   --red-soft: #fef2f2;
+  --red-border: #fca5a5;
   --purple: #7c3aed;
   --purple-soft: #f5f3ff;
   --blue: #2563eb;
   --blue-soft: #eff6ff;
-  --slate-50: #fafafa;
+  --slate-50: #fafaf9;
   --slate-100: #f5f5f4;
   --slate-150: #efedea;
   --slate-200: #e7e5e4;
@@ -38,112 +47,122 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--slate-100);color:var(--slate-800);line-height:1.6;min-height:100vh;}
-::selection{background:rgba(232,96,10,0.15);color:var(--slate-900);}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#f7f4f1;color:var(--pwc-black);line-height:1.6;min-height:100vh;}
+::selection{background:rgba(208,74,2,0.15);color:var(--pwc-dark);}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-@keyframes slideRight{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
-@keyframes breathe{0%,100%{box-shadow:0 0 0 0 rgba(232,96,10,0.1)}50%{box-shadow:0 0 0 8px rgba(232,96,10,0)}}
-@keyframes staggerIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.fade-up{animation:fadeUp .35s cubic-bezier(.21,1.02,.73,1) forwards}
-.slide-right{animation:slideRight .4s cubic-bezier(.21,1.02,.73,1) forwards}
+@keyframes slideRight{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes breathe{0%,100%{box-shadow:0 0 0 0 rgba(208,74,2,0.12)}50%{box-shadow:0 0 0 10px rgba(208,74,2,0)}}
+@keyframes staggerIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulseGlow{0%,100%{opacity:0.6}50%{opacity:1}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes ripple{0%{transform:scale(0);opacity:0.5}100%{transform:scale(4);opacity:0}}
+@keyframes checkBounce{0%{transform:scale(0)}50%{transform:scale(1.3)}70%{transform:scale(0.9)}100%{transform:scale(1)}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes dotPulse{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+@keyframes borderGlow{0%,100%{border-color:rgba(208,74,2,0.3)}50%{border-color:rgba(208,74,2,0.7)}}
+@keyframes statusSlide{from{opacity:0;transform:translateX(-8px);max-height:0}to{opacity:1;transform:translateX(0);max-height:60px}}
+.fade-up{animation:fadeUp .4s cubic-bezier(.21,1.02,.73,1) forwards}
+.slide-right{animation:slideRight .45s cubic-bezier(.21,1.02,.73,1) forwards}
+.scale-in{animation:scaleIn .35s cubic-bezier(.21,1.02,.73,1) forwards}
 
 ::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--slate-300);border-radius:99px}
 ::-webkit-scrollbar-thumb:hover{background:var(--slate-400)}
 
-.answer-content p{margin-bottom:14px;font-size:0.86rem;line-height:1.85;color:var(--slate-700);}
+.answer-content p{margin-bottom:14px;font-size:0.86rem;line-height:1.9;color:var(--slate-700);}
 .answer-content p:last-child{margin-bottom:0}
-.answer-content strong{color:var(--slate-800);font-weight:600}
+.answer-content strong{color:var(--pwc-black);font-weight:600}
 .answer-content em{color:var(--slate-600)}
 .answer-content ul{margin:8px 0 16px 0;list-style:none}
 .answer-content ul li{padding:5px 0 5px 22px;position:relative;font-size:0.86rem;color:var(--slate-700);line-height:1.75}
-.answer-content ul li::before{content:'';position:absolute;left:2px;top:14px;width:6px;height:6px;border-radius:50%;background:var(--orange);opacity:0.45}
+.answer-content ul li::before{content:'';position:absolute;left:2px;top:14px;width:6px;height:6px;border-radius:50%;background:var(--pwc-orange);opacity:0.5}
 .callout{padding:16px 20px;border-radius:12px;margin:18px 0;font-size:0.84rem;line-height:1.85}
 .callout.warn{background:linear-gradient(135deg,#fff6ef,#ffefe3);border:1px solid #fdd8b8;color:var(--slate-700)}
-.callout.info{background:linear-gradient(135deg,#f8faff,#eef3ff);border:1px solid #c7d9f7;color:var(--slate-700)}
+.callout.info{background:linear-gradient(135deg,#f8f6f3,#f0ede8);border:1px solid #e0d8cf;color:var(--slate-700)}
 .callout.good{background:linear-gradient(135deg,#f4fef7,#eafced);border:1px solid #b8efc7;color:var(--slate-700)}
-.callout strong{color:var(--slate-800)}
+.callout strong{color:var(--pwc-black)}
 
-.leg-panel{background:var(--slate-900);color:#e2ddd7;border-radius:16px;overflow:hidden;font-size:0.82rem;line-height:1.9}
+.leg-panel{background:var(--pwc-dark);color:#e2ddd7;border-radius:16px;overflow:hidden;font-size:0.82rem;line-height:1.9}
 .leg-panel-header{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between}
 .leg-panel-header span{font-weight:600;color:white;font-size:0.82rem}
 .leg-panel-body{padding:20px;max-height:420px;overflow-y:auto;font-family:'SF Mono','Fira Code','Cascadia Code',monospace;font-size:0.78rem;line-height:2;white-space:pre-wrap;color:#bbb5ad}
-.leg-panel-body .hl{background:rgba(232,96,10,0.2);color:#ffa860;border-radius:3px;padding:1px 4px;font-weight:600}
+.leg-panel-body .hl{background:rgba(208,74,2,0.25);color:#ffa860;border-radius:3px;padding:1px 4px;font-weight:600}
 
-.def-term{border-bottom:1.5px dashed var(--orange);color:var(--orange-dark);cursor:help;font-weight:500;position:relative;transition:color .2s}
-.def-term:hover{color:var(--orange)}
+.def-term{border-bottom:1.5px dashed var(--pwc-orange);color:var(--pwc-orange-dark);cursor:help;font-weight:500;position:relative;transition:color .2s}
+.def-term:hover{color:var(--pwc-orange)}
 
 .tooltip-wrap{position:relative;display:inline}
-.tooltip-box{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--slate-900);color:white;padding:14px 18px;border-radius:12px;font-size:0.78rem;line-height:1.7;width:340px;box-shadow:0 12px 40px rgba(0,0,0,0.25);z-index:1000;pointer-events:none;opacity:0;animation:fadeUp .2s ease forwards}
-.tooltip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--slate-900)}
+.tooltip-box{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--pwc-dark);color:white;padding:14px 18px;border-radius:12px;font-size:0.78rem;line-height:1.7;width:340px;box-shadow:0 12px 40px rgba(0,0,0,0.25);z-index:1000;pointer-events:none;opacity:0;animation:fadeUp .2s ease forwards}
+.tooltip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--pwc-dark)}
 
 .tool-tile{
   background:white;border-radius:20px;border:1.5px solid var(--slate-200);padding:32px 28px;
-  cursor:pointer;transition:all .3s cubic-bezier(.21,1.02,.73,1);position:relative;overflow:hidden;
+  cursor:pointer;transition:all .35s cubic-bezier(.21,1.02,.73,1);position:relative;overflow:hidden;
   display:flex;flex-direction:column;gap:16px;
 }
-.tool-tile:hover{
-  border-color:var(--orange);box-shadow:0 8px 32px rgba(232,96,10,0.1), 0 2px 8px rgba(0,0,0,0.04);
-  transform:translateY(-3px);
+.tool-tile::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg, var(--pwc-orange), var(--pwc-orange-light));
+  transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.21,1.02,.73,1);
 }
-.tool-tile.disabled{opacity:0.5;cursor:not-allowed;pointer-events:none}
+.tool-tile:hover::before{transform:scaleX(1)}
+.tool-tile:hover{
+  border-color:var(--pwc-orange);box-shadow:0 12px 40px rgba(208,74,2,0.1), 0 4px 12px rgba(0,0,0,0.05);
+  transform:translateY(-4px);
+}
+.tool-tile:active{transform:translateY(-2px);transition:transform .1s}
+.tool-tile.disabled{opacity:0.45;cursor:not-allowed;pointer-events:none}
+.tool-tile.disabled::before{display:none}
 .tool-tile .tile-icon{
   width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;
-  flex-shrink:0;
+  flex-shrink:0;transition:transform .3s cubic-bezier(.21,1.02,.73,1);
 }
+.tool-tile:hover .tile-icon{transform:scale(1.08) rotate(-2deg)}
 
-/* ═══ CONFETTI CANVAS ═══ */
 .confetti-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;pointer-events:none;z-index:9999}
 
-/* ═══ STAMP ANIMATION ═══ */
 @keyframes stampIn{
   0%{opacity:0;transform:scale(2.5) rotate(-15deg)}
   50%{opacity:1;transform:scale(0.9) rotate(2deg)}
   70%{transform:scale(1.05) rotate(-1deg)}
   100%{opacity:1;transform:scale(1) rotate(0deg)}
 }
-@keyframes stampFade{
-  0%,80%{opacity:1}
-  100%{opacity:0}
-}
-@keyframes stampGlow{
-  0%{box-shadow:0 0 0 0 rgba(232,96,10,0.4)}
-  50%{box-shadow:0 0 40px 10px rgba(232,96,10,0.15)}
-  100%{box-shadow:0 0 0 0 rgba(232,96,10,0)}
-}
-@keyframes ringPulse{
-  0%{transform:scale(0.8);opacity:0.6;border-width:3px}
-  100%{transform:scale(2.2);opacity:0;border-width:0px}
-}
-.stamp-overlay{
-  position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;
-  z-index:10;pointer-events:none;
-}
-.stamp-badge{
-  animation:stampIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards, stampFade 2.8s ease forwards, stampGlow 1.2s ease forwards;
-  background:white;border:4px solid var(--orange);border-radius:20px;padding:20px 36px;
-  display:flex;flex-direction:column;align-items:center;gap:6;position:relative;
-  box-shadow:0 12px 48px rgba(232,96,10,0.25);
-}
-.stamp-badge::before{
-  content:'';position:absolute;inset:-8px;border-radius:26px;border:3px solid var(--orange);
-  animation:ringPulse 1s ease-out 0.3s forwards;opacity:0;
-}
+@keyframes stampFade{0%,80%{opacity:1}100%{opacity:0}}
+@keyframes stampGlow{0%{box-shadow:0 0 0 0 rgba(208,74,2,0.4)}50%{box-shadow:0 0 40px 10px rgba(208,74,2,0.15)}100%{box-shadow:0 0 0 0 rgba(208,74,2,0)}}
+@keyframes ringPulse{0%{transform:scale(0.8);opacity:0.6;border-width:3px}100%{transform:scale(2.2);opacity:0;border-width:0px}}
+.stamp-overlay{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;z-index:10;pointer-events:none}
+.stamp-badge{animation:stampIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards, stampFade 2.8s ease forwards, stampGlow 1.2s ease forwards;background:white;border:4px solid var(--pwc-orange);border-radius:20px;padding:20px 36px;display:flex;flex-direction:column;align-items:center;gap:6;position:relative;box-shadow:0 12px 48px rgba(208,74,2,0.25)}
+.stamp-badge::before{content:'';position:absolute;inset:-8px;border-radius:26px;border:3px solid var(--pwc-orange);animation:ringPulse 1s ease-out 0.3s forwards;opacity:0}
 .stamp-icon{font-size:2rem;animation:fadeUp 0.3s 0.2s both}
-.stamp-text{font-size:0.82rem;font-weight:800;color:var(--orange);text-transform:uppercase;letter-spacing:1.5px;animation:fadeUp 0.3s 0.3s both}
+.stamp-text{font-size:0.82rem;font-weight:800;color:var(--pwc-orange);text-transform:uppercase;letter-spacing:1.5px;animation:fadeUp 0.3s 0.3s both}
 .stamp-sub{font-size:0.68rem;font-weight:600;color:var(--slate-400);animation:fadeUp 0.3s 0.4s both}
 
-/* ═══ SPARKLE PARTICLES ═══ */
-@keyframes sparkleFloat{
-  0%{opacity:0;transform:translateY(0) scale(0)}
-  20%{opacity:1;transform:translateY(-10px) scale(1)}
-  100%{opacity:0;transform:translateY(-60px) scale(0.3)}
-}
+@keyframes sparkleFloat{0%{opacity:0;transform:translateY(0) scale(0)}20%{opacity:1;transform:translateY(-10px) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(0.3)}}
 .sparkle-container{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:5;overflow:hidden}
 .sparkle{position:absolute;border-radius:50%;animation:sparkleFloat 1.5s ease-out forwards}
+
+/* Ripple effect */
+.ripple-container{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:inherit}
+.ripple-circle{position:absolute;border-radius:50%;background:rgba(208,74,2,0.08);animation:ripple 0.6s ease-out forwards}
+
+/* Status tracker in answer panel */
+.status-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;font-size:0.8rem;margin-bottom:4px;transition:all .3s;animation:statusSlide .35s cubic-bezier(.21,1.02,.73,1) both}
+.status-item.answered{background:var(--green-soft);border:1px solid var(--green-muted)}
+.status-item.answered-no{background:var(--red-soft);border:1px solid var(--red-border)}
+.status-item.current{background:var(--pwc-orange-soft);border:1px solid rgba(208,74,2,0.2);animation:borderGlow 2s ease-in-out infinite}
+.status-item.pending{background:var(--slate-50);border:1px solid var(--slate-200);opacity:0.5}
+.status-icon{font-size:0.9rem;flex-shrink:0}
+.status-label{font-weight:500;color:var(--slate-700);flex:1}
+.status-value{font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.3px}
+
+/* PwC geometric pattern */
+.geo-pattern{position:absolute;pointer-events:none;opacity:0.04}
 
 @media(max-width:960px){
   .main-grid{grid-template-columns:1fr !important}
@@ -159,175 +178,127 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 const {useState,useMemo,useCallback,useRef,useEffect,Fragment} = React;
 
 /* ═══════════════════════════════════════════════
-   CONFETTI ENGINE (Canvas-based)
+   SVG ASSETS
+   ═══════════════════════════════════════════════ */
+function PwCLogo({size=32}){
+  return(
+    <svg width={size*3.2} height={size} viewBox="0 0 160 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <text x="0" y="42" fill="var(--pwc-dark)" fontFamily="Inter, sans-serif" fontWeight="900" fontSize="46" letterSpacing="-2">pwc</text>
+      <path d="M118 4 L142 4 L130 18 Z" fill="var(--pwc-orange)" opacity="0.9"/>
+      <path d="M130 4 L154 4 L142 18 Z" fill="var(--pwc-orange)" opacity="0.6"/>
+    </svg>
+  );
+}
+
+function GeometricBg({style}){
+  return(
+    <svg className="geo-pattern" style={style} width="400" height="400" viewBox="0 0 400 400" fill="none">
+      <path d="M0 200 L100 0 L200 200 L100 400 Z" fill="var(--pwc-orange)" opacity="0.4"/>
+      <path d="M100 100 L200 0 L300 100 L200 200 Z" fill="var(--pwc-orange)" opacity="0.25"/>
+      <path d="M200 200 L300 100 L400 200 L300 300 Z" fill="var(--pwc-orange)" opacity="0.15"/>
+      <path d="M100 300 L200 200 L300 300 L200 400 Z" fill="var(--pwc-orange)" opacity="0.1"/>
+      <circle cx="200" cy="200" r="40" fill="none" stroke="var(--pwc-orange)" strokeWidth="1" opacity="0.3"/>
+      <circle cx="200" cy="200" r="80" fill="none" stroke="var(--pwc-orange)" strokeWidth="0.5" opacity="0.2"/>
+      <circle cx="200" cy="200" r="120" fill="none" stroke="var(--pwc-orange)" strokeWidth="0.5" opacity="0.1"/>
+    </svg>
+  );
+}
+
+function PropertyVector({style}){
+  return(
+    <svg style={{...style,opacity:0.06}} width="300" height="300" viewBox="0 0 300 300" fill="none">
+      <rect x="40" y="100" width="80" height="120" rx="4" fill="var(--pwc-orange)"/>
+      <rect x="55" y="115" width="20" height="20" rx="2" fill="white" opacity="0.3"/>
+      <rect x="85" y="115" width="20" height="20" rx="2" fill="white" opacity="0.3"/>
+      <rect x="55" y="145" width="20" height="20" rx="2" fill="white" opacity="0.3"/>
+      <rect x="85" y="145" width="20" height="20" rx="2" fill="white" opacity="0.3"/>
+      <rect x="70" y="185" width="20" height="35" rx="2" fill="white" opacity="0.3"/>
+      <rect x="140" y="60" width="120" height="160" rx="4" fill="var(--pwc-orange)" opacity="0.7"/>
+      <rect x="155" y="75" width="25" height="20" rx="2" fill="white" opacity="0.3"/>
+      <rect x="190" y="75" width="25" height="20" rx="2" fill="white" opacity="0.3"/>
+      <rect x="225" y="75" width="25" height="20" rx="2" fill="white" opacity="0.3"/>
+      <rect x="155" y="105" width="25" height="20" rx="2" fill="white" opacity="0.3"/>
+      <rect x="190" y="105" width="25" height="20" rx="2" fill="white" opacity="0.3"/>
+      <rect x="225" y="105" width="25" height="20" rx="2" fill="white" opacity="0.3"/>
+      <rect x="155" y="135" width="25" height="20" rx="2" fill="white" opacity="0.3"/>
+      <rect x="190" y="135" width="25" height="20" rx="2" fill="white" opacity="0.3"/>
+      <rect x="225" y="135" width="25" height="20" rx="2" fill="white" opacity="0.3"/>
+      <polygon points="40,100 80,60 120,100" fill="var(--pwc-orange)" opacity="0.9"/>
+      <polygon points="140,60 200,20 260,60" fill="var(--pwc-orange)" opacity="0.5"/>
+      <rect x="20" y="220" width="260" height="4" rx="2" fill="var(--pwc-orange)" opacity="0.3"/>
+    </svg>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   CONFETTI ENGINE
    ═══════════════════════════════════════════════ */
 function ConfettiCanvas({trigger}){
-  const canvasRef=useRef(null);
-  const prevTrigger=useRef(0);
-
+  const canvasRef=useRef(null);const prevTrigger=useRef(0);
   useEffect(()=>{
-    if(trigger<=prevTrigger.current)return;
-    prevTrigger.current=trigger;
-    const canvas=canvasRef.current;if(!canvas)return;
-    const ctx=canvas.getContext('2d');
-    canvas.width=window.innerWidth;
-    canvas.height=window.innerHeight;
-
-    const COLORS=['#e8600a','#f59e0b','#f97316','#fb923c','#fbbf24','#ffffff','#fde68a','#c2410c','#fcd34d','#fed7aa'];
-    const SHAPES=['rect','circle','strip','diamond'];
-    const COUNT=180;
-    const GRAVITY=0.12;
-    const DRAG=0.985;
-
+    if(trigger<=prevTrigger.current)return;prevTrigger.current=trigger;
+    const canvas=canvasRef.current;if(!canvas)return;const ctx=canvas.getContext('2d');
+    canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+    const COLORS=['#d04a02','#e05512','#f26b2a','#f59e0b','#fbbf24','#ffffff','#fde68a','#b03d00','#fcd34d','#2d2d2d'];
+    const SHAPES=['rect','circle','strip','diamond'];const COUNT=160;const GRAVITY=0.12;const DRAG=0.985;
     const particles=[];
-    for(let i=0;i<COUNT;i++){
-      const angle=Math.random()*Math.PI*2;
-      const speed=6+Math.random()*12;
-      const shape=SHAPES[Math.floor(Math.random()*SHAPES.length)];
-      particles.push({
-        x:canvas.width*0.5+(Math.random()-0.5)*200,
-        y:canvas.height*0.35+(Math.random()-0.5)*100,
-        vx:Math.cos(angle)*speed*(0.6+Math.random()*0.8),
-        vy:Math.sin(angle)*speed*(0.6+Math.random()*0.8)-3,
-        w:shape==='strip'?2+Math.random()*2:4+Math.random()*8,
-        h:shape==='strip'?12+Math.random()*18:4+Math.random()*8,
-        color:COLORS[Math.floor(Math.random()*COLORS.length)],
-        rotation:Math.random()*360,
-        rotSpeed:(Math.random()-0.5)*12,
-        opacity:1,
-        shape,
-        decay:0.008+Math.random()*0.008,
-        wobble:Math.random()*Math.PI*2,
-        wobbleSpeed:0.03+Math.random()*0.06,
-      });
-    }
-
-    let raf;
-    const draw=()=>{
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      let alive=0;
-      particles.forEach(p=>{
-        if(p.opacity<=0)return;
-        alive++;
-        p.vy+=GRAVITY;
-        p.vx*=DRAG;
-        p.vy*=DRAG;
-        p.wobble+=p.wobbleSpeed;
-        p.x+=p.vx+Math.sin(p.wobble)*0.8;
-        p.y+=p.vy;
-        p.rotation+=p.rotSpeed;
-        p.opacity-=p.decay;
-        if(p.opacity<=0){p.opacity=0;return}
-
-        ctx.save();
-        ctx.translate(p.x,p.y);
-        ctx.rotate(p.rotation*Math.PI/180);
-        ctx.globalAlpha=p.opacity;
-        ctx.fillStyle=p.color;
-
-        if(p.shape==='rect'){
-          ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
-        }else if(p.shape==='circle'){
-          ctx.beginPath();ctx.arc(0,0,p.w/2,0,Math.PI*2);ctx.fill();
-        }else if(p.shape==='strip'){
-          ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
-          ctx.shadowColor=p.color;ctx.shadowBlur=4;
-        }else if(p.shape==='diamond'){
-          ctx.beginPath();
-          ctx.moveTo(0,-p.h/2);ctx.lineTo(p.w/2,0);ctx.lineTo(0,p.h/2);ctx.lineTo(-p.w/2,0);
-          ctx.closePath();ctx.fill();
-        }
-        ctx.restore();
-      });
-      if(alive>0)raf=requestAnimationFrame(draw);
-      else ctx.clearRect(0,0,canvas.width,canvas.height);
-    };
-    raf=requestAnimationFrame(draw);
-    return()=>{if(raf)cancelAnimationFrame(raf)};
+    for(let i=0;i<COUNT;i++){const angle=Math.random()*Math.PI*2;const speed=6+Math.random()*12;const shape=SHAPES[Math.floor(Math.random()*SHAPES.length)];
+      particles.push({x:canvas.width*0.5+(Math.random()-0.5)*200,y:canvas.height*0.35+(Math.random()-0.5)*100,vx:Math.cos(angle)*speed*(0.6+Math.random()*0.8),vy:Math.sin(angle)*speed*(0.6+Math.random()*0.8)-3,w:shape==='strip'?2+Math.random()*2:4+Math.random()*8,h:shape==='strip'?12+Math.random()*18:4+Math.random()*8,color:COLORS[Math.floor(Math.random()*COLORS.length)],rotation:Math.random()*360,rotSpeed:(Math.random()-0.5)*12,opacity:1,shape,decay:0.008+Math.random()*0.008,wobble:Math.random()*Math.PI*2,wobbleSpeed:0.03+Math.random()*0.06})}
+    let raf;const draw=()=>{ctx.clearRect(0,0,canvas.width,canvas.height);let alive=0;
+      particles.forEach(p=>{if(p.opacity<=0)return;alive++;p.vy+=GRAVITY;p.vx*=DRAG;p.vy*=DRAG;p.wobble+=p.wobbleSpeed;p.x+=p.vx+Math.sin(p.wobble)*0.8;p.y+=p.vy;p.rotation+=p.rotSpeed;p.opacity-=p.decay;if(p.opacity<=0){p.opacity=0;return}
+        ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rotation*Math.PI/180);ctx.globalAlpha=p.opacity;ctx.fillStyle=p.color;
+        if(p.shape==='rect')ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+        else if(p.shape==='circle'){ctx.beginPath();ctx.arc(0,0,p.w/2,0,Math.PI*2);ctx.fill()}
+        else if(p.shape==='strip'){ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.shadowColor=p.color;ctx.shadowBlur=4}
+        else if(p.shape==='diamond'){ctx.beginPath();ctx.moveTo(0,-p.h/2);ctx.lineTo(p.w/2,0);ctx.lineTo(0,p.h/2);ctx.lineTo(-p.w/2,0);ctx.closePath();ctx.fill()}
+        ctx.restore()});
+      if(alive>0)raf=requestAnimationFrame(draw);else ctx.clearRect(0,0,canvas.width,canvas.height)};
+    raf=requestAnimationFrame(draw);return()=>{if(raf)cancelAnimationFrame(raf)};
   },[trigger]);
-
   return <canvas ref={canvasRef} className="confetti-canvas"/>;
 }
 
-/* ═══════════════════════════════════════════════
-   SPARKLE PARTICLES (React-based)
-   ═══════════════════════════════════════════════ */
 function SparkleParticles({trigger}){
-  const [sparkles,setSparkles]=useState([]);
-  const prev=useRef(0);
-
-  useEffect(()=>{
-    if(trigger<=prev.current)return;
-    prev.current=trigger;
-    const colors=['#e8600a','#f59e0b','#fb923c','#fbbf24','#fde68a'];
-    const arr=[];
-    for(let i=0;i<30;i++){
-      arr.push({
-        id:Date.now()+i,
-        left:`${10+Math.random()*80}%`,
-        top:`${10+Math.random()*80}%`,
-        size:3+Math.random()*6,
-        color:colors[Math.floor(Math.random()*colors.length)],
-        delay:Math.random()*0.8,
-        duration:1+Math.random()*1,
-      });
-    }
-    setSparkles(arr);
-    const t=setTimeout(()=>setSparkles([]),2000);
-    return()=>clearTimeout(t);
+  const [sparkles,setSparkles]=useState([]);const prev=useRef(0);
+  useEffect(()=>{if(trigger<=prev.current)return;prev.current=trigger;
+    const colors=['#d04a02','#f59e0b','#f26b2a','#fbbf24','#fde68a'];const arr=[];
+    for(let i=0;i<30;i++){arr.push({id:Date.now()+i,left:`${10+Math.random()*80}%`,top:`${10+Math.random()*80}%`,size:3+Math.random()*6,color:colors[Math.floor(Math.random()*colors.length)],delay:Math.random()*0.8,duration:1+Math.random()*1})}
+    setSparkles(arr);const t=setTimeout(()=>setSparkles([]),2000);return()=>clearTimeout(t);
   },[trigger]);
-
   if(!sparkles.length)return null;
-  return(
-    <div className="sparkle-container">
-      {sparkles.map(s=>(
-        <div key={s.id} className="sparkle" style={{
-          left:s.left,top:s.top,width:s.size,height:s.size,
-          background:s.color,
-          boxShadow:`0 0 ${s.size*2}px ${s.color}`,
-          animationDelay:`${s.delay}s`,
-          animationDuration:`${s.duration}s`,
-        }}/>
-      ))}
-    </div>
-  );
+  return(<div className="sparkle-container">{sparkles.map(s=>(<div key={s.id} className="sparkle" style={{left:s.left,top:s.top,width:s.size,height:s.size,background:s.color,boxShadow:`0 0 ${s.size*2}px ${s.color}`,animationDelay:`${s.delay}s`,animationDuration:`${s.duration}s`}}/>))}</div>);
 }
 
-/* ═══════════════════════════════════════════════
-   STAMP ANIMATION
-   ═══════════════════════════════════════════════ */
 function StampOverlay({trigger,tag}){
-  const [show,setShow]=useState(false);
-  const prev=useRef(0);
-  useEffect(()=>{
-    if(trigger<=prev.current)return;
-    prev.current=trigger;
-    setShow(true);
-    const t=setTimeout(()=>setShow(false),1500);
-    return()=>clearTimeout(t);
-  },[trigger]);
+  const [show,setShow]=useState(false);const prev=useRef(0);
+  useEffect(()=>{if(trigger<=prev.current)return;prev.current=trigger;setShow(true);const t=setTimeout(()=>setShow(false),1500);return()=>clearTimeout(t)},[trigger]);
   if(!show)return null;
-  return(
-    <div className="stamp-overlay">
-      <div className="stamp-badge">
-        <div className="stamp-icon">✓</div>
-        <div className="stamp-text">Analysis Complete</div>
-        <div className="stamp-sub">{tag}</div>
-      </div>
-    </div>
-  );
+  return(<div className="stamp-overlay"><div className="stamp-badge"><div className="stamp-icon">✓</div><div className="stamp-text">Analysis Complete</div><div className="stamp-sub">{tag}</div></div></div>);
 }
 
 /* ═══════════════════════════════════════════════
-   SIMPLE HASH ROUTER
+   RIPPLE HOOK
+   ═══════════════════════════════════════════════ */
+function useRipple(){
+  const [ripples,setRipples]=useState([]);
+  const addRipple=useCallback((e)=>{
+    const rect=e.currentTarget.getBoundingClientRect();
+    const x=e.clientX-rect.left;const y=e.clientY-rect.top;
+    const size=Math.max(rect.width,rect.height)*0.5;
+    const id=Date.now();
+    setRipples(prev=>[...prev,{id,x,y,size}]);
+    setTimeout(()=>setRipples(prev=>prev.filter(r=>r.id!==id)),600);
+  },[]);
+  const RippleElements=ripples.map(r=>(<div key={r.id} className="ripple-circle" style={{left:r.x-r.size/2,top:r.y-r.size/2,width:r.size,height:r.size}}/>));
+  return{addRipple,RippleElements};
+}
+
+/* ═══════════════════════════════════════════════
+   ROUTER
    ═══════════════════════════════════════════════ */
 function useRoute(){
   const [route,setRoute]=useState(window.location.hash.slice(1)||'/');
-  useEffect(()=>{
-    const h=()=>setRoute(window.location.hash.slice(1)||'/');
-    window.addEventListener('hashchange',h);
-    return()=>window.removeEventListener('hashchange',h);
-  },[]);
+  useEffect(()=>{const h=()=>setRoute(window.location.hash.slice(1)||'/');window.addEventListener('hashchange',h);return()=>window.removeEventListener('hashchange',h)},[]);
   const navigate=useCallback((path)=>{window.location.hash=path},[]);
   return{route,navigate};
 }
@@ -336,16 +307,13 @@ function useRoute(){
    TOOL REGISTRY
    ═══════════════════════════════════════════════ */
 const TOOLS = [
-  {id:'land-sale',title:'Land Sale',subtitle:'Decision Tool',description:'Determine the VAT treatment on a sale of land — development agreements, exemptions, JOTT, and clawback.',icon:'🏗️',iconBg:'linear-gradient(135deg, #e8600a, #f59e0b)',tag:'Live',tagColor:'var(--green)',route:'/land-sale'},
-  {id:'commercial-property',title:'Commercial Property',subtitle:'Sale Decision Tool',description:'Determine the VAT treatment on the sale of a commercial property — TOB relief, CGS implications, and recovery.',icon:'🏢',iconBg:'linear-gradient(135deg, #2563eb, #60a5fa)',tag:'Live',tagColor:'var(--green)',route:'/commercial-property'},
-  {id:'letting-licence',title:'Letting & Licence',subtitle:'VAT Analyser',description:'Analyse whether a property arrangement constitutes a letting (exempt) or a licence (taxable) for VAT purposes.',icon:'🔑',iconBg:'linear-gradient(135deg, #7c3aed, #a78bfa)',tag:'Coming Soon',tagColor:'var(--slate-400)',route:null},
-  {id:'cgs-calculator',title:'CGS Calculator',subtitle:'Adjustment Tool',description:'Calculate Capital Goods Scheme adjustments across intervals — acquisition, development, and refurbishment.',icon:'📊',iconBg:'linear-gradient(135deg, #059669, #34d399)',tag:'Coming Soon',tagColor:'var(--slate-400)',route:null},
-  {id:'option-to-tax',title:'Landlord Option to Tax',subtitle:'Decision Tool',description:'Assess whether a landlord should exercise the option to tax a letting and the implications for both parties.',icon:'📝',iconBg:'linear-gradient(135deg, #dc2626, #f87171)',tag:'Coming Soon',tagColor:'var(--slate-400)',route:null},
-  {id:'reverse-charge',title:'Reverse Charge',subtitle:'Checker',description:'Determine whether the reverse charge mechanism applies to a supply of immovable goods or property services.',icon:'🔄',iconBg:'linear-gradient(135deg, #0891b2, #67e8f9)',tag:'Coming Soon',tagColor:'var(--slate-400)',route:null},
+  {id:'land-sale',title:'Land Sale',subtitle:'Decision Tool',description:'Determine the VAT treatment on a sale of land — development agreements, exemptions, JOTT, and clawback.',icon:'🏗️',iconBg:'linear-gradient(135deg, #d04a02, #f26b2a)',tag:'Live',tagColor:'var(--green)',route:'/land-sale'},
+  {id:'commercial-property',title:'Commercial Property',subtitle:'Sale Decision Tool',description:'Determine the VAT treatment on the sale of a commercial property — TOB relief, CGS implications, and recovery.',icon:'🏢',iconBg:'linear-gradient(135deg, #2d2d2d, #57534e)',tag:'Live',tagColor:'var(--green)',route:'/commercial-property'},
+  
 ];
 
 /* ═══════════════════════════════════════════════
-   LEGISLATION DATABASE
+   LEGISLATION + GLOSSARY (same as before)
    ═══════════════════════════════════════════════ */
 const LEGISLATION = {
   's94_1':{title:'Section 94(1) — Definitions',section:'94(1)',text:`94.— (1) In this section —\n\n"<hl>completed</hl>", in respect of immovable goods, means that the development of those goods has reached the state, apart from only such finishing or fitting work that would normally be carried out by or on behalf of the person who will use them, where the goods can effectively be used for the purposes for which the goods were designed, and the utility services required for those purposes are connected to the goods;\n\n"<hl>occupied</hl>", in respect of immovable goods, means —\n  (a) occupied and fully in use following completion, where that use is one for which planning permission for the development of those goods was granted, and\n  (b) where those goods are let, occupied and fully in such use by the tenant.`},
@@ -359,44 +327,53 @@ const LEGISLATION = {
   's2_building':{title:'Section 2 — "Building" (Interpretation)',section:'2(1)',text:`"<hl>building</hl>", in the definition of "development", includes, in relation to a transaction, any prefabricated or like structure in respect of which the following conditions are satisfied:\n\n  (a) the structure —\n    (i) has a rigid roof and one or more rigid walls and (other than in the case of a structure used for the cultivation of plants) a floor,\n    (ii) is designed so as to provide for human access to, and free movement in, its interior,\n    (iii) is for a purpose that does not require that it be mobile or portable, and\n    (iv) does not have or contain any aids to mobility or portability.`},
 };
 
-/* ═══════════════════════════════════════════════
-   GLOSSARY DATABASE
-   ═══════════════════════════════════════════════ */
 const GLOSSARY = {
   'completed':{term:'Completed',source:'s94(1) VATCA 2010',definition:'The development has reached the state — apart from finishing or fitting work normally carried out by the user — where the goods can effectively be used for their designed purposes, and utility services are connected.',legRef:'s94_1'},
   'occupied':{term:'Occupied',source:'s94(1) VATCA 2010',definition:'Occupied and fully in use following completion, where that use is one for which planning permission was granted. Where let, occupied and fully in use by the tenant.',legRef:'s94_1'},
   'development':{term:'Development',source:'s2(1) VATCA 2010',definition:'In relation to land: (a) the construction, demolition, extension, alteration or reconstruction of any building, or (b) any engineering operation to adapt it for materially altered use. Does NOT include mere repair/maintenance or installation of fixtures.',legRef:'s2_development'},
-  'immovable goods':{term:'Immovable Goods',source:'s2(1) VATCA 2010',definition:'"Immovable goods" means land. This is defined broadly and includes buildings and structures erected on land.',legRef:null},
-  'taxable person':{term:'Taxable Person',source:'s2(1) VATCA 2010',definition:'A person who independently carries out any business activity, regardless of the purpose or results of that activity.',legRef:null},
-  'capital goods scheme':{term:'Capital Goods Scheme (CGS)',source:'Part 8, Ch.2 VATCA 2010',definition:'A mechanism that regulates VAT deductibility on immovable goods over an adjustment period. The period is 20 intervals (~20 years) for acquisition/development and 10 intervals (~10 years) for refurbishment.',legRef:null},
-  'joint option for taxation':{term:'Joint Option for Taxation (JOTT)',source:'s94(5) VATCA 2010',definition:'An agreement in writing between vendor (taxable person) and purchaser (taxable person) to opt to have VAT chargeable on an otherwise exempt supply of immovable goods. Must be made by the 15th of the month following supply.',legRef:'s94_5'},
-  'building':{term:'Building',source:'s2(1) VATCA 2010',definition:'Includes any prefabricated or like structure with a rigid roof, walls, floor, designed for human access, not mobile/portable. Used in the context of the definition of "development".',legRef:'s2_building'},
-  'transfer of business':{term:'Transfer of Business (TOB)',source:'s20(2)(c) VATCA 2010',definition:'Where the transfer of a totality of assets (or part thereof) of a business to another taxable person is deemed not to be a supply for VAT purposes. The transferee must be an accountable person.',legRef:'s20_2c'},
-  'adjustment period':{term:'Adjustment Period',source:'Part 8, Ch.2 VATCA 2010',definition:'The period over which VAT deductibility is regulated under the CGS. 20 intervals (~20 years) for acquisition/development; 10 intervals (~10 years) for refurbishment.',legRef:null},
-  'legacy lease':{term:'Legacy Lease',source:'Pre-2008 regime',definition:'A lease created under the old VAT on property rules (pre-1 July 2008). These leases are treated differently under the transitional provisions and Revenue guidance.',legRef:null},
+  'immovable goods':{term:'Immovable Goods',source:'s2(1) VATCA 2010',definition:'"Immovable goods" means land. Defined broadly — includes buildings and structures erected on land.'},
+  'taxable person':{term:'Taxable Person',source:'s2(1) VATCA 2010',definition:'A person who independently carries out any business activity, regardless of the purpose or results of that activity.'},
+  'capital goods scheme':{term:'Capital Goods Scheme (CGS)',source:'Part 8, Ch.2 VATCA 2010',definition:'A mechanism that regulates VAT deductibility on immovable goods over an adjustment period. 20 intervals for acquisition/development; 10 intervals for refurbishment.'},
+  'joint option for taxation':{term:'Joint Option for Taxation (JOTT)',source:'s94(5) VATCA 2010',definition:'An agreement in writing between vendor and purchaser (both taxable) to opt to have VAT chargeable on an otherwise exempt supply. Must be made by the 15th of the month following supply.',legRef:'s94_5'},
+  'building':{term:'Building',source:'s2(1) VATCA 2010',definition:'Includes any prefabricated or like structure with rigid roof, walls, floor, designed for human access, not mobile/portable.',legRef:'s2_building'},
+  'transfer of business':{term:'Transfer of Business (TOB)',source:'s20(2)(c) VATCA 2010',definition:'Where the transfer of a totality of assets (or part thereof) of a business to another taxable person is deemed not to be a supply for VAT purposes.',legRef:'s20_2c'},
+  'adjustment period':{term:'Adjustment Period',source:'Part 8, Ch.2 VATCA 2010',definition:'The period over which VAT deductibility is regulated under the CGS. 20 intervals for acquisition/development; 10 intervals for refurbishment.'},
+  'legacy lease':{term:'Legacy Lease',source:'Pre-2008 regime',definition:'A lease created under the old VAT on property rules (pre-1 July 2008). Treated differently under transitional provisions.'},
 };
 
 /* ═══════════════════════════════════════════════
    SHARED COMPONENTS
    ═══════════════════════════════════════════════ */
-function BrandBar({navigate,currentRoute}){
-  const isHome=currentRoute==='/';const currentTool=TOOLS.find(t=>t.route===currentRoute);
-  return(
-    <div style={{background:'white',padding:'0 24px',display:'flex',alignItems:'center',height:54,borderBottom:'1px solid var(--slate-200)',boxShadow:'0 1px 3px rgba(0,0,0,0.03)'}}>
-      <div style={{display:'flex',alignItems:'center',gap:14,maxWidth:1280,width:'100%',margin:'0 auto'}}>
-        <div style={{display:'flex',alignItems:'center',gap:10,cursor:'pointer'}} onClick={()=>navigate('/')}>
-          <div style={{width:32,height:32,background:'var(--orange)',borderRadius:8,display:'flex',alignItems:'center',justifyContent:'center'}}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 21h18M3 7l9-4 9 4M6 7v8M10 7v8M14 7v8M18 7v8M4 15h16v6H4z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+function BrandBar({navigate, currentRoute}) {
+  const isHome = currentRoute === '/';
+  const currentTool = TOOLS.find(t => t.route === currentRoute);
+  return (
+    <div style={{background:'white', padding:'0 24px', display:'flex', alignItems:'center', height:58, borderBottom:'1px solid var(--slate-200)', boxShadow:'0 1px 3px rgba(0,0,0,0.03)'}}>
+      <div style={{display:'flex', alignItems:'center', gap:16, maxWidth:1280, width:'100%', margin:'0 auto'}}>
+        <div style={{display:'flex', alignItems:'center', gap:12, cursor:'pointer', padding:'4px 0'}} onClick={() => navigate('/')}>
+          <div style={{display:'flex', alignItems:'center', gap:10}}>
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/c/c3/PwC_Company_Logo.svg"
+              alt="PwC Logo"
+              style={{height: 28, width: 'auto', objectFit: 'contain'}}
+            />
           </div>
+          <div style={{width:1, height:24, background:'var(--slate-200)'}} />
           <div>
-            <div style={{fontSize:'0.82rem',fontWeight:700,color:'var(--slate-900)',letterSpacing:'-0.02em',lineHeight:1.2}}>PwC</div>
-            <div style={{fontSize:'0.62rem',fontWeight:500,color:'var(--slate-400)',letterSpacing:'.3px',textTransform:'uppercase'}}>Tax Technology & Transformation</div>
+            <div style={{fontSize:'0.72rem', fontWeight:600, color:'var(--slate-500)', letterSpacing:'.2px'}}>Tax Technology &amp; Transformation</div>
           </div>
         </div>
-        <div style={{width:1,height:28,background:'var(--slate-200)',margin:'0 8px'}}/>
-        <div style={{fontSize:'0.78rem',fontWeight:500,color:'var(--slate-500)',cursor:'pointer'}} onClick={()=>navigate('/')}>VAT on Property</div>
-        {!isHome&&currentTool&&(<><span style={{fontSize:'0.72rem',color:'var(--slate-300)'}}>›</span><span style={{fontSize:'0.78rem',fontWeight:600,color:'var(--slate-700)'}}>{currentTool.title}</span></>)}
-        {!isHome&&(<button onClick={()=>navigate('/')} style={{marginLeft:'auto',padding:'6px 16px',background:'var(--slate-50)',border:'1.5px solid var(--slate-200)',borderRadius:10,fontSize:'0.74rem',fontWeight:600,color:'var(--slate-500)',cursor:'pointer',display:'inline-flex',alignItems:'center',gap:6,transition:'all .25s'}} onMouseOver={e=>{e.currentTarget.style.borderColor='var(--orange)';e.currentTarget.style.color='var(--orange)';e.currentTarget.style.background='var(--orange-soft)'}} onMouseOut={e=>{e.currentTarget.style.borderColor='var(--slate-200)';e.currentTarget.style.color='var(--slate-500)';e.currentTarget.style.background='var(--slate-50)'}}>← All Tools</button>)}
+        <div style={{width:1, height:28, background:'var(--slate-200)', margin:'0 4px'}} />
+        <div style={{fontSize:'0.78rem', fontWeight:500, color:'var(--slate-500)', cursor:'pointer', transition:'color .2s'}} onClick={() => navigate('/')} onMouseOver={e => e.target.style.color='var(--pwc-orange)'} onMouseOut={e => e.target.style.color='var(--slate-500)'}>VAT on Property</div>
+        {!isHome && currentTool && (
+          <>
+            <span style={{fontSize:'0.72rem', color:'var(--slate-300)', margin:'0 2px'}}>›</span>
+            <span style={{fontSize:'0.78rem', fontWeight:600, color:'var(--slate-700)'}}>{currentTool.title}</span>
+          </>
+        )}
+        {!isHome && (
+          <button onClick={() => navigate('/')} style={{marginLeft:'auto', padding:'7px 18px', background:'var(--slate-50)', border:'1.5px solid var(--slate-200)', borderRadius:10, fontSize:'0.74rem', fontWeight:600, color:'var(--slate-500)', cursor:'pointer', display:'inline-flex', alignItems:'center', gap:6, transition:'all .25s'}} onMouseOver={e => {e.currentTarget.style.borderColor='var(--pwc-orange)'; e.currentTarget.style.color='var(--pwc-orange)'; e.currentTarget.style.background='var(--pwc-orange-soft)'}} onMouseOut={e => {e.currentTarget.style.borderColor='var(--slate-200)'; e.currentTarget.style.color='var(--slate-500)'; e.currentTarget.style.background='var(--slate-50)'}}>← All Tools</button>
+        )}
       </div>
     </div>
   );
@@ -404,15 +381,13 @@ function BrandBar({navigate,currentRoute}){
 
 function PageHero({badge,title,description}){
   return(
-    <div style={{background:'linear-gradient(135deg, #e8600a 0%, #f28030 50%, #e86a18 100%)',padding:'40px 40px 36px',borderRadius:22,marginBottom:28,position:'relative',overflow:'hidden',boxShadow:'0 8px 32px rgba(232,96,10,0.2), 0 2px 8px rgba(232,96,10,0.1)'}}>
-      <div style={{position:'absolute',top:-60,right:-40,width:220,height:220,borderRadius:'50%',background:'rgba(255,255,255,0.07)'}}/>
-      <div style={{position:'absolute',bottom:-80,right:100,width:160,height:160,borderRadius:'50%',background:'rgba(255,255,255,0.05)'}}/>
-      <div style={{position:'absolute',top:30,right:80,width:80,height:80,borderRadius:'50%',background:'rgba(255,255,255,0.04)'}}/>
-      <div style={{position:'absolute',bottom:0,left:0,right:0,height:3,background:'linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.4), rgba(255,255,255,0.15))'}}/>
+    <div style={{background:'var(--bu-orange100)',padding:'44px 44px 40px',borderRadius:22,marginBottom:28,position:'relative',overflow:'hidden',boxShadow:'0 8px 32px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08)'}}>
+      <div style={{position:'absolute',top:0,left:0,right:0,height:4,background:'linear-gradient(90deg, var(--pwc-orange), var(--pwc-orange-light), var(--pwc-orange))'}}/>
+      <div style={{position:'absolute',bottom:0,left:0,width:'35%',height:3,background:'var(--pwc-orange)',opacity:0.5}}/>
       <div style={{position:'relative'}}>
-        <div style={{display:'inline-flex',alignItems:'center',gap:6,padding:'5px 14px',background:'rgba(255,255,255,0.15)',borderRadius:8,marginBottom:18,fontSize:'0.72rem',fontWeight:600,color:'rgba(255,255,255,0.92)',textTransform:'uppercase',letterSpacing:.8,backdropFilter:'blur(8px)'}}>{badge}</div>
-        <h1 style={{fontSize:'1.9rem',fontWeight:800,color:'white',marginBottom:12,lineHeight:1.25,letterSpacing:'-0.03em',maxWidth:560}}>{title}</h1>
-        <p style={{color:'rgba(255,255,255,0.8)',fontSize:'0.9rem',maxWidth:540,lineHeight:1.7,fontWeight:400}}>{description}</p>
+        <div style={{display:'inline-flex',alignItems:'center',gap:6,padding:'5px 14px',background:'rgba(208,74,2,0.15)',borderRadius:8,marginBottom:18,fontSize:'0.72rem',fontWeight:600,color:'var(--pwc-orange-light)',textTransform:'uppercase',letterSpacing:.8,border:'1px solid rgba(208,74,2,0.2)'}}>{badge}</div>
+        <h1 style={{fontSize:'1.9rem',fontWeight:800,color:'black',marginBottom:12,lineHeight:1.25,letterSpacing:'-0.03em',maxWidth:560}}>{title}</h1>
+        <p style={{color:'var(--bu-black)',fontSize:'0.9rem',maxWidth:540,lineHeight:1.7,fontWeight:400}}>{description}</p>
       </div>
     </div>
   );
@@ -423,53 +398,73 @@ function ProgressBar({answered,total,isComplete}){
   return(
     <div style={{display:'flex',alignItems:'center',gap:14,marginBottom:26,padding:'0 4px'}}>
       <span style={{fontSize:'0.7rem',fontWeight:600,color:'var(--slate-400)',textTransform:'uppercase',letterSpacing:.8,whiteSpace:'nowrap'}}>Progress</span>
-      <div style={{background:'var(--slate-200)',borderRadius:99,height:4,flex:1,overflow:'hidden'}}>
-        <div style={{background:isComplete?'linear-gradient(90deg, var(--green), #22c55e)':'linear-gradient(90deg, var(--orange), #f59e0b)',height:'100%',borderRadius:99,transition:'width .6s cubic-bezier(.21,1.02,.73,1)',width:`${pct}%`}}/>
+      <div style={{background:'var(--slate-200)',borderRadius:99,height:5,flex:1,overflow:'hidden',position:'relative'}}>
+        <div style={{background:isComplete?'linear-gradient(90deg, var(--green), #22c55e)':'linear-gradient(90deg, var(--pwc-orange), var(--pwc-orange-light))',height:'100%',borderRadius:99,transition:'width .6s cubic-bezier(.21,1.02,.73,1)',width:`${pct}%`,position:'relative'}}>
+          {!isComplete&&pct>5&&<div style={{position:'absolute',right:0,top:-1,width:8,height:8,borderRadius:99,background:'white',border:'2px solid var(--pwc-orange)',boxShadow:'0 0 8px rgba(208,74,2,0.3)'}}/>}
+        </div>
       </div>
-      <span style={{fontSize:'0.72rem',fontWeight:600,color:isComplete?'var(--green)':'var(--slate-400)',whiteSpace:'nowrap'}}>{isComplete?'✓ Complete':`${answered} of ~${total}`}</span>
+      <span style={{fontSize:'0.72rem',fontWeight:600,color:isComplete?'var(--green)':'var(--slate-400)',whiteSpace:'nowrap'}}>{isComplete?'✅ Complete':`${answered} of ~${total}`}</span>
     </div>
   );
 }
 
-function Footer(){return(<div style={{marginTop:40,padding:'16px 24px',background:'white',border:'1px solid var(--slate-200)',borderRadius:14,fontSize:'0.75rem',color:'var(--slate-400)',textAlign:'center',lineHeight:1.65}}>This tool is for informational purposes only and does not constitute tax advice. Based on VATCA 2010 and Finance Act 2025.</div>)}
+function Footer(){return(<div style={{marginTop:40,padding:'18px 24px',background:'white',border:'1px solid var(--slate-200)',borderRadius:14,fontSize:'0.75rem',color:'var(--slate-400)',textAlign:'center',lineHeight:1.65}}>This tool is for informational purposes only and does not constitute tax advice. Based on VATCA 2010 and Finance Act 2025. © 2025 PricewaterhouseCoopers. All rights reserved.</div>)}
 
-function StartOverButton({onClick}){return(<div style={{textAlign:'center',marginTop:20}}><button onClick={onClick} style={{padding:'10px 28px',background:'white',color:'var(--slate-500)',border:'1.5px solid var(--slate-200)',borderRadius:12,fontSize:'0.82rem',fontWeight:600,cursor:'pointer',transition:'all .25s'}} onMouseOver={e=>{e.target.style.borderColor='var(--orange)';e.target.style.color='var(--orange)';e.target.style.background='var(--orange-soft)'}} onMouseOut={e=>{e.target.style.borderColor='var(--slate-200)';e.target.style.color='var(--slate-500)';e.target.style.background='white'}}>↻ Start Over</button></div>)}
+function StartOverButton({onClick}){
+  const {addRipple,RippleElements}=useRipple();
+  return(<div style={{textAlign:'center',marginTop:20}}><button onClick={(e)=>{addRipple(e);onClick()}} style={{padding:'10px 28px',background:'white',color:'var(--slate-500)',border:'1.5px solid var(--slate-200)',borderRadius:12,fontSize:'0.82rem',fontWeight:600,cursor:'pointer',transition:'all .25s',position:'relative',overflow:'hidden'}} onMouseOver={e=>{e.target.style.borderColor='var(--pwc-orange)';e.target.style.color='var(--pwc-orange)';e.target.style.background='var(--pwc-orange-soft)'}} onMouseOut={e=>{e.target.style.borderColor='var(--slate-200)';e.target.style.color='var(--slate-500)';e.target.style.background='white'}}><div className="ripple-container">{RippleElements}</div>↻ Start Over</button></div>);
+}
 
-function LegislationLink({legKey,isOpen,onToggle}){const leg=LEGISLATION[legKey];if(!leg)return null;return(<button onClick={onToggle} style={{background:isOpen?'var(--slate-900)':'var(--slate-50)',border:`1px solid ${isOpen?'var(--slate-900)':'var(--slate-200)'}`,color:isOpen?'white':'var(--slate-600)',padding:'6px 14px',borderRadius:10,fontSize:'0.74rem',fontWeight:600,cursor:'pointer',display:'inline-flex',alignItems:'center',gap:6,marginBottom:10,transition:'all .25s'}}>📖 {isOpen?'Hide':'View'} s{leg.section} VATCA</button>)}
+function LegislationLink({legKey,isOpen,onToggle}){const leg=LEGISLATION[legKey];if(!leg)return null;return(<button onClick={onToggle} style={{background:isOpen?'var(--pwc-dark)':'var(--slate-50)',border:`1px solid ${isOpen?'var(--pwc-dark)':'var(--slate-200)'}`,color:isOpen?'white':'var(--slate-600)',padding:'6px 14px',borderRadius:10,fontSize:'0.74rem',fontWeight:600,cursor:'pointer',display:'inline-flex',alignItems:'center',gap:6,marginBottom:10,transition:'all .25s'}}>📖 {isOpen?'Hide':'View'} s{leg.section} VATCA</button>)}
 
-function LegislationPanel({legKey,onClose}){const leg=LEGISLATION[legKey];if(!leg)return null;return(<div className="leg-panel fade-up" style={{marginTop:14}}><div className="leg-panel-header"><span>📖 {leg.title}</span><button onClick={onClose} style={{background:'rgba(255,255,255,0.1)',border:'none',color:'white',width:28,height:28,borderRadius:8,cursor:'pointer',fontSize:'0.8rem',display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button></div><div className="leg-panel-body" dangerouslySetInnerHTML={{__html:leg.text}}/></div>)}
+function LegislationPanel({legKey,onClose}){const leg=LEGISLATION[legKey];if(!leg)return null;return(<div className="leg-panel fade-up" style={{marginTop:14}}><div className="leg-panel-header"><span>📖 {leg.title}</span><button onClick={onClose} style={{background:'rgba(255,255,255,0.1)',border:'none',color:'white',width:28,height:28,borderRadius:8,cursor:'pointer',fontSize:'0.8rem',display:'flex',alignItems:'center',justifyContent:'center',transition:'background .2s'}} onMouseOver={e=>e.target.style.background='rgba(255,255,255,0.2)'} onMouseOut={e=>e.target.style.background='rgba(255,255,255,0.1)'}>✕</button></div><div className="leg-panel-body" dangerouslySetInnerHTML={{__html:leg.text}}/></div>)}
 
 function GlossaryTerm({termKey}){const [show,setShow]=useState(false);const g=GLOSSARY[termKey];if(!g)return <span>{termKey}</span>;return(<span className="tooltip-wrap" onMouseEnter={()=>setShow(true)} onMouseLeave={()=>setShow(false)}><span className="def-term" style={{fontStyle:'italic'}}>"{g.term}"</span>{show&&(<div className="tooltip-box"><div style={{fontWeight:700,marginBottom:6,fontSize:'0.82rem'}}>{g.term}</div><div style={{opacity:0.6,fontSize:'0.7rem',marginBottom:8}}>{g.source}</div><div style={{lineHeight:1.75}}>{g.definition}</div></div>)}</span>)}
 
-function InfoToggle({html}){const [open,setOpen]=useState(false);if(!html)return null;return(<><button onClick={()=>setOpen(!open)} style={{background:'none',border:'none',color:'var(--orange)',fontSize:'0.78rem',cursor:'pointer',padding:'2px 0',display:'flex',alignItems:'center',gap:5,fontWeight:500,marginBottom:8,opacity:.85,transition:'opacity .2s'}} onMouseOver={e=>e.target.style.opacity=1} onMouseOut={e=>e.target.style.opacity=.85}><span style={{display:'inline-block',transition:'transform .2s',transform:open?'rotate(90deg)':'rotate(0)',fontSize:'0.7rem'}}>▶</span>{open?'Hide detail':'Why does this matter?'}</button>{open&&<div className="fade-up" style={{background:'var(--slate-50)',borderRadius:12,padding:'16px 18px',marginBottom:12,fontSize:'0.8rem',color:'var(--slate-600)',border:'1px solid var(--slate-200)',lineHeight:1.8}} dangerouslySetInnerHTML={{__html:html}}/>}</>)}
+function InfoToggle({html}){const [open,setOpen]=useState(false);if(!html)return null;return(<><button onClick={()=>setOpen(!open)} style={{background:'none',border:'none',color:'var(--pwc-orange)',fontSize:'0.78rem',cursor:'pointer',padding:'2px 0',display:'flex',alignItems:'center',gap:5,fontWeight:500,marginBottom:8,opacity:.85,transition:'all .2s'}} onMouseOver={e=>e.target.style.opacity=1} onMouseOut={e=>e.target.style.opacity=.85}><span style={{display:'inline-block',transition:'transform .25s cubic-bezier(.21,1.02,.73,1)',transform:open?'rotate(90deg)':'rotate(0)',fontSize:'0.7rem'}}>▶</span>{open?'Hide detail':'Why does this matter?'}</button>{open&&<div className="fade-up" style={{background:'var(--pwc-warm-grey)',borderRadius:12,padding:'16px 18px',marginBottom:12,fontSize:'0.8rem',color:'var(--slate-600)',border:'1px solid var(--slate-200)',lineHeight:1.8}} dangerouslySetInnerHTML={{__html:html}}/>}</>)}
 
-function AnswerBadge({isYes,label}){return(<span style={{fontSize:'0.68rem',fontWeight:600,padding:'4px 10px',borderRadius:8,flexShrink:0,textTransform:'uppercase',letterSpacing:.4,background:isYes?'var(--green-soft)':'var(--red-soft)',color:isYes?'var(--green)':'var(--red)',minWidth:52,textAlign:'center'}}>{label}</span>)}
+function AnswerBadge({isYes,label}){
+  const [animate,setAnimate]=useState(false);
+  useEffect(()=>{setAnimate(true);const t=setTimeout(()=>setAnimate(false),400);return()=>clearTimeout(t)},[label]);
+  return(<span style={{fontSize:'0.68rem',fontWeight:600,padding:'4px 10px',borderRadius:8,flexShrink:0,textTransform:'uppercase',letterSpacing:.4,background:isYes?'var(--green-soft)':'var(--red-soft)',color:isYes?'var(--green)':'var(--red)',minWidth:52,textAlign:'center',display:'inline-flex',alignItems:'center',gap:4,transform:animate?'scale(1.1)':'scale(1)',transition:'transform .3s cubic-bezier(.21,1.02,.73,1)'}}>{isYes?'✅':'❌'} {label}</span>)
+}
 
-function NumberBadge({num,isAnswered,isYes,isActive}){return(<div style={{width:32,height:32,borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.78rem',fontWeight:700,flexShrink:0,transition:'all .3s',color:'white',background:isAnswered?(isYes?'var(--green)':'var(--slate-500)'):isActive?'var(--orange)':'var(--slate-300)'}}>{isAnswered?(isYes?'✓':'✗'):num}</div>)}
+function NumberBadge({num,isAnswered,isYes,isActive}){
+  return(<div style={{width:34,height:34,borderRadius:10,display:'flex',alignItems:'center',justifyContent:'center',fontSize:isAnswered?'1rem':'0.78rem',fontWeight:700,flexShrink:0,transition:'all .35s cubic-bezier(.21,1.02,.73,1)',color:'white',background:isAnswered?(isYes?'var(--green)':'var(--red)'):isActive?'var(--pwc-orange)':'var(--slate-300)',transform:isAnswered?'scale(1)':'scale(1)',animation:isAnswered?'checkBounce .4s cubic-bezier(.21,1.02,.73,1)':'none',boxShadow:isActive&&!isAnswered?'0 2px 12px rgba(208,74,2,0.25)':'none'}}>{isAnswered?(isYes?'✅':'❌'):num}</div>)
+}
 
-function YesNoButtons({value,yesLabel,noLabel,onYes,onNo}){return(<div style={{display:'flex',gap:10}}><button onClick={onYes} style={{padding:'12px 18px',borderRadius:12,border:'1.5px solid',fontSize:'0.84rem',fontWeight:500,cursor:'pointer',flex:1,textAlign:'center',transition:'all .25s cubic-bezier(.21,1.02,.73,1)',background:value==='Yes'?'var(--green-soft)':'white',borderColor:value==='Yes'?'var(--green)':'var(--slate-200)',color:value==='Yes'?'var(--green)':'var(--slate-600)',boxShadow:value==='Yes'?'0 2px 12px rgba(22,163,74,0.1)':'0 1px 3px rgba(0,0,0,0.04)'}}>✓ {yesLabel}</button><button onClick={onNo} style={{padding:'12px 18px',borderRadius:12,border:'1.5px solid',fontSize:'0.84rem',fontWeight:500,cursor:'pointer',flex:1,textAlign:'center',transition:'all .25s cubic-bezier(.21,1.02,.73,1)',background:value==='No'?'var(--red-soft)':'white',borderColor:value==='No'?'var(--red)':'var(--slate-200)',color:value==='No'?'#b91c1c':'var(--slate-600)',boxShadow:value==='No'?'0 2px 12px rgba(220,38,38,0.08)':'0 1px 3px rgba(0,0,0,0.04)'}}>✗ {noLabel}</button></div>)}
+function YesNoButtons({value,yesLabel,noLabel,onYes,onNo}){
+  const {addRipple:addRippleYes,RippleElements:RippleYes}=useRipple();
+  const {addRipple:addRippleNo,RippleElements:RippleNo}=useRipple();
+  return(
+    <div style={{display:'flex',gap:10}}>
+      <button onClick={(e)=>{addRippleYes(e);onYes()}} style={{padding:'13px 18px',borderRadius:12,border:'1.5px solid',fontSize:'0.84rem',fontWeight:500,cursor:'pointer',flex:1,textAlign:'center',transition:'all .3s cubic-bezier(.21,1.02,.73,1)',position:'relative',overflow:'hidden',background:value==='Yes'?'var(--green-soft)':'white',borderColor:value==='Yes'?'var(--green)':'var(--slate-200)',color:value==='Yes'?'var(--green)':'var(--slate-600)',boxShadow:value==='Yes'?'0 4px 16px rgba(22,163,74,0.12)':'0 1px 3px rgba(0,0,0,0.04)',transform:value==='Yes'?'scale(1.02)':'scale(1)'}} onMouseOver={e=>{if(value!=='Yes'){e.currentTarget.style.borderColor='var(--green)';e.currentTarget.style.background='#fafff7'}}} onMouseOut={e=>{if(value!=='Yes'){e.currentTarget.style.borderColor='var(--slate-200)';e.currentTarget.style.background='white'}}}><div className="ripple-container">{RippleYes}</div>✅ {yesLabel}</button>
+      <button onClick={(e)=>{addRippleNo(e);onNo()}} style={{padding:'13px 18px',borderRadius:12,border:'1.5px solid',fontSize:'0.84rem',fontWeight:500,cursor:'pointer',flex:1,textAlign:'center',transition:'all .3s cubic-bezier(.21,1.02,.73,1)',position:'relative',overflow:'hidden',background:value==='No'?'var(--red-soft)':'white',borderColor:value==='No'?'var(--red)':'var(--slate-200)',color:value==='No'?'#b91c1c':'var(--slate-600)',boxShadow:value==='No'?'0 4px 16px rgba(220,38,38,0.1)':'0 1px 3px rgba(0,0,0,0.04)',transform:value==='No'?'scale(1.02)':'scale(1)'}} onMouseOver={e=>{if(value!=='No'){e.currentTarget.style.borderColor='var(--red)';e.currentTarget.style.background='#fff8f8'}}} onMouseOut={e=>{if(value!=='No'){e.currentTarget.style.borderColor='var(--slate-200)';e.currentTarget.style.background='white'}}}><div className="ripple-container">{RippleNo}</div>❌ {noLabel}</button>
+    </div>
+  );
+}
 
-function ChoiceButtons({choices,value,onSelect}){return(<div style={{display:'flex',gap:10,flexWrap:'wrap'}}>{choices.map(c=>{const sel=value===c.value;return(<button key={c.value} onClick={()=>onSelect(c.value)} style={{padding:'12px 18px',borderRadius:12,border:'1.5px solid',fontSize:'0.84rem',fontWeight:500,cursor:'pointer',flex:1,minWidth:160,textAlign:'left',transition:'all .25s cubic-bezier(.21,1.02,.73,1)',background:sel?'var(--orange-soft)':'white',borderColor:sel?'var(--orange)':'var(--slate-200)',color:sel?'var(--orange-dark)':'var(--slate-600)',boxShadow:sel?'0 2px 12px rgba(232,96,10,0.1)':'0 1px 3px rgba(0,0,0,0.04)',display:'flex',alignItems:'center',gap:10}}><span style={{fontSize:'1.1rem'}}>{c.icon}</span>{c.label}</button>)})}</div>)}
+function ChoiceButtons({choices,value,onSelect}){return(<div style={{display:'flex',gap:10,flexWrap:'wrap'}}>{choices.map(c=>{const sel=value===c.value;return(<button key={c.value} onClick={()=>onSelect(c.value)} style={{padding:'13px 18px',borderRadius:12,border:'1.5px solid',fontSize:'0.84rem',fontWeight:500,cursor:'pointer',flex:1,minWidth:160,textAlign:'left',transition:'all .3s cubic-bezier(.21,1.02,.73,1)',background:sel?'var(--pwc-orange-soft)':'white',borderColor:sel?'var(--pwc-orange)':'var(--slate-200)',color:sel?'var(--pwc-orange-dark)':'var(--slate-600)',boxShadow:sel?'0 4px 16px rgba(208,74,2,0.1)':'0 1px 3px rgba(0,0,0,0.04)',display:'flex',alignItems:'center',gap:10,transform:sel?'scale(1.02)':'scale(1)'}} onMouseOver={e=>{if(!sel){e.currentTarget.style.borderColor='var(--pwc-orange)';e.currentTarget.style.background='var(--pwc-orange-softer)'}}} onMouseOut={e=>{if(!sel){e.currentTarget.style.borderColor='var(--slate-200)';e.currentTarget.style.background='white'}}}><span style={{fontSize:'1.1rem'}}>{c.icon}</span>{c.label}</button>)})}</div>)}
 
 function QuestionCard({qId,num,questions,state:s,isActive,isAnswered,onAnswer}){
   const [legOpen,setLegOpen]=useState(null);const q=questions[qId];const val=s[qId];
   const isYes=q.type==='choice'?(q.choices[0]&&val===q.choices[0].value):val==='Yes';
   const isNo=q.type==='choice'?(q.choices[1]&&val===q.choices[1].value):val==='No';
-  const border=isActive&&!isAnswered?'var(--orange)':isAnswered&&isYes?'var(--green-muted)':isAnswered&&isNo?'var(--slate-300)':'transparent';
-  const leftBorder=isActive&&!isAnswered?'var(--orange)':isAnswered&&isYes?'var(--green)':isAnswered&&isNo?'var(--slate-400)':'var(--slate-200)';
+  const border=isActive&&!isAnswered?'var(--pwc-orange)':isAnswered&&isYes?'var(--green-muted)':isAnswered&&isNo?'var(--red-border)':'transparent';
+  const leftBorder=isActive&&!isAnswered?'var(--pwc-orange)':isAnswered&&isYes?'var(--green)':isAnswered&&isNo?'var(--red)':'var(--slate-200)';
   const badgeLabel=q.type==='choice'?(q.choices.find(c=>c.value===val)?.shortLabel||val):val;
   return(
-    <div className={isActive&&!isAnswered?'fade-up':''} style={{background:'white',borderRadius:16,marginBottom:14,border:`1.5px solid ${border}`,borderLeft:`4px solid ${leftBorder}`,boxShadow:isActive&&!isAnswered?'0 8px 32px rgba(232,96,10,0.08), 0 2px 8px rgba(0,0,0,0.04)':'0 1px 4px rgba(0,0,0,0.03)',transition:'all .35s cubic-bezier(.21,1.02,.73,1)',opacity:isActive||isAnswered?1:0.35,pointerEvents:isActive||isAnswered?'auto':'none',animation:isActive&&!isAnswered?'breathe 3s ease-in-out infinite':'none'}}>
+    <div className={isActive&&!isAnswered?'fade-up':''} style={{background:'white',borderRadius:16,marginBottom:14,border:`1.5px solid ${border}`,borderLeft:`4px solid ${leftBorder}`,boxShadow:isActive&&!isAnswered?'0 8px 32px rgba(208,74,2,0.08), 0 2px 8px rgba(0,0,0,0.04)':'0 1px 4px rgba(0,0,0,0.03)',transition:'all .35s cubic-bezier(.21,1.02,.73,1)',opacity:isActive||isAnswered?1:0.3,pointerEvents:isActive||isAnswered?'auto':'none',animation:isActive&&!isAnswered?'breathe 3s ease-in-out infinite':'none'}}>
       <div style={{padding:'18px 22px',display:'flex',alignItems:'flex-start',gap:14}}>
         <NumberBadge num={num} isAnswered={isAnswered} isYes={isYes} isActive={isActive}/>
         <div style={{flex:1,minWidth:0}}>
-          <div style={{fontSize:'0.92rem',fontWeight:600,color:'var(--slate-900)',lineHeight:1.5,letterSpacing:'-0.01em'}}>{q.title}</div>
+          <div style={{fontSize:'0.92rem',fontWeight:600,color:'var(--pwc-black)',lineHeight:1.5,letterSpacing:'-0.01em'}}>{q.title}</div>
           {q.description&&<div style={{fontSize:'0.8rem',color:'var(--slate-500)',marginTop:4,lineHeight:1.55}}>{q.description}</div>}
           {q.glossaryTerms&&q.glossaryTerms.length>0&&(isActive||isAnswered)&&(<div style={{display:'flex',flexWrap:'wrap',gap:6,marginTop:10}}>{q.glossaryTerms.map(t=>(<span key={t} style={{display:'inline-flex'}}><GlossaryTerm termKey={t}/></span>))}</div>)}
         </div>
         {isAnswered&&<AnswerBadge isYes={isYes} label={badgeLabel}/>}
       </div>
-      {(isActive||isAnswered)&&(<div style={{padding:'0 22px 20px',paddingLeft:68}}>
+      {(isActive||isAnswered)&&(<div style={{padding:'0 22px 20px',paddingLeft:70}}>
         <InfoToggle html={q.info}/>
         {q.legRef&&(<><LegislationLink legKey={q.legRef} isOpen={legOpen===q.legRef} onToggle={()=>setLegOpen(legOpen===q.legRef?null:q.legRef)}/>{legOpen===q.legRef&&<LegislationPanel legKey={q.legRef} onClose={()=>setLegOpen(null)}/>}</>)}
         <div style={{marginTop:legOpen?14:4}}>
@@ -480,38 +475,92 @@ function QuestionCard({qId,num,questions,state:s,isActive,isAnswered,onAnswer}){
   );
 }
 
-function AnswerPanel({state:s,flow,getOutcomeFn,answersDb,trailLabels,celebrateTrigger}){
+/* ═══════════════════════════════════════════════
+   STATUS TRACKER COMPONENT
+   ═══════════════════════════════════════════════ */
+function StatusTracker({flow,questions,state,trailLabels}){
+  const nextUnanswered=flow.find(q=>state[q]===undefined);
+  return(
+    <div style={{marginBottom:20,paddingBottom:18,borderBottom:'1px solid var(--slate-200)'}}>
+      <div style={{fontSize:'0.7rem',fontWeight:700,color:'var(--slate-400)',textTransform:'uppercase',letterSpacing:1,marginBottom:10,display:'flex',alignItems:'center',gap:6}}>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--slate-400)" strokeWidth="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        Current Status
+      </div>
+      {flow.map((qId,idx)=>{
+        const val=state[qId];
+        const isAnswered=val!==undefined;
+        const isCurrent=qId===nextUnanswered;
+        const isPending=!isAnswered&&!isCurrent;
+        const isYes=questions[qId].type==='choice'?(questions[qId].choices[0]&&val===questions[qId].choices[0].value):val==='Yes';
+        const label=trailLabels[qId]||qId;
+        const displayVal=questions[qId].type==='choice'?(questions[qId].choices.find(c=>c.value===val)?.shortLabel||val):val;
+
+        let className='status-item';
+        if(isAnswered&&isYes)className+=' answered';
+        else if(isAnswered)className+=' answered-no';
+        else if(isCurrent)className+=' current';
+        else className+=' pending';
+
+        return(
+          <div key={qId} className={className} style={{animationDelay:`${idx*0.05}s`}}>
+            <span className="status-icon">
+              {isAnswered?(isYes?'✅':'❌'):isCurrent?'⏳':'⬜'}
+            </span>
+            <span className="status-label" style={{color:isPending?'var(--slate-400)':'var(--slate-700)'}}>{label}</span>
+            <span className="status-value" style={{
+              color:isAnswered?(isYes?'var(--green)':'var(--red)'):isCurrent?'var(--pwc-orange)':'var(--slate-400)'
+            }}>
+              {isAnswered?displayVal:isCurrent?'Awaiting...':'TBC'}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function AnswerPanel({state:s,flow,questions,getOutcomeFn,answersDb,trailLabels,celebrateTrigger}){
   const outcome=getOutcomeFn(s);const answer=outcome?answersDb[outcome]:null;
   const [animKey,setAnimKey]=useState(0);const [legOpen,setLegOpen]=useState(null);const prev=useRef(null);
   useEffect(()=>{if(outcome!==prev.current){setAnimKey(k=>k+1);setLegOpen(null);prev.current=outcome}},[outcome]);
+  const hasAnyAnswer=Object.keys(s).length>0;
   return(
     <div className="answer-sticky" style={{position:'sticky',top:24,borderRadius:20,overflow:'hidden',background:'white',boxShadow:'0 1px 4px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06)',border:'1px solid var(--slate-200)',maxHeight:'calc(100vh - 48px)',display:'flex',flexDirection:'column',transition:'box-shadow .3s'}}>
-      <div style={{background:'linear-gradient(135deg, #e8600a 0%, #f07a28 100%)',padding:'18px 24px',display:'flex',alignItems:'center',gap:12,flexShrink:0,position:'relative',overflow:'hidden'}}>
-        <div style={{position:'absolute',top:-30,right:-20,width:120,height:120,borderRadius:'50%',background:'rgba(255,255,255,0.08)'}}/>
-        <div style={{position:'absolute',bottom:-40,right:60,width:80,height:80,borderRadius:'50%',background:'rgba(255,255,255,0.05)'}}/>
-        <div style={{width:36,height:36,borderRadius:10,background:'rgba(255,255,255,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1rem',backdropFilter:'blur(8px)',position:'relative'}}>📋</div>
+      <div style={{background:'var(--bu-orange100)',padding:'18px 24px',display:'flex',alignItems:'center',gap:12,flexShrink:0,position:'relative',overflow:'hidden'}}>
+        <div style={{position:'absolute',top:0,left:0,right:0,height:3,background:'linear-gradient(90deg, var(--pwc-orange), var(--pwc-orange-light), var(--pwc-orange))'}}/>
+        <GeometricBg style={{position:'absolute',right:-60,top:-60,width:200,height:200,opacity:0.04}}/>
+        <div style={{width:36,height:36,borderRadius:10,background:'rgba(208,74,2,0.2)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1rem',position:'relative',border:'1px solid rgba(208,74,2,0.3)'}}>📋</div>
         <div style={{position:'relative'}}>
           <div style={{color:'white',fontSize:'0.95rem',fontWeight:700,letterSpacing:'-0.01em'}}>VAT Analysis</div>
-          <div style={{color:'rgba(255,255,255,0.75)',fontSize:'0.72rem',fontWeight:500,marginTop:1}}>{answer?'Outcome determined':'Awaiting your input'}</div>
+          <div style={{color:'rgba(255,255,255,0.5)',fontSize:'0.72rem',fontWeight:500,marginTop:1}}>{answer?'Outcome determined':hasAnyAnswer?'In progress…':'Awaiting your input'}</div>
         </div>
+        {answer&&<div style={{marginLeft:'auto',width:10,height:10,borderRadius:99,background:'var(--green)',boxShadow:'0 0 8px rgba(22,163,74,0.5)',animation:'pulseGlow 2s ease-in-out infinite'}}/>}
       </div>
       <div style={{padding:22,overflowY:'auto',flex:1,position:'relative'}}>
-        {/* Stamp + Sparkles inside the panel */}
         {answer&&<StampOverlay trigger={celebrateTrigger} tag={answer.tag}/>}
         {answer&&<SparkleParticles trigger={celebrateTrigger}/>}
-        {!answer?(
-          <div style={{textAlign:'center',padding:'52px 16px'}}>
-            <div style={{width:72,height:72,borderRadius:20,margin:'0 auto 20px',background:'var(--slate-100)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.8rem'}}>🔍</div>
-            <p style={{fontSize:'0.95rem',fontWeight:600,color:'var(--slate-700)',marginBottom:8}}>Insufficient information</p>
-            <p style={{fontSize:'0.84rem',color:'var(--slate-400)',lineHeight:1.7,maxWidth:280,margin:'0 auto'}}>Answer the questions to the left and the analysis will appear here.</p>
-            <div style={{display:'flex',justifyContent:'center',gap:6,marginTop:28}}>{[0,1,2].map(i=>(<div key={i} style={{width:5,height:5,borderRadius:99,background:'var(--slate-300)',opacity:.5}}/>))}</div>
+
+        {/* Status Tracker — always show when we have flow */}
+        {flow.length>0&&(
+          <StatusTracker flow={flow} questions={questions} state={s} trailLabels={trailLabels}/>
+        )}
+
+        {!answer&&!hasAnyAnswer?(
+          <div style={{textAlign:'center',padding:'36px 16px'}}>
+            <div style={{width:72,height:72,borderRadius:20,margin:'0 auto 20px',background:'var(--pwc-warm-grey)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.8rem',animation:'float 4s ease-in-out infinite'}}>🔍</div>
+            <p style={{fontSize:'0.95rem',fontWeight:600,color:'var(--slate-700)',marginBottom:8}}>No data yet</p>
+            <p style={{fontSize:'0.84rem',color:'var(--slate-400)',lineHeight:1.7,maxWidth:280,margin:'0 auto'}}>Answer the questions to the left and the analysis will build here in real time.</p>
+            <div style={{display:'flex',justifyContent:'center',gap:8,marginTop:24}}>{[0,1,2].map(i=>(<div key={i} style={{width:6,height:6,borderRadius:99,background:'var(--pwc-orange)',opacity:0.2,animation:`dotPulse 1.4s ${i*0.16}s ease-in-out infinite`}}/>))}</div>
+          </div>
+        ):!answer&&hasAnyAnswer?(
+          <div style={{textAlign:'center',padding:'24px 16px'}}>
+            <div style={{width:56,height:56,borderRadius:16,margin:'0 auto 16px',background:'var(--pwc-orange-soft)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.4rem',border:'1px solid rgba(208,74,2,0.15)'}}>⏳</div>
+            <p style={{fontSize:'0.88rem',fontWeight:600,color:'var(--slate-700)',marginBottom:6}}>Analysis in progress</p>
+            <p style={{fontSize:'0.82rem',color:'var(--slate-400)',lineHeight:1.7,maxWidth:280,margin:'0 auto'}}>Continue answering questions to determine the VAT outcome.</p>
           </div>
         ):(
           <div key={animKey} className="slide-right">
-            <div style={{display:'flex',flexWrap:'wrap',gap:5,marginBottom:16,paddingBottom:16,borderBottom:'1px solid var(--slate-200)'}}>
-              {flow.filter(q=>s[q]!==undefined).map(qId=>{const val=s[qId];const pos=val==='Yes';return(<span key={qId} style={{display:'inline-flex',alignItems:'center',gap:4,padding:'3px 9px',borderRadius:8,fontSize:'0.68rem',fontWeight:600,letterSpacing:.2,background:pos?'var(--green-soft)':'var(--red-soft)',color:pos?'var(--green)':'var(--red)'}}>{trailLabels[qId]||qId}: <strong>{val}</strong></span>)})}
-            </div>
-            <span style={{display:'inline-block',padding:'5px 14px',borderRadius:10,fontSize:'0.74rem',fontWeight:700,marginBottom:18,textTransform:'uppercase',letterSpacing:.3,background:answer.tagBg,color:answer.tagColor,border:`1px solid ${answer.tagColor}22`}}>{answer.tag}</span>
+            <span style={{display:'inline-block',padding:'6px 16px',borderRadius:10,fontSize:'0.76rem',fontWeight:700,marginBottom:18,textTransform:'uppercase',letterSpacing:.3,background:answer.tagBg,color:answer.tagColor,border:`1px solid ${answer.tagColor}22`}}>{answer.tag}</span>
             <div className="answer-content" dangerouslySetInnerHTML={{__html:answer.html}}/>
             {answer.legRefs&&answer.legRefs.length>0&&(<div style={{marginTop:20,paddingTop:18,borderTop:'1px solid var(--slate-200)'}}><div style={{fontSize:'0.72rem',fontWeight:600,color:'var(--slate-500)',textTransform:'uppercase',letterSpacing:.8,marginBottom:10}}>Relevant Legislation</div><div style={{display:'flex',flexWrap:'wrap',gap:8}}>{answer.legRefs.map(ref=>(<Fragment key={ref}><LegislationLink legKey={ref} isOpen={legOpen===ref} onToggle={()=>setLegOpen(legOpen===ref?null:ref)}/></Fragment>))}</div>{legOpen&&<LegislationPanel legKey={legOpen} onClose={()=>setLegOpen(null)}/>}</div>)}
           </div>
@@ -528,36 +577,36 @@ function HomePage({navigate}){
   const liveCount=TOOLS.filter(t=>t.route).length;const soonCount=TOOLS.filter(t=>!t.route).length;
   return(
     <div style={{maxWidth:1320,margin:'0 auto',padding:'28px 24px 80px'}}>
-      <div style={{background:'linear-gradient(135deg, #e8600a 0%, #f28030 50%, #e86a18 100%)',padding:'52px 48px 48px',borderRadius:22,marginBottom:36,position:'relative',overflow:'hidden',boxShadow:'0 8px 32px rgba(232,96,10,0.2), 0 2px 8px rgba(232,96,10,0.1)'}}>
-        <div style={{position:'absolute',top:-60,right:-40,width:220,height:220,borderRadius:'50%',background:'rgba(255,255,255,0.07)'}}/>
-        <div style={{position:'absolute',bottom:-80,right:100,width:160,height:160,borderRadius:'50%',background:'rgba(255,255,255,0.05)'}}/>
-        <div style={{position:'absolute',top:30,right:80,width:80,height:80,borderRadius:'50%',background:'rgba(255,255,255,0.04)'}}/>
-        <div style={{position:'absolute',bottom:0,left:0,right:0,height:3,background:'linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.4), rgba(255,255,255,0.15))'}}/>
+      <div style={{background:'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 40%, #3a3a3a 100%)',padding:'56px 52px 52px',borderRadius:22,marginBottom:36,position:'relative',overflow:'hidden',boxShadow:'0 8px 32px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08)'}}>
+        <div style={{position:'absolute',top:0,left:0,right:0,height:4,background:'linear-gradient(90deg, var(--pwc-orange), var(--pwc-orange-light), var(--pwc-orange))'}}/>
+        <PropertyVector style={{position:'absolute',right:20,top:0,width:350,height:350}}/>
+        <GeometricBg style={{position:'absolute',left:-100,bottom:-100,width:400,height:400}}/>
+        <div style={{position:'absolute',bottom:0,left:0,width:'40%',height:3,background:'var(--pwc-orange)',opacity:0.4}}/>
         <div style={{position:'relative'}}>
-          <div style={{display:'inline-flex',alignItems:'center',gap:6,padding:'5px 14px',background:'rgba(255,255,255,0.15)',borderRadius:8,marginBottom:20,fontSize:'0.72rem',fontWeight:600,color:'rgba(255,255,255,0.92)',textTransform:'uppercase',letterSpacing:.8,backdropFilter:'blur(8px)'}}>🏠 VAT on Property · Tool Suite</div>
-          <h1 style={{fontSize:'2.2rem',fontWeight:800,color:'white',marginBottom:14,lineHeight:1.2,letterSpacing:'-0.03em',maxWidth:600}}>VAT on Property</h1>
-          <p style={{color:'rgba(255,255,255,0.8)',fontSize:'0.94rem',maxWidth:560,lineHeight:1.75,fontWeight:400}}>Interactive decision tools for Irish VAT on property transactions. Select a tool below to get started.</p>
-          <div style={{display:'flex',gap:24,marginTop:28}}>
-            <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{width:8,height:8,borderRadius:99,background:'rgba(255,255,255,0.4)'}}/><span style={{fontSize:'0.78rem',color:'rgba(255,255,255,0.7)',fontWeight:500}}>{TOOLS.length} tools</span></div>
-            <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{width:8,height:8,borderRadius:99,background:'#4ade80'}}/><span style={{fontSize:'0.78rem',color:'rgba(255,255,255,0.7)',fontWeight:500}}>{liveCount} live</span></div>
-            <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{width:8,height:8,borderRadius:99,background:'rgba(255,255,255,0.25)'}}/><span style={{fontSize:'0.78rem',color:'rgba(255,255,255,0.7)',fontWeight:500}}>{soonCount} coming soon</span></div>
+          <div style={{display:'inline-flex',alignItems:'center',gap:6,padding:'5px 14px',background:'rgba(208,74,2,0.15)',borderRadius:8,marginBottom:22,fontSize:'0.72rem',fontWeight:600,color:'var(--pwc-orange-light)',textTransform:'uppercase',letterSpacing:.8,border:'1px solid rgba(208,74,2,0.2)'}}>🏠 VAT on Property · Tool Suite</div>
+          <h1 style={{fontSize:'2.4rem',fontWeight:900,color:'white',marginBottom:14,lineHeight:1.15,letterSpacing:'-0.04em',maxWidth:600}}>VAT on Property</h1>
+          <p style={{color:'rgba(255,255,255,0.55)',fontSize:'0.94rem',maxWidth:560,lineHeight:1.75,fontWeight:400}}>Interactive decision tools for Irish VAT on property transactions. Select a tool below to get started.</p>
+          <div style={{display:'flex',gap:28,marginTop:32}}>
+            <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{width:8,height:8,borderRadius:99,background:'rgba(255,255,255,0.3)'}}/><span style={{fontSize:'0.78rem',color:'rgba(255,255,255,0.5)',fontWeight:500}}>{TOOLS.length} tools</span></div>
+            <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{width:8,height:8,borderRadius:99,background:'#4ade80'}}/><span style={{fontSize:'0.78rem',color:'rgba(255,255,255,0.5)',fontWeight:500}}>{liveCount} live</span></div>
+            <div style={{display:'flex',alignItems:'center',gap:8}}><span style={{width:8,height:8,borderRadius:99,background:'rgba(255,255,255,0.15)'}}/><span style={{fontSize:'0.78rem',color:'rgba(255,255,255,0.5)',fontWeight:500}}>{soonCount} coming soon</span></div>
           </div>
         </div>
       </div>
-      <div style={{marginBottom:12,padding:'0 4px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-        <h2 style={{fontSize:'1.05rem',fontWeight:700,color:'var(--slate-800)',letterSpacing:'-0.02em'}}>Tools</h2>
+      <div style={{marginBottom:16,padding:'0 4px',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+        <h2 style={{fontSize:'1.05rem',fontWeight:700,color:'var(--pwc-black)',letterSpacing:'-0.02em'}}>Tools</h2>
         <span style={{fontSize:'0.72rem',fontWeight:500,color:'var(--slate-400)',textTransform:'uppercase',letterSpacing:.6}}>VATCA 2010 · Finance Act 2025</span>
       </div>
       <div className="home-grid" style={{display:'grid',gridTemplateColumns:'repeat(3, 1fr)',gap:20}}>
         {TOOLS.map((tool,i)=>{const isLive=!!tool.route;return(
-          <div key={tool.id} className={`tool-tile${!isLive?' disabled':''}`} style={{animation:`staggerIn .45s cubic-bezier(.21,1.02,.73,1) ${i*0.07}s both`}} onClick={()=>isLive&&navigate(tool.route)}>
+          <div key={tool.id} className={`tool-tile${!isLive?' disabled':''}`} style={{animation:`staggerIn .5s cubic-bezier(.21,1.02,.73,1) ${i*0.08}s both`}} onClick={()=>isLive&&navigate(tool.route)}>
             <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between'}}>
               <div className="tile-icon" style={{background:tool.iconBg}}>{tool.icon}</div>
               <span style={{fontSize:'0.64rem',fontWeight:700,textTransform:'uppercase',letterSpacing:.6,padding:'3px 10px',borderRadius:6,background:isLive?'var(--green-soft)':'var(--slate-50)',color:tool.tagColor,border:`1px solid ${isLive?'var(--green-muted)':'var(--slate-200)'}`}}>{tool.tag}</span>
             </div>
-            <div><div style={{fontSize:'0.95rem',fontWeight:700,color:'var(--slate-900)',letterSpacing:'-0.01em',lineHeight:1.3}}>{tool.title}</div><div style={{fontSize:'0.72rem',fontWeight:600,color:'var(--orange)',textTransform:'uppercase',letterSpacing:.4,marginTop:3}}>{tool.subtitle}</div></div>
+            <div><div style={{fontSize:'0.95rem',fontWeight:700,color:'var(--pwc-black)',letterSpacing:'-0.01em',lineHeight:1.3}}>{tool.title}</div><div style={{fontSize:'0.72rem',fontWeight:600,color:'var(--pwc-orange)',textTransform:'uppercase',letterSpacing:.4,marginTop:4}}>{tool.subtitle}</div></div>
             <p style={{fontSize:'0.8rem',color:'var(--slate-500)',lineHeight:1.7,flex:1}}>{tool.description}</p>
-            {isLive&&(<div style={{display:'flex',alignItems:'center',gap:6,fontSize:'0.76rem',fontWeight:600,color:'var(--orange)'}}>Open tool <span>→</span></div>)}
+            {isLive&&(<div style={{display:'flex',alignItems:'center',gap:6,fontSize:'0.76rem',fontWeight:600,color:'var(--pwc-orange)',transition:'gap .3s'}}>Open tool <span style={{transition:'transform .3s',display:'inline-block'}}>→</span></div>)}
           </div>
         )})}
       </div>
@@ -567,7 +616,7 @@ function HomePage({navigate}){
 }
 
 /* ═══════════════════════════════════════════════
-   GENERIC TOOL PAGE (shared logic)
+   GENERIC TOOL PAGE
    ═══════════════════════════════════════════════ */
 function ToolPage({badge,title,description,questions,getFlowFn,getOutcomeFn,answersDb,trailLabels}){
   const [state,setState]=useState({});
@@ -577,9 +626,7 @@ function ToolPage({badge,title,description,questions,getFlowFn,getOutcomeFn,answ
   const outcome=getOutcomeFn(state);
 
   useEffect(()=>{
-    if(outcome&&outcome!==prevOutcome.current){
-      setCelebrateTrigger(t=>t+1);
-    }
+    if(outcome&&outcome!==prevOutcome.current)setCelebrateTrigger(t=>t+1);
     prevOutcome.current=outcome;
   },[outcome]);
 
@@ -611,7 +658,7 @@ function ToolPage({badge,title,description,questions,getFlowFn,getOutcomeFn,answ
           })}
           {answered>0&&<StartOverButton onClick={reset}/>}
         </div>
-        <AnswerPanel state={state} flow={flow} getOutcomeFn={getOutcomeFn} answersDb={answersDb} trailLabels={trailLabels} celebrateTrigger={celebrateTrigger}/>
+        <AnswerPanel state={state} flow={flow} questions={questions} getOutcomeFn={getOutcomeFn} answersDb={answersDb} trailLabels={trailLabels} celebrateTrigger={celebrateTrigger}/>
       </div>
       <Footer/>
     </div>
@@ -630,7 +677,7 @@ const LAND_QUESTIONS = {
   q4:{title:'Which best describes the land?',description:'Select the option that applies.',type:'choice',glossaryTerms:[],choices:[{value:'developedOver5',label:'Developed to completion more than 5 years ago',shortLabel:'Dev >5 yrs',icon:'🏗️'},{value:'neverDeveloped',label:'The land has never been developed',shortLabel:'Never dev.',icon:'🌿'}]},
   q5:{title:'Confirm: undeveloped land NOT sold with a development agreement?',description:'You indicated earlier there is no development agreement — please confirm.',glossaryTerms:[],yesLabel:'Confirmed — no development agreement',noLabel:'Actually, there IS a development agreement'},
   q6:{title:'Will the Joint Option to Tax (JOTT) be exercised?',description:'Under s94(5), vendor and purchaser can jointly opt to make an exempt supply taxable.',legRef:'s94_5',glossaryTerms:['joint option for taxation','taxable person'],info:`Both parties must be <em>taxable persons</em> carrying on business in the State. The agreement must be in writing by the 15th of the month following supply.<br/><br/>Where exercised, the <strong>purchaser</strong> self-accounts for VAT at 13.5% under the reverse charge mechanism.`,yesLabel:'Yes, JOTT will be exercised',noLabel:'No, JOTT will not be exercised'},
-  q7:{title:'Will the purchaser suffer a VAT cost from the JOTT?',description:'Consider the purchasers intended use — fully taxable, exempt, or mixed activities.',glossaryTerms:[],info:`If the purchaser uses the property for <strong>fully VATable activities</strong>, the self-accounted VAT is fully deductible — no cost.<br/><br/>If used for <strong>exempt or partially exempt activities</strong>, some or all VAT is irrecoverable.`,yesLabel:'Yes, there is a VAT cost',noLabel:'No VAT cost for the purchaser'},
+  q7:{title:'Will the purchaser suffer a VAT cost from the JOTT?',description:'Consider the purchaser\'s intended use — fully taxable, exempt, or mixed activities.',glossaryTerms:[],info:`If the purchaser uses the property for <strong>fully VATable activities</strong>, the self-accounted VAT is fully deductible — no cost.<br/><br/>If used for <strong>exempt or partially exempt activities</strong>, some or all VAT is irrecoverable.`,yesLabel:'Yes, there is a VAT cost',noLabel:'No VAT cost for the purchaser'},
   q8:{title:'Is there a risk of clawback for the vendor?',description:'Did the vendor recover VAT on acquisition of the land (or self-account under a prior JOTT)?',glossaryTerms:['capital goods scheme'],info:`A <strong>CGS clawback</strong> can arise where the vendor sells "old" property during the adjustment period having previously reclaimed VAT.<br/><br/>• <strong>20 intervals (~20 years)</strong> for acquisition/development<br/>• <strong>10 intervals (~10 years)</strong> for refurbishment`,yesLabel:'Yes, risk of clawback',noLabel:'No risk of clawback'},
 };
 
@@ -656,16 +703,16 @@ function getLandOutcome(s){
 
 const LAND_ANSWERS = {
   devAgreement9:{tag:'VAT @ 9%',tagColor:'#7c3aed',tagBg:'#f5f3ff',legRefs:['s94_3'],html:`<p>Irish VAT legislation contains anti-avoidance provisions under <strong>Section 94(3) VATCA 2010</strong>. Where undeveloped land is sold and an agreement is entered into with the purchaser (or a connected person) to develop the land, the sale becomes subject to VAT.</p><p>Under <strong>Finance Act 2025</strong>, the <strong>9% rate</strong> applies to land which, when developed, will be one or more apartments in a qualifying "apartment block":</p><ul><li>Multi-storey building (minimum 2 floors)</li><li>Not less than 3 apartments</li><li>Grouped or common access</li></ul><p>On this basis, <strong>the sale should be subject to VAT at 9%</strong>.</p><div class="callout warn">⚠️ If the 9% criteria are not met, <strong>13.5%</strong> applies. The 9% rate is available until <strong>31 December 2030</strong>.</div><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion (or by 15th of following month)<br/>• VAT in Vendor's return (Box T1)<br/>• Vendor entitled to VAT recovery on sale costs<br/>• PCVEs must be completed for Purchaser<br/>• VAT charging clause in Contract for Sale</div>`},
-  devAgreement13:{tag:'VAT @ 13.5%',tagColor:'#e8600a',tagBg:'#fff3eb',legRefs:['s94_3'],html:`<p>Under <strong>Section 94(3) VATCA 2010</strong>, where undeveloped land is sold and an agreement is entered into with the purchaser (or a connected person) to develop the land, the sale becomes subject to VAT at <strong>13.5%</strong>.</p><p>On this basis, <strong>the sale should be subject to VAT at 13.5%</strong>.</p><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion (or by 15th of following month)<br/>• VAT in Vendor's return (Box T1)<br/>• Vendor entitled to VAT recovery on sale costs<br/>• PCVEs required · VAT charging clause in Contract for Sale</div>`},
+  devAgreement13:{tag:'VAT @ 13.5%',tagColor:'var(--pwc-orange)',tagBg:'var(--pwc-orange-soft)',legRefs:['s94_3'],html:`<p>Under <strong>Section 94(3) VATCA 2010</strong>, where undeveloped land is sold and an agreement is entered into with the purchaser (or a connected person) to develop the land, the sale becomes subject to VAT at <strong>13.5%</strong>.</p><p>On this basis, <strong>the sale should be subject to VAT at 13.5%</strong>.</p><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion (or by 15th of following month)<br/>• VAT in Vendor's return (Box T1)<br/>• Vendor entitled to VAT recovery on sale costs<br/>• PCVEs required · VAT charging clause in Contract for Sale</div>`},
   partial9:{tag:'VAT @ 9%',tagColor:'#7c3aed',tagBg:'#f5f3ff',legRefs:['s94_2'],html:`<p>The sale of partially developed land is subject to VAT. This is land developed within the last 20 years where development is not yet <em>completed</em>.</p><p>Under <strong>Finance Act 2025</strong>, the <strong>9% rate</strong> applies where the land will be developed into qualifying apartments in an apartment block.</p><ul><li>Multi-storey building (min. 2 floors)</li><li>Not less than 3 apartments</li><li>Grouped or common access</li></ul><p>On this basis, <strong>the sale should be subject to VAT at 9%</strong>.</p><div class="callout warn">⚠️ If the 9% criteria are not met, <strong>13.5%</strong> applies. Available until <strong>31 December 2030</strong>.</div><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion<br/>• VAT in Vendor's return (Box T1)<br/>• VAT recovery on sale costs<br/>• PCVEs required · VAT charging clause required</div>`},
-  partial13:{tag:'VAT @ 13.5%',tagColor:'#e8600a',tagBg:'#fff3eb',legRefs:['s94_2'],html:`<p>The sale of partially developed land is subject to VAT at <strong>13.5%</strong>. Non-completed property within 20 years of development is liable to VAT.</p><p>On this basis, <strong>the sale will be subject to VAT at 13.5%</strong>.</p><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion (or by 15th of following month)<br/>• VAT in Vendor's return (Box T1)<br/>• VAT recovery on sale costs · PCVEs required<br/>• VAT charging clause in Contract for Sale</div>`},
-  completedLast5:{tag:'VAT @ 13.5%',tagColor:'#e8600a',tagBg:'#fff3eb',legRefs:['s94_2'],html:`<div class="callout warn">⚠️ Consider whether <strong>s94(2)(c)</strong> applies re: the 24-month occupation rule for second/subsequent supplies.</div><p>Land developed to completion in the last 5 years is subject to VAT at <strong>13.5%</strong>.</p><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion<br/>• VAT in Vendor's return (Box T1)<br/>• VAT recovery on sale costs<br/>• PCVEs required · VAT charging clause required</div>`},
-  developedOver5:{tag:'Exempt (in first instance)',tagColor:'#16a34a',tagBg:'#f0fdf4',legRefs:['s94_2','s94_5','s94_6'],html:`<p>The land was completed more than 5 years ago with no significant subsequent development, so <strong>the sale should be exempt from VAT</strong>.</p><p>A <strong>Capital Goods Scheme clawback</strong> can arise if the vendor previously recovered VAT. Adjustment periods:</p><ul><li><strong>20 intervals (~20 years)</strong> — acquisition/development</li><li><strong>10 intervals (~10 years)</strong> — refurbishment</li></ul><p>Under <strong>s94(5)</strong>, the vendor can seek agreement to exercise the <strong>JOTT</strong> to prevent a clawback.</p><div class="callout info"><strong>Consider</strong><br/>• Whether vendor deducted VAT within the adjustment period<br/>• Purchaser's intended use (JOTT may not be agreed if exempt/mixed use)<br/>• If exempt, vendor <strong>cannot</strong> recover VAT on sale costs</div>`},
-  contradiction:{tag:'⚠️ Contradiction',tagColor:'#dc2626',tagBg:'#fef2f2',legRefs:[],html:`<p>You previously said <strong>no development agreement</strong> but now indicated there <strong>is</strong> one. Please <strong>Start Over</strong>.</p>`},
-  jottCost:{tag:'Exempt → JOTT → 13.5% (Purchaser Cost)',tagColor:'#e8600a',tagBg:'#fff3eb',legRefs:['s94_5','s94_6'],html:`<p>The land is undeveloped with no development agreement, so <strong>the sale is exempt in the first instance</strong>.</p><p>The <strong>JOTT</strong> renders it taxable. The purchaser self-accounts at <strong>13.5%</strong> under the reverse charge.</p><ul><li>Prevents CGS clawback for vendor</li><li>Permits VAT recovery on sale costs</li></ul><div class="callout warn">⚠️ The purchaser intends to use the land for <strong>exempt or partially exempt activities</strong> — an irrecoverable VAT cost arises. The purchaser may refuse the JOTT.</div><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required (Purchaser completes page 3)<br/>• VAT clause in Contract for Sale<br/>• Purchaser self-accounts under reverse charge</div>`},
-  jottNoCost:{tag:'Exempt → JOTT → 13.5% (No Cost)',tagColor:'#16a34a',tagBg:'#f0fdf4',legRefs:['s94_5','s94_6'],html:`<p>The land is undeveloped with no development agreement, so <strong>the sale is exempt in the first instance</strong>.</p><p>The <strong>JOTT</strong> renders it taxable. The purchaser self-accounts at <strong>13.5%</strong> under the reverse charge.</p><ul><li>Prevents CGS clawback for vendor</li><li>Permits VAT recovery on sale costs</li></ul><div class="callout good">✓ The purchaser uses the land for <strong>fully taxable purposes</strong> — no VAT cost. The purchaser should not object.</div><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required (Purchaser completes page 3)<br/>• VAT clause in Contract for Sale<br/>• Purchaser self-accounts under reverse charge</div>`},
-  noJottClawback:{tag:'Exempt — No JOTT — Clawback',tagColor:'#dc2626',tagBg:'#fef2f2',legRefs:['s94_2','s94_5'],html:`<p>The sale is <strong>exempt from VAT</strong>. As VAT was recovered on acquisition, <strong>a CGS clawback will arise</strong>.</p><div class="callout warn">⚠️ The clawback can be avoided via the <strong>JOTT</strong>, but it will not be exercised. Consider adjusting the sale price.</div><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required<br/>• No VAT clause (include "the transfer is not subject to VAT")<br/>• Vendor <strong>cannot</strong> recover VAT on sale costs</div>`},
-  noJottNoClawback:{tag:'Exempt — No JOTT — No Clawback',tagColor:'#16a34a',tagBg:'#f0fdf4',legRefs:['s94_2'],html:`<p>The sale is <strong>exempt from VAT</strong>. No VAT was recovered on acquisition, so <strong>no CGS clawback arises</strong>.</p><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required<br/>• No VAT clause (include "the transfer is not subject to VAT")<br/>• Vendor <strong>cannot</strong> recover VAT on sale costs</div>`},
+  partial13:{tag:'VAT @ 13.5%',tagColor:'var(--pwc-orange)',tagBg:'var(--pwc-orange-soft)',legRefs:['s94_2'],html:`<p>The sale of partially developed land is subject to VAT at <strong>13.5%</strong>. Non-completed property within 20 years of development is liable to VAT.</p><p>On this basis, <strong>the sale will be subject to VAT at 13.5%</strong>.</p><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion (or by 15th of following month)<br/>• VAT in Vendor's return (Box T1)<br/>• VAT recovery on sale costs · PCVEs required<br/>• VAT charging clause in Contract for Sale</div>`},
+  completedLast5:{tag:'VAT @ 13.5%',tagColor:'var(--pwc-orange)',tagBg:'var(--pwc-orange-soft)',legRefs:['s94_2'],html:`<div class="callout warn">⚠️ Consider whether <strong>s94(2)(c)</strong> applies re: the 24-month occupation rule for second/subsequent supplies.</div><p>Land developed to completion in the last 5 years is subject to VAT at <strong>13.5%</strong>.</p><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion<br/>• VAT in Vendor's return (Box T1)<br/>• VAT recovery on sale costs<br/>• PCVEs required · VAT charging clause required</div>`},
+  developedOver5:{tag:'Exempt (in first instance)',tagColor:'var(--green)',tagBg:'var(--green-soft)',legRefs:['s94_2','s94_5','s94_6'],html:`<p>The land was completed more than 5 years ago with no significant subsequent development, so <strong>the sale should be exempt from VAT</strong>.</p><p>A <strong>Capital Goods Scheme clawback</strong> can arise if the vendor previously recovered VAT. Adjustment periods:</p><ul><li><strong>20 intervals (~20 years)</strong> — acquisition/development</li><li><strong>10 intervals (~10 years)</strong> — refurbishment</li></ul><p>Under <strong>s94(5)</strong>, the vendor can seek agreement to exercise the <strong>JOTT</strong> to prevent a clawback.</p><div class="callout info"><strong>Consider</strong><br/>• Whether vendor deducted VAT within the adjustment period<br/>• Purchaser's intended use (JOTT may not be agreed if exempt/mixed use)<br/>• If exempt, vendor <strong>cannot</strong> recover VAT on sale costs</div>`},
+  contradiction:{tag:'⚠️ Contradiction',tagColor:'var(--red)',tagBg:'var(--red-soft)',legRefs:[],html:`<p>You previously said <strong>no development agreement</strong> but now indicated there <strong>is</strong> one. Please <strong>Start Over</strong>.</p>`},
+  jottCost:{tag:'Exempt → JOTT → 13.5% (Purchaser Cost)',tagColor:'var(--pwc-orange)',tagBg:'var(--pwc-orange-soft)',legRefs:['s94_5','s94_6'],html:`<p>The land is undeveloped with no development agreement, so <strong>the sale is exempt in the first instance</strong>.</p><p>The <strong>JOTT</strong> renders it taxable. The purchaser self-accounts at <strong>13.5%</strong> under the reverse charge.</p><ul><li>Prevents CGS clawback for vendor</li><li>Permits VAT recovery on sale costs</li></ul><div class="callout warn">⚠️ The purchaser intends to use the land for <strong>exempt or partially exempt activities</strong> — an irrecoverable VAT cost arises. The purchaser may refuse the JOTT.</div><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required (Purchaser completes page 3)<br/>• VAT clause in Contract for Sale<br/>• Purchaser self-accounts under reverse charge</div>`},
+  jottNoCost:{tag:'Exempt → JOTT → 13.5% (No Cost)',tagColor:'var(--green)',tagBg:'var(--green-soft)',legRefs:['s94_5','s94_6'],html:`<p>The land is undeveloped with no development agreement, so <strong>the sale is exempt in the first instance</strong>.</p><p>The <strong>JOTT</strong> renders it taxable. The purchaser self-accounts at <strong>13.5%</strong> under the reverse charge.</p><ul><li>Prevents CGS clawback for vendor</li><li>Permits VAT recovery on sale costs</li></ul><div class="callout good">✓ The purchaser uses the land for <strong>fully taxable purposes</strong> — no VAT cost. The purchaser should not object.</div><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required (Purchaser completes page 3)<br/>• VAT clause in Contract for Sale<br/>• Purchaser self-accounts under reverse charge</div>`},
+  noJottClawback:{tag:'Exempt — No JOTT — Clawback',tagColor:'var(--red)',tagBg:'var(--red-soft)',legRefs:['s94_2','s94_5'],html:`<p>The sale is <strong>exempt from VAT</strong>. As VAT was recovered on acquisition, <strong>a CGS clawback will arise</strong>.</p><div class="callout warn">⚠️ The clawback can be avoided via the <strong>JOTT</strong>, but it will not be exercised. Consider adjusting the sale price.</div><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required<br/>• No VAT clause (include "the transfer is not subject to VAT")<br/>• Vendor <strong>cannot</strong> recover VAT on sale costs</div>`},
+  noJottNoClawback:{tag:'Exempt — No JOTT — No Clawback',tagColor:'var(--green)',tagBg:'var(--green-soft)',legRefs:['s94_2'],html:`<p>The sale is <strong>exempt from VAT</strong>. No VAT was recovered on acquisition, so <strong>no CGS clawback arises</strong>.</p><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required<br/>• No VAT clause (include "the transfer is not subject to VAT")<br/>• Vendor <strong>cannot</strong> recover VAT on sale costs</div>`},
 };
 const LAND_TRAIL={q1:'Dev. Agreement',q1a:'9% Qualifying',q2:'Partially Dev.',q2a:'9% Qualifying',q3:'Completed <5 yrs',q4:'Land Status',q5:'Confirmed',q6:'JOTT',q7:'Purchaser Cost',q8:'Clawback'};
 
@@ -700,13 +747,13 @@ function getCPOutcome(s){
 }
 
 const CP_ANSWERS = {
-  tob_taxable:{tag:'TOB Relief — Underlying Taxable',tagColor:'#16a34a',tagBg:'#f0fdf4',legRefs:['s20_2c','s94_2','s64_6b'],html:`<p>In accordance with <strong>Section 20(2)(c) VATCA 2010</strong>, VAT Transfer of Business ("TOB") relief applies where there is a transfer of a business, or part of a business, capable of being operated on an independent basis to an accountable person.</p><p>The relief provides that the transfer is <strong>not a supply for VAT purposes</strong> (i.e. not subject to VAT).</p><p>Current Revenue guidance provides that TOB relief may apply to the transfer of property subject to an existing letting agreement, agreement to lease, or licence to occupy — as those assets are capable of constituting an independent business. This includes the transfer of property subject to a <em>legacy lease</em>.</p><div class="callout good">✓ On the basis the property is being sold subject to and with the benefit of a lease in place, and is being sold to a VAT-registered purchaser, <strong>TOB relief should apply</strong>.</div><p><strong>Capital Goods Scheme implications:</strong></p><p>Where the sale would be <strong>taxable in the absence of TOB relief</strong>, the vendor's CGS obligations do <strong>not</strong> pass to the purchaser. Instead, a <strong>new CGS adjustment period</strong> commences for the purchaser on acquisition — the purchaser's base cost for CGS purposes is the consideration paid.</p><p>There will be <strong>no requirement</strong> for the vendor to provide the purchaser with a CGS record in respect of the property.</p><div class="callout info"><strong>VAT recovery on sale costs</strong><br/>Where TOB relief applies, VAT on sale-related costs (legal fees, professional fees, etc.) is treated as a general overhead of the letting business being sold. Recovery is permissible where the underlying letting is <strong>taxable</strong> (i.e. Landlord's Option to Tax is exercised) and not permissible where the letting is <strong>exempt</strong>.</div><div class="callout warn">⚠️ <strong>Consider s64(6)(b)</strong> — where VAT was restricted on acquisition/development and an uplift in VAT recovery arises due to the underlying taxable sale (including TOB underlying taxable).</div>`},
-  tob_exempt:{tag:'TOB Relief — Underlying Exempt',tagColor:'#e8600a',tagBg:'#fff3eb',legRefs:['s20_2c','s94_2'],html:`<p>In accordance with <strong>Section 20(2)(c) VATCA 2010</strong>, VAT Transfer of Business ("TOB") relief applies. The transfer is <strong>not a supply for VAT purposes</strong>.</p><p><strong>Capital Goods Scheme implications:</strong></p><p>Where the sale would be <strong>exempt in the absence of TOB relief</strong>, the purchaser <strong>"steps into the shoes"</strong> of the vendor and <strong>inherits the vendor's CGS obligations</strong> (if any) in respect of the property.</p><div class="callout warn">⚠️ The vendor <strong>must provide the purchaser with a CGS record</strong> in respect of the property. The purchaser continues the vendor's CGS adjustment period.</div><div class="callout info"><strong>VAT recovery on sale costs</strong><br/>Where TOB relief applies, VAT on sale-related costs is treated as a general overhead of the letting business. Recovery depends on whether the underlying letting is taxable or exempt.<br/><br/>Where the property is subject to a <strong>legacy lease</strong>, Revenue's view is that VAT on sale costs is <strong>not deductible</strong>. Although arguments exist that this position is incorrect, the prudent position is to disallow VAT on sales costs.</div>`},
-  no_tob_taxable:{tag:'VAT @ 13.5%',tagColor:'#e8600a',tagBg:'#fff3eb',legRefs:['s94_2'],html:`<p>The property was completed within the last 5 years and TOB relief does not apply. The sale is <strong>subject to VAT at 13.5%</strong>.</p><div class="callout warn">⚠️ Consider whether <strong>s94(2)(c)</strong> applies — the 24-month occupation rule for second/subsequent supplies of completed property.</div><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion (or by 15th of following month)<br/>• VAT in Vendor's return (Box T1)<br/>• Vendor entitled to VAT recovery on sale costs<br/>• PCVEs required<br/>• VAT charging clause in Contract for Sale</div>`},
+  tob_taxable:{tag:'TOB Relief — Underlying Taxable',tagColor:'var(--green)',tagBg:'var(--green-soft)',legRefs:['s20_2c','s94_2','s64_6b'],html:`<p>In accordance with <strong>Section 20(2)(c) VATCA 2010</strong>, VAT Transfer of Business ("TOB") relief applies where there is a transfer of a business, or part of a business, capable of being operated on an independent basis to an accountable person.</p><p>The relief provides that the transfer is <strong>not a supply for VAT purposes</strong> (i.e. not subject to VAT).</p><p>Current Revenue guidance provides that TOB relief may apply to the transfer of property subject to an existing letting agreement, agreement to lease, or licence to occupy — as those assets are capable of constituting an independent business. This includes the transfer of property subject to a <em>legacy lease</em>.</p><div class="callout good">✓ On the basis the property is being sold subject to and with the benefit of a lease in place, and is being sold to a VAT-registered purchaser, <strong>TOB relief should apply</strong>.</div><p><strong>Capital Goods Scheme implications:</strong></p><p>Where the sale would be <strong>taxable in the absence of TOB relief</strong>, the vendor's CGS obligations do <strong>not</strong> pass to the purchaser. Instead, a <strong>new CGS adjustment period</strong> commences for the purchaser on acquisition — the purchaser's base cost for CGS purposes is the consideration paid.</p><p>There will be <strong>no requirement</strong> for the vendor to provide the purchaser with a CGS record in respect of the property.</p><div class="callout info"><strong>VAT recovery on sale costs</strong><br/>Where TOB relief applies, VAT on sale-related costs (legal fees, professional fees, etc.) is treated as a general overhead of the letting business being sold. Recovery is permissible where the underlying letting is <strong>taxable</strong> and not permissible where the letting is <strong>exempt</strong>.</div><div class="callout warn">⚠️ <strong>Consider s64(6)(b)</strong> — where VAT was restricted on acquisition/development and an uplift in VAT recovery arises due to the underlying taxable sale (including TOB underlying taxable).</div>`},
+  tob_exempt:{tag:'TOB Relief — Underlying Exempt',tagColor:'var(--pwc-orange)',tagBg:'var(--pwc-orange-soft)',legRefs:['s20_2c','s94_2'],html:`<p>In accordance with <strong>Section 20(2)(c) VATCA 2010</strong>, VAT Transfer of Business ("TOB") relief applies. The transfer is <strong>not a supply for VAT purposes</strong>.</p><p><strong>Capital Goods Scheme implications:</strong></p><p>Where the sale would be <strong>exempt in the absence of TOB relief</strong>, the purchaser <strong>"steps into the shoes"</strong> of the vendor and <strong>inherits the vendor's CGS obligations</strong> (if any) in respect of the property.</p><div class="callout warn">⚠️ The vendor <strong>must provide the purchaser with a CGS record</strong> in respect of the property. The purchaser continues the vendor's CGS adjustment period.</div><div class="callout info"><strong>VAT recovery on sale costs</strong><br/>Where TOB relief applies, VAT on sale-related costs is treated as a general overhead of the letting business. Recovery depends on whether the underlying letting is taxable or exempt.<br/><br/>Where the property is subject to a <strong>legacy lease</strong>, Revenue's view is that VAT on sale costs is <strong>not deductible</strong>.</div>`},
+  no_tob_taxable:{tag:'VAT @ 13.5%',tagColor:'var(--pwc-orange)',tagBg:'var(--pwc-orange-soft)',legRefs:['s94_2'],html:`<p>The property was completed within the last 5 years and TOB relief does not apply. The sale is <strong>subject to VAT at 13.5%</strong>.</p><div class="callout warn">⚠️ Consider whether <strong>s94(2)(c)</strong> applies — the 24-month occupation rule for second/subsequent supplies of completed property.</div><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion (or by 15th of following month)<br/>• VAT in Vendor's return (Box T1)<br/>• Vendor entitled to VAT recovery on sale costs<br/>• PCVEs required<br/>• VAT charging clause in Contract for Sale</div>`},
   no_tob_exempt_jott:{tag:'Exempt → JOTT → 13.5%',tagColor:'#7c3aed',tagBg:'#f5f3ff',legRefs:['s94_2','s94_5','s94_6'],html:`<p>The property was completed more than 5 years ago and TOB relief does not apply. The sale is <strong>exempt in the first instance</strong>.</p><p>The <strong>JOTT</strong> renders the supply taxable. The purchaser self-accounts at <strong>13.5%</strong> under the reverse charge mechanism.</p><ul><li>Prevents CGS clawback for the vendor</li><li>Permits VAT recovery on sale costs</li></ul><div class="callout info"><strong>Practical steps</strong><br/>• Written agreement by 15th of month following supply<br/>• PCVEs required (Purchaser completes page 3)<br/>• VAT clause in Contract for Sale<br/>• Purchaser self-accounts under reverse charge</div>`},
-  no_tob_exempt_no_jott:{tag:'Exempt — No JOTT',tagColor:'#16a34a',tagBg:'#f0fdf4',legRefs:['s94_2','s94_5'],html:`<p>The property was completed more than 5 years ago, TOB relief does not apply, and the JOTT will not be exercised. The sale is <strong>exempt from VAT</strong>.</p><div class="callout warn">⚠️ A <strong>CGS clawback</strong> may arise if the vendor previously recovered VAT on acquisition/development within the adjustment period. Consider whether the sale price should reflect this.</div><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required<br/>• No VAT clause (include "the transfer is not subject to VAT")<br/>• Vendor <strong>cannot</strong> recover VAT on sale costs</div>`},
-  incomplete:{tag:'VAT @ 13.5% (Incomplete)',tagColor:'#e8600a',tagBg:'#fff3eb',legRefs:['s94_2'],html:`<p>The sale of incomplete property — i.e. property that has been developed in the last 20 years but is not "<em>completed</em>" within the VAT meaning — is subject to VAT at the <strong>reduced rate (currently 13.5%)</strong>.</p><div class="callout info"><strong>Practical steps</strong><br/>• A valid VAT invoice should be issued by the vendor on completion of the sale (or by the 15th day of the month following the month of completion)<br/>• VAT arising should be included in the vendor's VAT return (Box T1) for the period in which the sale completes<br/>• The vendor should be entitled to deduct VAT incurred on sale-related costs (legal fees, professional fees, etc.)<br/>• PCVEs must be completed and provided to the purchaser<br/>• A VAT charging clause must be included in the Contract for Sale</div>`},
-  review_first:{tag:'⚠️ Review Required',tagColor:'#dc2626',tagBg:'#fef2f2',legRefs:[],html:`<p>You indicated that the property is <strong>not completed</strong> but also that you are <strong>not advising on an incomplete property</strong>.</p><p>Please review your response to the first question. Alternatively, are you advising on the <strong>sale of undeveloped land</strong>? If so, please use the <strong>Land Sale</strong> tool instead.</p><div class="callout warn">⚠️ Press <strong>Start Over</strong> to reset and try again.</div>`},
+  no_tob_exempt_no_jott:{tag:'Exempt — No JOTT',tagColor:'var(--green)',tagBg:'var(--green-soft)',legRefs:['s94_2','s94_5'],html:`<p>The property was completed more than 5 years ago, TOB relief does not apply, and the JOTT will not be exercised. The sale is <strong>exempt from VAT</strong>.</p><div class="callout warn">⚠️ A <strong>CGS clawback</strong> may arise if the vendor previously recovered VAT on acquisition/development within the adjustment period.</div><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required<br/>• No VAT clause (include "the transfer is not subject to VAT")<br/>• Vendor <strong>cannot</strong> recover VAT on sale costs</div>`},
+  incomplete:{tag:'VAT @ 13.5% (Incomplete)',tagColor:'var(--pwc-orange)',tagBg:'var(--pwc-orange-soft)',legRefs:['s94_2'],html:`<p>The sale of incomplete property — i.e. property that has been developed in the last 20 years but is not "<em>completed</em>" within the VAT meaning — is subject to VAT at the <strong>reduced rate (currently 13.5%)</strong>.</p><div class="callout info"><strong>Practical steps</strong><br/>• A valid VAT invoice should be issued by the vendor on completion of the sale (or by the 15th day of the month following the month of completion)<br/>• VAT arising should be included in the vendor's VAT return (Box T1) for the period in which the sale completes<br/>• The vendor should be entitled to deduct VAT incurred on sale-related costs (legal fees, professional fees, etc.)<br/>• PCVEs must be completed and provided to the purchaser<br/>• A VAT charging clause must be included in the Contract for Sale</div>`},
+  review_first:{tag:'⚠️ Review Required',tagColor:'var(--red)',tagBg:'var(--red-soft)',legRefs:[],html:`<p>You indicated that the property is <strong>not completed</strong> but also that you are <strong>not advising on an incomplete property</strong>.</p><p>Please review your response to the first question. Alternatively, are you advising on the <strong>sale of undeveloped land</strong>? If so, please use the <strong>Land Sale</strong> tool instead.</p><div class="callout warn">⚠️ Press <strong>Start Over</strong> to reset and try again.</div>`},
 };
 const CP_TRAIL={cp1:'Completed',cp2_tob:'TOB Relief',cp3_underlying:'Underlying VAT',cp_incomplete_confirm:'Incomplete',cp_no_tob_5yr:'Completed <5 yrs',cp_no_tob_jott:'JOTT'};
 
