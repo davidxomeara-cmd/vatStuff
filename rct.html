@@ -1,0 +1,2175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VAT on Property – Tool Suite | PwC</title>
+
+    <!-- ============================================================
+       EXTERNAL DEPENDENCIES
+       ============================================================ -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ============================================================
+       DESIGN TOKENS & CSS
+       All colors, spacing, and visual tokens live here.
+       ============================================================ -->
+    <style>
+      /* ----------------------------------------------------------
+       1. DESIGN TOKENS
+       ---------------------------------------------------------- */
+      :root {
+        /* Brand */
+        --pwc-orange: #d04a02;
+        --pwc-orange-hover: #e05512;
+        --pwc-orange-dark: #b03d00;
+        --pwc-orange-light: #f26b2a;
+        --pwc-orange-soft: #fff4ee;
+        --pwc-orange-softer: #fffaf6;
+        --pwc-black: #2d2d2d;
+        --pwc-dark: #1a1a1a;
+        --pwc-warm-grey: #f5f0eb;
+
+        /* Semantic */
+        --color-success: #16a34a;
+        --color-success-soft: #f0fdf4;
+        --color-success-muted: #bbf7d0;
+        --color-danger: #dc2626;
+        --color-danger-soft: #fef2f2;
+        --color-danger-border: #fca5a5;
+        --color-purple: #7c3aed;
+        --color-purple-soft: #f5f3ff;
+
+        /* Neutral scale */
+        --grey-50: #fafaf9;
+        --grey-100: #f5f5f4;
+        --grey-200: #e7e5e4;
+        --grey-300: #d6d3d1;
+        --grey-400: #a8a29e;
+        --grey-500: #78716c;
+        --grey-600: #57534e;
+        --grey-700: #44403c;
+        --grey-800: #292524;
+        --grey-900: #1c1917;
+
+        /* Layout */
+        --max-width: 1320px;
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 20px;
+        --radius-full: 99px;
+
+        /* Transitions */
+        --ease-out-expo: cubic-bezier(0.21, 1.02, 0.73, 1);
+      }
+
+      /* ----------------------------------------------------------
+       2. RESET & BASE
+       ---------------------------------------------------------- */
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: #f7f4f1;
+        color: var(--pwc-black);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      ::selection {
+        background: rgba(208, 74, 2, 0.15);
+        color: var(--pwc-dark);
+      }
+
+      /* Focus ring for keyboard accessibility */
+      :focus-visible {
+        outline: 2px solid var(--pwc-orange);
+        outline-offset: 2px;
+        border-radius: var(--radius-sm);
+      }
+
+      button:focus:not(:focus-visible) {
+        outline: none;
+      }
+
+      /* ----------------------------------------------------------
+       3. SCROLLBAR
+       ---------------------------------------------------------- */
+      ::-webkit-scrollbar {
+        width: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--grey-300);
+        border-radius: var(--radius-full);
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--grey-400);
+      }
+
+      /* ----------------------------------------------------------
+       4. ANIMATIONS
+       ---------------------------------------------------------- */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      @keyframes pulseWidth {
+        0%,
+        100% {
+          width: 32px;
+          opacity: 0.3;
+        }
+        50% {
+          width: 56px;
+          opacity: 0.5;
+        }
+      }
+      @keyframes slideRight {
+        from {
+          opacity: 0;
+          transform: translateX(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes scaleIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @keyframes breathe {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(208, 74, 2, 0.12);
+        }
+        50% {
+          box-shadow: 0 0 0 10px rgba(208, 74, 2, 0);
+        }
+      }
+      @keyframes staggerIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+      @keyframes dotPulse {
+        0%,
+        80%,
+        100% {
+          transform: scale(0);
+        }
+        40% {
+          transform: scale(1);
+        }
+      }
+      @keyframes rippleExpand {
+        0% {
+          transform: scale(0);
+          opacity: 0.5;
+        }
+        100% {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+      @keyframes completePop {
+        0% {
+          opacity: 0;
+          transform: scale(0.92);
+        }
+        60% {
+          transform: scale(1.02);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      @keyframes checkMark {
+        0% {
+          transform: scale(0);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .anim-fade-up {
+        animation: fadeUp 0.4s var(--ease-out-expo) forwards;
+      }
+      .anim-slide-right {
+        animation: slideRight 0.45s var(--ease-out-expo) forwards;
+      }
+      .anim-scale-in {
+        animation: scaleIn 0.35s var(--ease-out-expo) forwards;
+      }
+
+      /* ----------------------------------------------------------
+       5. TYPOGRAPHY — Answer Panel Content
+       ---------------------------------------------------------- */
+      .answer-content p {
+        margin-bottom: 14px;
+        font-size: 0.86rem;
+        line-height: 1.9;
+        color: var(--grey-700);
+      }
+      .answer-content p:last-child {
+        margin-bottom: 0;
+      }
+      .answer-content strong {
+        color: var(--pwc-black);
+        font-weight: 600;
+      }
+      .answer-content em {
+        color: var(--grey-600);
+      }
+      .answer-content ul {
+        margin: 8px 0 16px 0;
+        list-style: none;
+      }
+      .answer-content ul li {
+        padding: 5px 0 5px 22px;
+        position: relative;
+        font-size: 0.86rem;
+        color: var(--grey-700);
+        line-height: 1.75;
+      }
+      .answer-content ul li::before {
+        content: "";
+        position: absolute;
+        left: 2px;
+        top: 14px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--pwc-orange);
+        opacity: 0.5;
+      }
+
+      /* ----------------------------------------------------------
+       6. CALLOUT BOXES (in answer content)
+       ---------------------------------------------------------- */
+      .callout {
+        padding: 16px 20px;
+        border-radius: var(--radius-md);
+        margin: 18px 0;
+        font-size: 0.84rem;
+        line-height: 1.85;
+      }
+      .callout strong {
+        color: var(--pwc-black);
+      }
+      .callout.warn {
+        background: linear-gradient(135deg, #fff6ef, #ffefe3);
+        border: 1px solid #fdd8b8;
+        color: var(--grey-700);
+      }
+      .callout.info {
+        background: linear-gradient(135deg, #f8f6f3, #f0ede8);
+        border: 1px solid #e0d8cf;
+        color: var(--grey-700);
+      }
+      .callout.good {
+        background: linear-gradient(135deg, #f4fef7, #eafced);
+        border: 1px solid #b8efc7;
+        color: var(--grey-700);
+      }
+
+      /* ----------------------------------------------------------
+       7. LEGISLATION PANEL (dark code-style panel)
+       ---------------------------------------------------------- */
+      .legislation-panel {
+        background: var(--pwc-orange-soft);
+        color: black;
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        font-size: 0.82rem;
+        line-height: 1.9;
+      }
+      .legislation-panel__header {
+        padding: 14px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .legislation-panel__header span {
+        font-weight: 600;
+        color: black;
+        font-size: 0.82rem;
+      }
+      .legislation-panel__body {
+        padding: 20px;
+        max-height: 420px;
+        overflow-y: auto;
+        font-family: "Georgia", "Times New Roman", "Garamond", serif;
+        font-size: 0.78rem;
+        line-height: 2;
+        white-space: pre-wrap;
+        color: var(--pwc-black);
+      }
+      .legislation-panel__body .hl {
+        background: rgba(208, 74, 2, 0.25);
+        color: black;
+        border-radius: 3px;
+        padding: 1px 4px;
+        font-weight: 600;
+      }
+
+      /* ----------------------------------------------------------
+       8. GLOSSARY TOOLTIP
+       ---------------------------------------------------------- */
+      .glossary-term {
+        border-bottom: 1.5px dashed var(--pwc-orange);
+        color: var(--pwc-orange-dark);
+        cursor: help;
+        font-weight: 500;
+        font-style: italic;
+        transition: color 0.2s;
+      }
+      .glossary-term:hover {
+        color: var(--pwc-orange);
+      }
+
+      .glossary-tooltip {
+        position: relative;
+        display: inline;
+      }
+      .glossary-tooltip__popup {
+        position: absolute;
+        bottom: calc(100% + 8px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--pwc-dark);
+        color: white;
+        padding: 14px 18px;
+        border-radius: var(--radius-md);
+        font-size: 0.78rem;
+        line-height: 1.7;
+        width: 340px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+        z-index: 1000;
+        animation: fadeUp 0.2s ease forwards;
+      }
+      .glossary-tooltip__popup::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 6px solid transparent;
+        border-top-color: var(--pwc-dark);
+      }
+
+      /* ----------------------------------------------------------
+       9. TOOL TILES (Home Page)
+       ---------------------------------------------------------- */
+      .tool-tile {
+        background: white;
+        border-radius: var(--radius-xl);
+        border: 1.5px solid var(--grey-200);
+        padding: 32px 28px;
+        cursor: pointer;
+        transition: all 0.35s var(--ease-out-expo);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .tool-tile::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--pwc-orange),
+          var(--pwc-orange-light)
+        );
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.4s var(--ease-out-expo);
+      }
+      .tool-tile:hover::before {
+        transform: scaleX(1);
+      }
+      .tool-tile:hover {
+        border-color: var(--pwc-orange);
+        box-shadow:
+          0 12px 40px rgba(208, 74, 2, 0.1),
+          0 4px 12px rgba(0, 0, 0, 0.05);
+        transform: translateY(-4px);
+      }
+      .tool-tile:active {
+        transform: translateY(-2px);
+        transition: transform 0.1s;
+      }
+      .tool-tile.is-disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+      .tool-tile.is-disabled::before {
+        display: none;
+      }
+      .tool-tile__icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+        transition: transform 0.3s var(--ease-out-expo);
+      }
+      .tool-tile:hover .tool-tile__icon {
+        transform: scale(1.08) rotate(-2deg);
+      }
+
+      /* ----------------------------------------------------------
+       10. QUESTION CARD
+       ---------------------------------------------------------- */
+      .question-card {
+        background: white;
+        border-radius: var(--radius-lg);
+        margin-bottom: 14px;
+        transition: all 0.35s var(--ease-out-expo);
+      }
+      .question-card.is-active {
+        box-shadow:
+          0 8px 32px rgba(208, 74, 2, 0.08),
+          0 2px 8px rgba(0, 0, 0, 0.04);
+        animation: breathe 3s ease-in-out infinite;
+      }
+      .question-card.is-inactive {
+        opacity: 0.3;
+        pointer-events: none;
+      }
+
+      /* Edit button — appears on hover for answered cards */
+      .question-card__edit-btn {
+        opacity: 0;
+        transition:
+          opacity 0.2s,
+          background 0.2s;
+        background: var(--grey-50);
+        border: 1px solid var(--grey-200);
+        color: var(--grey-500);
+        padding: 4px 10px;
+        border-radius: var(--radius-sm);
+        font-size: 0.7rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
+        font-family: inherit;
+      }
+      .question-card:hover .question-card__edit-btn {
+        opacity: 1;
+      }
+      .question-card__edit-btn:hover {
+        background: var(--pwc-orange-soft);
+        border-color: var(--pwc-orange);
+        color: var(--pwc-orange);
+      }
+
+      /* ----------------------------------------------------------
+       11. DECISION PATH (breadcrumb trail)
+       ---------------------------------------------------------- */
+      .decision-path {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 20px;
+        padding: 14px 18px;
+        background: var(--grey-50);
+        border: 1px solid var(--grey-200);
+        border-radius: var(--radius-md);
+      }
+      .decision-path__step {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.74rem;
+        font-weight: 500;
+        color: var(--grey-600);
+        padding: 4px 10px;
+        background: white;
+        border: 1px solid var(--grey-200);
+        border-radius: var(--radius-sm);
+      }
+      .decision-path__value {
+        font-weight: 700;
+      }
+      .decision-path__value.is-yes {
+        color: var(--color-success);
+      }
+      .decision-path__value.is-no {
+        color: var(--color-danger);
+      }
+      .decision-path__arrow {
+        color: var(--grey-300);
+        font-size: 0.7rem;
+      }
+
+      /* ----------------------------------------------------------
+       12. RIPPLE EFFECT
+       ---------------------------------------------------------- */
+      .ripple-container {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        border-radius: inherit;
+      }
+      .ripple-circle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(208, 74, 2, 0.08);
+        animation: rippleExpand 0.6s ease-out forwards;
+      }
+
+      /* ----------------------------------------------------------
+       13. TOAST NOTIFICATION
+       ---------------------------------------------------------- */
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(80px);
+        background: var(--pwc-dark);
+        color: white;
+        padding: 12px 24px;
+        border-radius: var(--radius-md);
+        font-size: 0.82rem;
+        font-weight: 500;
+        z-index: 9999;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 0.35s var(--ease-out-expo),
+          opacity 0.35s;
+        opacity: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .toast.is-visible {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+
+      /* ----------------------------------------------------------
+       14. MOBILE BOTTOM SHEET
+       ---------------------------------------------------------- */
+      .mobile-summary-bar {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: white;
+        border-top: 1px solid var(--grey-200);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+        padding: 14px 20px;
+        cursor: pointer;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .mobile-sheet-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 150;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+      }
+      .mobile-sheet-overlay.is-open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .mobile-sheet {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+        background: white;
+        border-top-left-radius: var(--radius-xl);
+        border-top-right-radius: var(--radius-xl);
+        box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.15);
+        max-height: 80vh;
+        overflow-y: auto;
+        transform: translateY(100%);
+        transition: transform 0.35s var(--ease-out-expo);
+        padding: 0 0 32px;
+      }
+      .mobile-sheet.is-open {
+        transform: translateY(0);
+      }
+      .mobile-sheet__handle {
+        width: 40px;
+        height: 4px;
+        background: var(--grey-300);
+        border-radius: var(--radius-full);
+        margin: 12px auto 8px;
+      }
+
+      /* ----------------------------------------------------------
+       15. PRINT STYLES
+       ---------------------------------------------------------- */
+      @media print {
+        .no-print {
+          display: none !important;
+        }
+        body {
+          background: white;
+        }
+        .answer-panel {
+          position: relative !important;
+          box-shadow: none !important;
+          border: 1px solid #ddd !important;
+        }
+      }
+
+      /* ----------------------------------------------------------
+       16. RESPONSIVE
+       ---------------------------------------------------------- */
+      @media (max-width: 960px) {
+        .main-grid {
+          grid-template-columns: 1fr !important;
+        }
+        .home-grid {
+          grid-template-columns: 1fr !important;
+        }
+        .answer-panel {
+          display: none !important;
+        }
+        .mobile-summary-bar {
+          display: flex !important;
+        }
+        .question-card__edit-btn {
+          opacity: 1;
+        }
+        .glossary-tooltip__popup {
+          width: 280px;
+          left: 0;
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      const { useState, useMemo, useCallback, useRef, useEffect, Fragment } =
+        React;
+
+      /* ================================================================
+   ================================================================
+
+   SECTION A — UTILITIES & HOOKS
+
+   Small, reusable pieces that don't depend on business logic.
+
+   ================================================================
+   ================================================================ */
+
+      function useToast() {
+        const [message, setMessage] = useState("");
+        const [isVisible, setIsVisible] = useState(false);
+        const timerRef = useRef(null);
+
+        const showToast = useCallback((text, durationMs = 2500) => {
+          if (timerRef.current) clearTimeout(timerRef.current);
+          setMessage(text);
+          setIsVisible(true);
+          timerRef.current = setTimeout(() => setIsVisible(false), durationMs);
+        }, []);
+
+        const ToastElement = (
+          <div
+            className={`toast ${isVisible ? "is-visible" : ""}`}
+            role="status"
+            aria-live="polite"
+          >
+            {message}
+          </div>
+        );
+
+        return { showToast, ToastElement };
+      }
+
+      function useRipple() {
+        const [ripples, setRipples] = useState([]);
+
+        const handleRipple = useCallback((event) => {
+          const rect = event.currentTarget.getBoundingClientRect();
+          const x = event.clientX - rect.left;
+          const y = event.clientY - rect.top;
+          const size = Math.max(rect.width, rect.height) * 0.5;
+          const id = Date.now() + Math.random();
+
+          setRipples((prev) => [...prev, { id, x, y, size }]);
+          setTimeout(
+            () => setRipples((prev) => prev.filter((r) => r.id !== id)),
+            600,
+          );
+        }, []);
+
+        const RippleElements = ripples.map((r) => (
+          <div
+            key={r.id}
+            className="ripple-circle"
+            style={{
+              left: r.x - r.size / 2,
+              top: r.y - r.size / 2,
+              width: r.size,
+              height: r.size,
+            }}
+          />
+        ));
+
+        return { handleRipple, RippleElements };
+      }
+
+      /* ================================================================
+   URL STATE
+   ================================================================ */
+
+      function encodeStateToHash(routePath, answersState) {
+        const params = new URLSearchParams();
+        Object.entries(answersState).forEach(([key, value]) => {
+          params.set(key, value);
+        });
+        const queryString = params.toString();
+        return queryString ? `${routePath}?${queryString}` : routePath;
+      }
+
+      function decodeStateFromHash(hash) {
+        const [routePath, queryString] = hash.split("?");
+        const state = {};
+        if (queryString) {
+          const params = new URLSearchParams(queryString);
+          params.forEach((value, key) => {
+            state[key] = value;
+          });
+        }
+        return { route: routePath || "/", state };
+      }
+
+      function useRouter() {
+        const parseHash = () => {
+          const raw = window.location.hash.slice(1) || "/";
+          return decodeStateFromHash(raw);
+        };
+
+        const [route, setRoute] = useState(() => parseHash().route);
+        const [initialUrlState] = useState(() => parseHash().state);
+
+        useEffect(() => {
+          const handleHashChange = () => {
+            const { route: newRoute } = parseHash();
+            setRoute(newRoute);
+          };
+          window.addEventListener("hashchange", handleHashChange);
+          return () =>
+            window.removeEventListener("hashchange", handleHashChange);
+        }, []);
+
+        const navigate = useCallback((path) => {
+          window.location.hash = path;
+        }, []);
+
+        return { route, navigate, initialUrlState };
+      }
+
+      /* ================================================================
+   PDF EXPORT
+   ================================================================ */
+
+      function exportToPdf(title, decisionPathHtml, outcomeHtml) {
+        const printWindow = window.open("", "_blank");
+        if (!printWindow) return;
+
+        printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>${title} — Analysis | PwC</title>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+      <style>
+        body { font-family: 'Inter', sans-serif; max-width: 800px; margin: 40px auto; padding: 0 24px; color: #2d2d2d; line-height: 1.7; }
+        h1 { font-size: 1.6rem; margin-bottom: 8px; }
+        .subtitle { color: #78716c; font-size: 0.85rem; margin-bottom: 32px; }
+        .section-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #a8a29e; margin-bottom: 12px; border-bottom: 1px solid #e7e5e4; padding-bottom: 8px; }
+        .path-box { background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 8px; padding: 16px; margin-bottom: 28px; font-size: 0.82rem; }
+        .path-step { display: inline-block; padding: 3px 8px; background: white; border: 1px solid #e7e5e4; border-radius: 6px; margin: 2px 4px 2px 0; font-size: 0.76rem; }
+        .path-arrow { color: #d6d3d1; margin: 0 2px; }
+        .outcome-tag { display: inline-block; padding: 6px 16px; border-radius: 8px; font-size: 0.76rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; background: #fff4ee; color: #d04a02; border: 1px solid rgba(208,74,2,0.2); }
+        .outcome-content p { margin-bottom: 12px; font-size: 0.86rem; line-height: 1.9; }
+        .outcome-content strong { font-weight: 600; }
+        .outcome-content ul { margin: 8px 0 16px 20px; }
+        .outcome-content ul li { margin-bottom: 4px; font-size: 0.86rem; line-height: 1.75; }
+        .callout { padding: 14px 18px; border-radius: 8px; margin: 16px 0; font-size: 0.82rem; line-height: 1.8; }
+        .callout.warn { background: #fff6ef; border: 1px solid #fdd8b8; }
+        .callout.info { background: #f8f6f3; border: 1px solid #e0d8cf; }
+        .callout.good { background: #f4fef7; border: 1px solid #b8efc7; }
+        .footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid #e7e5e4; font-size: 0.72rem; color: #a8a29e; }
+        @media print { body { margin: 20px; } }
+      </style>
+    </head>
+    <body>
+      <h1>${title} — Analysis</h1>
+      <div class="subtitle">Generated by PwC Tax Tool Suite · ${new Date().toLocaleDateString("en-IE", { day: "numeric", month: "long", year: "numeric" })}</div>
+
+      <div class="section-title">Decision Path</div>
+      <div class="path-box">${decisionPathHtml}</div>
+
+      <div class="section-title">Outcome</div>
+      <div class="outcome-content">${outcomeHtml}</div>
+
+      <div class="footer">
+        <p>This analysis is for informational purposes only and does not constitute tax advice. Based on TCA 1997, VATCA 2010 and Finance Act 2025.</p>
+        <p>© ${new Date().getFullYear()} PricewaterhouseCoopers. All rights reserved.</p>
+      </div>
+    </body>
+    </html>
+  `);
+
+        printWindow.document.close();
+        setTimeout(() => printWindow.print(), 400);
+      }
+
+      /* ================================================================
+   ================================================================
+
+   SECTION B — DATA
+
+   All questions, legislation, glossary, and answer content.
+
+   ================================================================
+   ================================================================ */
+
+      /* ----------------------------------------------------------------
+   B1. TOOL REGISTRY
+   ---------------------------------------------------------------- */
+
+      const TOOL_REGISTRY = [
+        {
+          id: "land-sale",
+          title: "Land Sale",
+          subtitle: "Decision Tool",
+          description:
+            "Determine the VAT treatment on a sale of land — development agreements, exemptions, JOTT, and clawback.",
+          useWhen:
+            "Selling undeveloped land, sites with planning, or development sites",
+          estimatedTime: "~2 min · 4–8 questions",
+          icon: "🏗️",
+          iconBackground: "linear-gradient(135deg, #d04a02, #f26b2a)",
+          tag: "Live",
+          tagColor: "var(--color-success)",
+          route: "/land-sale",
+        },
+        {
+          id: "commercial-property",
+          title: "Commercial Property",
+          subtitle: "Sale Decision Tool",
+          description:
+            "Determine the VAT treatment on the sale of a commercial property — TOB relief, CGS implications, and recovery.",
+          useWhen: "Selling office, retail, industrial, or mixed-use buildings",
+          estimatedTime: "~2 min · 3–6 questions",
+          icon: "🏢",
+          iconBackground: "linear-gradient(135deg, #2d2d2d, #57534e)",
+          tag: "Live",
+          tagColor: "var(--color-success)",
+          route: "/commercial-property",
+        },
+        {
+          id: "rct",
+          title: "Relevant Contracts Tax",
+          subtitle: "RCT Decision Tool",
+          description:
+            "Determine if RCT applies to a payment, identify the correct withholding rate (0%/20%/35%), and understand eRCT compliance obligations.",
+          useWhen:
+            "Engaging subcontractors in construction, forestry, or meat processing",
+          estimatedTime: "~3 min · 5–8 questions",
+          icon: "🔨",
+          iconBackground: "linear-gradient(135deg, #7c3aed, #a78bfa)",
+          tag: "Live",
+          tagColor: "var(--color-success)",
+          route: "/rct",
+        },
+      ];
+
+      /* ----------------------------------------------------------------
+   B2. LEGISLATION
+   ---------------------------------------------------------------- */
+
+      const LEGISLATION_DATABASE = {
+        s94_1: {
+          title: "Section 94(1) — Definitions",
+          section: "94(1)",
+          text: `94.— (1) In this section —\n\n"<hl>completed</hl>", in respect of immovable goods, means that the development of those goods has reached the state, apart from only such finishing or fitting work that would normally be carried out by or on behalf of the person who will use them, where the goods can effectively be used for the purposes for which the goods were designed, and the utility services required for those purposes are connected to the goods;\n\n"<hl>occupied</hl>", in respect of immovable goods, means —\n  (a) occupied and fully in use following completion, where that use is one for which planning permission for the development of those goods was granted, and\n  (b) where those goods are let, occupied and fully in such use by the tenant.`,
+        },
+        s94_2: {
+          title: "Section 94(2) — Exempt Supplies",
+          section: "94(2)",
+          text: `(2) Subject to subsections (3), (5), (8) and (9) and section 95(7)(a), tax is <hl>not chargeable</hl> on the supply of immovable goods —\n\n  (a) that have <hl>not been developed within 20 years</hl> prior to that supply,\n\n  (b) being completed immovable goods, the most recent completion of which occurred <hl>more than 5 years prior</hl> to that supply, and those goods have not been developed within that 5 year period,\n\n  (c) being completed immovable goods that have not been developed since the most recent completion of those goods, where that supply —\n    (i) occurs after the immovable goods have been <hl>occupied for an aggregate of at least 24 months</hl> following the most recent completion of those goods, and\n    (ii) takes place after a previous supply of those goods on which tax was chargeable and that previous supply —\n      (I) took place after the most recent completion of those goods, and\n      (II) was a transaction between persons who were not connected within the meaning of section 97,\n\n  (d) being a building that was completed more than 5 years prior to that supply and on which development was carried out in the 5 years prior to that supply where —\n    (i) such development did not and was not intended to adapt the building for a materially altered use, and\n    (ii) the cost of such development did not exceed <hl>25 per cent</hl> of the consideration for that supply,\n\n  (e) being a building that was completed within the 5 years prior to that supply where —\n    (i) the building had been occupied for an aggregate of at least 24 months following that completion,\n    (ii) that supply takes place after a previous supply of the building on which tax was chargeable and that previous supply took place after that completion and was between unconnected persons, and\n    (iii) if any development occurred after that completion — such development did not adapt for materially altered use and did not exceed 25% of the consideration.`,
+        },
+        s94_3: {
+          title: "Section 94(3) — Development Agreement",
+          section: "94(3)",
+          text: `(3) Where a person supplies immovable goods to another person and <hl>in connection with that supply a taxable person enters into an agreement</hl> with that other person or with a person connected with that other person <hl>to carry out a development</hl> in relation to those immovable goods, then —\n\n  (a) the person who supplies the goods shall, in relation to that supply, be deemed to be a <hl>taxable person</hl>,\n\n  (b) the supply of the goods shall be deemed to be a supply to which section 3 applies, and\n\n  (c) <hl>subsection (2) does not apply</hl> to that supply.`,
+        },
+        s94_5: {
+          title: "Section 94(5) — Joint Option for Taxation",
+          section: "94(5)",
+          text: `(5) Subject to subsection (9), where a <hl>taxable person who carries on a business in the State</hl> supplies immovable goods to <hl>another taxable person who carries on a business in the State</hl> in circumstances where that supply would otherwise be exempted because of subsection (2), or section 95(3) or (7)(b), then, notwithstanding those provisions, <hl>tax is chargeable on that supply</hl>, but only if the supplier and the taxable person to whom the supply is made have, <hl>no later than the 15th day of the month after the month</hl> during which the supply occurred, entered into an <hl>agreement in writing</hl> to opt to have tax chargeable on that supply (in this Act referred to as a "<hl>joint option for taxation</hl>").`,
+        },
+        s94_6: {
+          title: "Section 94(6) — Effect of JOTT",
+          section: "94(6)",
+          text: `(6) Where a joint option for taxation is exercised in accordance with subsection (5), then —\n\n  (a) the <hl>person to whom the supply is made</hl> shall, in relation to that supply, be an accountable person and shall be <hl>liable to pay the tax</hl> chargeable on that supply as if that person supplied those goods, and\n\n  (b) the person who made the supply shall <hl>not be accountable for or liable to pay</hl> such tax.`,
+        },
+        s20_2c: {
+          title: "Section 20(2)(c) — Transfer of Business",
+          section: "20(2)(c)",
+          text: `(2) The following shall be deemed not to be a supply of goods or services, as the case may be —\n\n  ...\n\n  (c) the transfer of ownership of goods, or of the right to a service, —\n    (i) being the <hl>transfer of a totality of assets</hl>, or part thereof, of a business to <hl>another taxable person</hl>,\n    (ii) whether or not that transfer is in connection with a transfer of a business or of part of a business,\n\n  provided that the <hl>transferee is an accountable person</hl> and would, but for this paragraph, be entitled to deduct under section 59 the tax that would be chargeable in respect of the transfer,\n\n  and the transferor and transferee shall, in relation to that transfer, be jointly and severally liable for the tax, if any, that would have been chargeable but for this paragraph.`,
+        },
+        s64_6b: {
+          title: "Section 64(6)(b) — Increase in Deductibility",
+          section: "64(6)(b)",
+          text: `(6)(b) Where, during an <hl>adjustment period</hl>, a capital good is used in a <hl>taxable supply</hl> (including a supply that would be taxable but for the application of section 20(2)(c)), and the proportion of deductible use in the current interval <hl>exceeds</hl> the initial proportion of deductible use or the reference deduction amount (as the case may be), the accountable person shall be entitled to an <hl>increase in the amount deductible</hl> for that interval.`,
+        },
+        s2_development: {
+          title: 'Section 2 — "Development" (Interpretation)',
+          section: "2(1)",
+          text: `"<hl>development</hl>", in relation to any land, means —\n\n  (a) the construction, demolition, extension, alteration or reconstruction of any <hl>building</hl> on the land, or\n\n  (b) the carrying out of any <hl>engineering or other operation</hl> in, on, over or under the land to adapt it for <hl>materially altered use</hl>,\n\nbut does not include —\n  (i) any work of maintenance or repair of an existing building where the work done does not materially alter the building or any part of the building, or\n  (ii) any work which consists only of the installation of fixtures.`,
+        },
+        /* ---- RCT LEGISLATION ---- */
+        s531_1: {
+          title: "Section 531(1) — Application of RCT",
+          section: "531(1)",
+          text: `531.— (1) Where, in the performance of a <hl>relevant contract</hl> in the case of which the principal contractor is one of a number of categories of person and the principal makes a <hl>payment</hl> (or is deemed to do so) as respects that relevant contract to a <hl>sub-contractor</hl>,\n\nthe principal is instructed to <hl>deduct tax at a rate of 0%, 20% or 35%</hl> via the RCT online system from the payment and pay that tax to the Collector General.\n\nIn order for a payment between two persons to fall within the scope of the sub-contractor legislation, the following conditions must be fulfilled:\n  (a) the person making the payment must be a <hl>principal contractor</hl>, and\n  (b) the contract between the two persons must be a <hl>relevant contract</hl>, and\n  (c) the work to be carried out under the contract must consist of "<hl>relevant operations</hl>".`,
+        },
+        s530_1: {
+          title: "Section 530(1) — Definitions: Relevant Contract & Relevant Operations",
+          section: "530(1)",
+          text: `530.— (1) In this Chapter —\n\n"<hl>relevant contract</hl>" means a contract whereby a person "the contractor" (subcontractor) is liable to another person "the principal" (principal contractor):\n  (a) to carry out <hl>relevant operations</hl>, or\n  (b) to be answerable for the carrying out of operations by others, or\n  (c) to furnish his own labour or the labour of others or to arrange for the labour of others in the course of such relevant operations.\n\nA <hl>contract of employment is specifically excluded</hl> from this definition.\n\n"<hl>relevant operations</hl>" means <hl>construction operations</hl>, <hl>forestry operations</hl> or <hl>meat processing operations</hl>.\n\nThe RCT system applies regardless of whether the principal contractor and/or the subcontractor are resident in the State, where the contract is executed and regardless of where payments are made (<hl>s530(4)</hl>).`,
+        },
+        s530A_1: {
+          title: "Section 530A(1) — Principal Contractor Categories",
+          section: "530A(1)",
+          text: `530A.— (1) A "<hl>principal contractor</hl>" means any of the following:\n\n  (I) A person who has a relevant contract with a client and who uses a <hl>sub-contractor</hl> in the course or execution of that relevant contract;\n\n  (II) A person carrying on a business which includes:\n    (a) The <hl>erection of buildings</hl> (not including a person who constructs a building for their employees' use or enjoyment or to let),\n    (b) The <hl>development of land</hl> (definition from s639(1) — very broad, includes construction, demolition, extension, alteration or reconstruction of any building and any work to adapt land for materially altered use),\n    (c) The <hl>manufacture, treatment or extraction of materials</hl> for use in construction operations,\n    (d) <hl>Meat processing operations</hl> in an approved establishment,\n    (e) <hl>Processing of wood</hl> from thinned or felled trees in sawmills;\n\n  (III) A person <hl>connected with a company</hl> carrying on any of the above businesses (per s10(7) TCA 1997);\n\n  (IV) A <hl>local authority</hl> or public utility society;\n  (V) A <hl>government minister</hl> acting in official capacity;\n  (VI) Any <hl>board established by statute</hl> or Royal Charter funded by the Oireachtas;\n  (VII) A person carrying on any <hl>gas, electricity, water, hydraulic power, dock, canal or rail undertaking</hl>;\n  (VIII) A person carrying out <hl>telecommunications</hl> installation, alteration or repair.`,
+        },
+        s530E_1: {
+          title: "Section 530E(1) — RCT Rates",
+          section: "530E(1)",
+          text: `530E.— (1) The rates of withholding tax under this Chapter are as follows:\n\n  (a) <hl>0%</hl> — for subcontractors who satisfy the requirements of <hl>s530G TCA 1997</hl> (good tax compliance record for the previous 3 years, fixed place of business, proper records);\n\n  (b) <hl>20%</hl> — for subcontractors registered for tax with a record of <hl>substantial compliance</hl> but who do not qualify for the 0% rate;\n\n  (c) <hl>35%</hl> — this is the <hl>default rate</hl> where:\n    — a determination of the rate applicable to the subcontractor has not been made, or\n    — the subcontractor is <hl>not registered</hl> with Revenue, or\n    — there are <hl>serious compliance issues</hl>.\n\nRCT is deducted from the <hl>VAT-exclusive</hl> payment to the sub-contractor.`,
+        },
+        s530G: {
+          title: "Section 530G — Conditions for 0% RCT Rate",
+          section: "530G",
+          text: `530G.— The Revenue Commissioners must be satisfied that the subcontractor:\n\n  (a) <hl>is, or is about to become</hl>, a subcontractor engaged in a business of carrying on relevant operations,\n\n  (b) carries on business from a <hl>fixed place of business in a permanent building</hl> and will have such stock, equipment and other facilities which, in the opinion of the Revenue Commissioners, are required for the purposes of the business,\n\n  (c) does/will keep <hl>business records properly and accurately</hl>,\n\n  (d) has <hl>complied with all obligations</hl> imposed by the Tax Acts, VAT Acts and CGT Acts in the <hl>previous 3 years</hl> in relation to the delivery of returns, payment of tax, interest and penalties and the supply of accounts or other information to Revenue on request, and\n\n  (e) in the case of a subcontractor who was <hl>resident outside the State</hl> at some time during the previous 3 years, the subcontractor has, throughout that period, complied with all comparable obligations imposed by the laws of the country in which the subcontractor was resident.`,
+        },
+        s530F: {
+          title: "Section 530F — Penalties for Non-Compliance",
+          section: "530F",
+          text: `530F.— If a principal makes a payment to a subcontractor <hl>otherwise than in accordance with a deduction authorisation</hl> (e.g. by making a payment without obtaining a deduction authorisation or making a payment and not deducting tax at the rate specified), a <hl>penalty</hl> equal to a percentage of the payment made is payable:\n\n  Status of Subcontractor → Penalty:\n  • <hl>Zero rate subcontractor</hl> → 3%\n  • <hl>20% rate subcontractor</hl> → 10%\n  • <hl>35% rate subcontractor</hl> → 20%\n  • <hl>Any other subcontractor</hl> → 35%`,
+        },
+        s530P: {
+          title: "Section 530P — Credit & Offset for RCT Deducted",
+          section: "530P",
+          text: `530P.— (4) The RCT deducted by the principal is treated as a <hl>payment by the subcontractor on account of income tax</hl> (or corporation tax) payable by the subcontractor for the chargeable period in which the RCT was deducted.\n\n(5) To the extent that the RCT is not required to meet preliminary tax for the current year, RCT may be <hl>offset against any other outstanding taxes</hl>, such as VAT, PAYE/PRSI and CGT.\n\nThe general <hl>4-year time limit</hl> applies to any refund claims (s531(5A) and s865(4) TCA 1997).`,
+        },
+      };
+
+      /* ----------------------------------------------------------------
+   B3. GLOSSARY
+   ---------------------------------------------------------------- */
+
+      const GLOSSARY_DATABASE = {
+        completed: {
+          term: "Completed",
+          source: "s94(1) VATCA 2010",
+          definition:
+            "The development has reached the state — apart from finishing or fitting work normally carried out by the user — where the goods can effectively be used for their designed purposes, and utility services are connected.",
+        },
+        occupied: {
+          term: "Occupied",
+          source: "s94(1) VATCA 2010",
+          definition:
+            "Occupied and fully in use following completion, where that use is one for which planning permission was granted. Where let, occupied and fully in use by the tenant.",
+        },
+        development: {
+          term: "Development",
+          source: "s2(1) VATCA 2010",
+          definition:
+            "In relation to land: (a) the construction, demolition, extension, alteration or reconstruction of any building, or (b) any engineering operation to adapt it for materially altered use. Does NOT include mere repair/maintenance or installation of fixtures.",
+        },
+        "immovable goods": {
+          term: "Immovable Goods",
+          source: "s2(1) VATCA 2010",
+          definition:
+            '"Immovable goods" means land. Defined broadly — includes buildings and structures erected on land.',
+        },
+        "taxable person": {
+          term: "Taxable Person",
+          source: "s2(1) VATCA 2010",
+          definition:
+            "A person who independently carries out any business activity, regardless of the purpose or results of that activity.",
+        },
+        "capital goods scheme": {
+          term: "Capital Goods Scheme (CGS)",
+          source: "Part 8, Ch.2 VATCA 2010",
+          definition:
+            "A mechanism that regulates VAT deductibility on immovable goods over an adjustment period. 20 intervals for acquisition/development; 10 intervals for refurbishment.",
+        },
+        "joint option for taxation": {
+          term: "Joint Option for Taxation (JOTT)",
+          source: "s94(5) VATCA 2010",
+          definition:
+            "An agreement in writing between vendor and purchaser (both taxable) to opt to have VAT chargeable on an otherwise exempt supply. Must be made by the 15th of the month following supply.",
+        },
+        "transfer of business": {
+          term: "Transfer of Business (TOB)",
+          source: "s20(2)(c) VATCA 2010",
+          definition:
+            "Where the transfer of a totality of assets (or part thereof) of a business to another taxable person is deemed not to be a supply for VAT purposes.",
+        },
+        "adjustment period": {
+          term: "Adjustment Period",
+          source: "Part 8, Ch.2 VATCA 2010",
+          definition:
+            "The period over which VAT deductibility is regulated under the CGS. 20 intervals for acquisition/development; 10 intervals for refurbishment.",
+        },
+        /* ---- RCT GLOSSARY ---- */
+        "principal contractor": {
+          term: "Principal Contractor",
+          source: "s530A(1) TCA 1997",
+          definition:
+            "A person who falls within defined categories (e.g. carrying on construction, land development, meat processing, forestry) and engages subcontractors under relevant contracts. Categories are set out in s530A(1) TCA 1997.",
+        },
+        "relevant contract": {
+          term: "Relevant Contract",
+          source: "s530(1) TCA 1997",
+          definition:
+            "A contract whereby a subcontractor is liable to a principal to carry out relevant operations, be answerable for operations by others, or furnish/arrange labour for such operations. A contract of employment is specifically excluded.",
+        },
+        "relevant operations": {
+          term: "Relevant Operations",
+          source: "s530(1) TCA 1997",
+          definition:
+            "Means construction operations, forestry operations, or meat processing operations as defined in s530(1) TCA 1997. Includes building, demolition, site clearance, haulage, tree felling/processing, slaughter, carcass processing, and much more.",
+        },
+        "deduction authorisation": {
+          term: "Deduction Authorisation",
+          source: "s530D(1) TCA 1997",
+          definition:
+            "An authorisation issued by Revenue specifying the rate of tax and amount of tax to be deducted from a payment to a subcontractor. The principal must obtain this before making a payment.",
+        },
+        "contract notification": {
+          term: "Contract Notification",
+          source: "s530B TCA 1997",
+          definition:
+            "The process by which a principal provides Revenue with details of a new relevant contract and the subcontractor's identity through the eRCT system. Must be done when entering into the contract.",
+        },
+      };
+
+      /* ----------------------------------------------------------------
+   B4. TOOL: LAND SALE
+   ---------------------------------------------------------------- */
+
+      const LAND_SALE_QUESTIONS = {
+        q1: {
+          title:
+            "Is the land being sold in connection with a development agreement?",
+          actionableHint:
+            "Check the contract for sale — is there a separate agreement for the purchaser (or a connected party) to develop the site?",
+          legislationRef: "s94_3",
+          glossaryTerms: ["development"],
+          infoPreview:
+            "Section 94(3) VATCA — where land is sold with a linked development agreement, it cannot be exempt.",
+          infoDetail: `<strong>Section 94(3) VATCA 2010</strong> provides that where a person supplies immovable goods and, in connection with that supply, a taxable person enters into an agreement with the purchaser (or a connected person) to carry out <em>development</em>, the supply is deemed taxable.<br/><br/>This anti-avoidance provision ensures that land which would otherwise be exempt cannot avoid VAT by being sold separately from the development agreement.`,
+          yesLabel: "Yes, development agreement in place",
+          noLabel: "No development agreement",
+        },
+        q1a: {
+          title: "Will the site qualify for the 9% VAT rate?",
+          actionableHint:
+            'Check if the development will be apartments in a qualifying "apartment block" (min. 2 floors, 3+ apartments, grouped access).',
+          glossaryTerms: [],
+          infoPreview:
+            "Finance Act 2025 introduced a 9% rate for qualifying apartment blocks until 31 Dec 2030.",
+          infoDetail: `Finance Act 2025 introduced a <strong>9% VAT rate</strong> for the sale of land which, when developed, will be one or more apartments used for residential purposes in an <strong>"apartment block"</strong>.<br/><br/>An "apartment block" must:<br/>• Be a multi-storey building (minimum 2 floors)<br/>• Comprise not less than 3 apartments<br/>• Have grouped or common access<br/><br/>The 9% rate applies until <strong>31 December 2030</strong>.`,
+          yesLabel: "Yes, qualifies for 9%",
+          noLabel: "Does not qualify",
+        },
+        q2: {
+          title: "Is the land partially developed?",
+          actionableHint:
+            'Has construction or engineering work been carried out that has NOT yet reached "completed" status?',
+          legislationRef: "s94_2",
+          glossaryTerms: ["development", "completed"],
+          infoPreview:
+            "Non-completed property developed within 20 years is subject to VAT.",
+          infoDetail: `A supply of non-completed property that has been <em>developed</em> within 20 years is liable to VAT. The 5-year rule and 24-month occupation rule in <strong>s94(2)</strong> only start once development is "<em>completed</em>".<br/><br/>Mere repair and maintenance, or obtaining planning permission, does <strong>not</strong> constitute development.`,
+          yesLabel: "Yes, partially developed",
+          noLabel: "Not partially developed",
+        },
+        q2a: {
+          title: "Will the site qualify for the 9% VAT rate?",
+          actionableHint:
+            "Check if the development will be apartments in a qualifying apartment block.",
+          glossaryTerms: [],
+          infoPreview:
+            "Finance Act 2025 reduced rate for qualifying apartment blocks.",
+          infoDetail: `An "apartment block" must:<br/>• Be a multi-storey building (minimum 2 floors)<br/>• Comprise not less than 3 apartments<br/>• Have grouped or common access<br/><br/>The 9% rate applies until <strong>31 December 2030</strong>.`,
+          yesLabel: "Yes, qualifies for 9%",
+          noLabel: "Does not qualify",
+        },
+        q3: {
+          title:
+            "Has the land been developed to completion in the last 5 years?",
+          actionableHint:
+            'When was the most recent "completion" date — was it within 5 years of the proposed sale date?',
+          legislationRef: "s94_2",
+          glossaryTerms: ["completed", "development"],
+          infoPreview:
+            "Property completed >5 years ago with no further development is generally exempt.",
+          infoDetail: `The 5-year period runs from the most recent "<em>completion</em>" of development. Where land was developed to completion more than 5 years ago and no further development has occurred, the supply will generally be exempt (subject to the JOTT).`,
+          yesLabel: "Yes, completed in last 5 years",
+          noLabel: "No",
+        },
+        q4: {
+          title: "Which best describes the land?",
+          actionableHint:
+            "Select the option that matches the development history of this site.",
+          type: "choice",
+          glossaryTerms: [],
+          choices: [
+            {
+              value: "developedOver5",
+              label: "Developed to completion more than 5 years ago",
+              shortLabel: "Dev >5 yrs",
+              icon: "🏗️",
+            },
+            {
+              value: "neverDeveloped",
+              label: "The land has never been developed",
+              shortLabel: "Never dev.",
+              icon: "🌿",
+            },
+          ],
+        },
+        q5: {
+          title:
+            "Confirm: undeveloped land NOT sold with a development agreement?",
+          actionableHint:
+            'You said "no development agreement" earlier — confirming this hasn\'t changed.',
+          glossaryTerms: [],
+          yesLabel: "Confirmed — no development agreement",
+          noLabel: "Actually, there IS a development agreement",
+        },
+        q6: {
+          title: "Will the Joint Option to Tax (JOTT) be exercised?",
+          actionableHint:
+            "Are both vendor and purchaser VAT-registered, and willing to sign a written JOTT by the 15th of the month following sale?",
+          legislationRef: "s94_5",
+          glossaryTerms: ["joint option for taxation", "taxable person"],
+          infoPreview:
+            "JOTT allows an otherwise exempt sale to become taxable — prevents vendor CGS clawback.",
+          infoDetail: `Both parties must be <em>taxable persons</em> carrying on business in the State. The agreement must be in writing by the 15th of the month following supply.<br/><br/>Where exercised, the <strong>purchaser</strong> self-accounts for VAT at 13.5% under the reverse charge mechanism.`,
+          yesLabel: "Yes, JOTT will be exercised",
+          noLabel: "No, JOTT will not be exercised",
+        },
+        q7: {
+          title: "Will the purchaser suffer a VAT cost from the JOTT?",
+          actionableHint:
+            "What is the purchaser's intended use — fully taxable activities (no cost) or exempt/mixed (cost)?",
+          glossaryTerms: [],
+          infoPreview:
+            "If purchaser uses property for fully VATable activities, the self-accounted VAT is fully deductible.",
+          infoDetail: `If the purchaser uses the property for <strong>fully VATable activities</strong>, the self-accounted VAT is fully deductible — no cost.<br/><br/>If used for <strong>exempt or partially exempt activities</strong>, some or all VAT is irrecoverable.`,
+          yesLabel: "Yes, there is a VAT cost",
+          noLabel: "No VAT cost for the purchaser",
+        },
+        q8: {
+          title: "Is there a risk of clawback for the vendor?",
+          actionableHint:
+            "Did the vendor recover VAT on acquisition of the land — and is the CGS adjustment period still running?",
+          glossaryTerms: ["capital goods scheme"],
+          infoPreview:
+            "A CGS clawback arises if the vendor previously reclaimed VAT during the adjustment period.",
+          infoDetail: `A <strong>CGS clawback</strong> can arise where the vendor sells "old" property during the adjustment period having previously reclaimed VAT.<br/><br/>• <strong>20 intervals (~20 years)</strong> for acquisition/development<br/>• <strong>10 intervals (~10 years)</strong> for refurbishment`,
+          yesLabel: "Yes, risk of clawback",
+          noLabel: "No risk of clawback",
+        },
+      };
+
+      const LAND_SALE_TRAIL_LABELS = {
+        q1: "Dev. Agreement",
+        q1a: "9% Qualifying",
+        q2: "Partially Dev.",
+        q2a: "9% Qualifying",
+        q3: "Completed <5 yrs",
+        q4: "Land Status",
+        q5: "Confirmed",
+        q6: "JOTT",
+        q7: "Purchaser Cost",
+        q8: "Clawback",
+      };
+
+      function getLandSaleFlow(answers) {
+        const flow = ["q1"];
+        if (answers.q1 === undefined) return flow;
+        if (answers.q1 === "Yes") { flow.push("q1a"); return flow; }
+        flow.push("q2");
+        if (answers.q2 === undefined) return flow;
+        if (answers.q2 === "Yes") { flow.push("q2a"); return flow; }
+        flow.push("q3");
+        if (answers.q3 === undefined) return flow;
+        if (answers.q3 === "Yes") return flow;
+        flow.push("q4");
+        if (answers.q4 === undefined) return flow;
+        if (answers.q4 === "developedOver5") return flow;
+        if (answers.q4 === "neverDeveloped") {
+          flow.push("q5");
+          if (answers.q5 === undefined) return flow;
+          if (answers.q5 === "No") return flow;
+          flow.push("q6");
+          if (answers.q6 === undefined) return flow;
+          if (answers.q6 === "Yes") { flow.push("q7"); return flow; }
+          flow.push("q8");
+          return flow;
+        }
+        return flow;
+      }
+
+      function getLandSaleOutcome(answers) {
+        if (answers.q1 === "Yes" && answers.q1a === "Yes") return "devAgreement9";
+        if (answers.q1 === "Yes" && answers.q1a === "No") return "devAgreement13";
+        if (answers.q1 === "No" && answers.q2 === "Yes" && answers.q2a === "Yes") return "partial9";
+        if (answers.q1 === "No" && answers.q2 === "Yes" && answers.q2a === "No") return "partial13";
+        if (answers.q1 === "No" && answers.q2 === "No" && answers.q3 === "Yes") return "completedLast5";
+        if (answers.q1 === "No" && answers.q2 === "No" && answers.q3 === "No" && answers.q4 === "developedOver5") return "developedOver5";
+        if (answers.q1 === "No" && answers.q2 === "No" && answers.q3 === "No" && answers.q4 === "neverDeveloped" && answers.q5 === "No") return "contradiction";
+        if (answers.q5 === "Yes" && answers.q6 === "Yes" && answers.q7 === "Yes") return "jottCost";
+        if (answers.q5 === "Yes" && answers.q6 === "Yes" && answers.q7 === "No") return "jottNoCost";
+        if (answers.q5 === "Yes" && answers.q6 === "No" && answers.q8 === "Yes") return "noJottClawback";
+        if (answers.q5 === "Yes" && answers.q6 === "No" && answers.q8 === "No") return "noJottNoClawback";
+        return null;
+      }
+
+      const LAND_SALE_OUTCOMES = {
+        devAgreement9: { tag: "VAT @ 9%", tagColor: "#7c3aed", tagBackground: "#f5f3ff", legislationRefs: ["s94_3"], html: `<p>Irish VAT legislation contains anti-avoidance provisions under <strong>Section 94(3) VATCA 2010</strong>. Where undeveloped land is sold and an agreement is entered into with the purchaser (or a connected person) to develop the land, the sale becomes subject to VAT.</p><p>Under <strong>Finance Act 2025</strong>, the <strong>9% rate</strong> applies to land which, when developed, will be one or more apartments in a qualifying "apartment block":</p><ul><li>Multi-storey building (minimum 2 floors)</li><li>Not less than 3 apartments</li><li>Grouped or common access</li></ul><p>On this basis, <strong>the sale should be subject to VAT at 9%</strong>.</p><div class="callout warn">⚠️ If the 9% criteria are not met, <strong>13.5%</strong> applies. The 9% rate is available until <strong>31 December 2030</strong>.</div><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion (or by 15th of following month)<br/>• VAT in Vendor's return (Box T1)<br/>• Vendor entitled to VAT recovery on sale costs<br/>• PCVEs must be completed for Purchaser<br/>• VAT charging clause in Contract for Sale</div>` },
+        devAgreement13: { tag: "VAT @ 13.5%", tagColor: "var(--pwc-orange)", tagBackground: "var(--pwc-orange-soft)", legislationRefs: ["s94_3"], html: `<p>Under <strong>Section 94(3) VATCA 2010</strong>, where undeveloped land is sold and an agreement is entered into with the purchaser (or a connected person) to develop the land, the sale becomes subject to VAT at <strong>13.5%</strong>.</p><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion (or by 15th of following month)<br/>• VAT in Vendor's return (Box T1)<br/>• Vendor entitled to VAT recovery on sale costs<br/>• PCVEs required · VAT charging clause in Contract for Sale</div>` },
+        partial9: { tag: "VAT @ 9%", tagColor: "#7c3aed", tagBackground: "#f5f3ff", legislationRefs: ["s94_2"], html: `<p>The sale of partially developed land is subject to VAT. This is land developed within the last 20 years where development is not yet <em>completed</em>.</p><p>Under <strong>Finance Act 2025</strong>, the <strong>9% rate</strong> applies where the land will be developed into qualifying apartments in an apartment block.</p><p>On this basis, <strong>the sale should be subject to VAT at 9%</strong>.</p><div class="callout warn">⚠️ If the 9% criteria are not met, <strong>13.5%</strong> applies. Available until <strong>31 December 2030</strong>.</div><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion<br/>• VAT in Vendor's return (Box T1)<br/>• VAT recovery on sale costs<br/>• PCVEs required · VAT charging clause required</div>` },
+        partial13: { tag: "VAT @ 13.5%", tagColor: "var(--pwc-orange)", tagBackground: "var(--pwc-orange-soft)", legislationRefs: ["s94_2"], html: `<p>The sale of partially developed land is subject to VAT at <strong>13.5%</strong>. Non-completed property within 20 years of development is liable to VAT.</p><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion (or by 15th of following month)<br/>• VAT in Vendor's return (Box T1)<br/>• VAT recovery on sale costs · PCVEs required<br/>• VAT charging clause in Contract for Sale</div>` },
+        completedLast5: { tag: "VAT @ 13.5%", tagColor: "var(--pwc-orange)", tagBackground: "var(--pwc-orange-soft)", legislationRefs: ["s94_2"], html: `<div class="callout warn">⚠️ Consider whether <strong>s94(2)(c)</strong> applies re: the 24-month occupation rule for second/subsequent supplies.</div><p>Land developed to completion in the last 5 years is subject to VAT at <strong>13.5%</strong>.</p><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion<br/>• VAT in Vendor's return (Box T1)<br/>• VAT recovery on sale costs<br/>• PCVEs required · VAT charging clause required</div>` },
+        developedOver5: { tag: "Exempt (in first instance)", tagColor: "var(--color-success)", tagBackground: "var(--color-success-soft)", legislationRefs: ["s94_2", "s94_5", "s94_6"], html: `<p>The land was completed more than 5 years ago with no significant subsequent development, so <strong>the sale should be exempt from VAT</strong>.</p><p>A <strong>Capital Goods Scheme clawback</strong> can arise if the vendor previously recovered VAT. Adjustment periods:</p><ul><li><strong>20 intervals (~20 years)</strong> — acquisition/development</li><li><strong>10 intervals (~10 years)</strong> — refurbishment</li></ul><p>Under <strong>s94(5)</strong>, the vendor can seek agreement to exercise the <strong>JOTT</strong> to prevent a clawback.</p><div class="callout info"><strong>Consider</strong><br/>• Whether vendor deducted VAT within the adjustment period<br/>• Purchaser's intended use (JOTT may not be agreed if exempt/mixed use)<br/>• If exempt, vendor <strong>cannot</strong> recover VAT on sale costs</div>` },
+        contradiction: { tag: "⚠️ Contradiction", tagColor: "var(--color-danger)", tagBackground: "var(--color-danger-soft)", legislationRefs: [], html: `<p>You previously said <strong>no development agreement</strong> but now indicated there <strong>is</strong> one. Please <strong>Start Over</strong> or edit your earlier answer.</p>` },
+        jottCost: { tag: "Exempt → JOTT → 13.5% (Purchaser Cost)", tagColor: "var(--pwc-orange)", tagBackground: "var(--pwc-orange-soft)", legislationRefs: ["s94_5", "s94_6"], html: `<p>The land is undeveloped with no development agreement, so <strong>the sale is exempt in the first instance</strong>.</p><p>The <strong>JOTT</strong> renders it taxable. The purchaser self-accounts at <strong>13.5%</strong> under the reverse charge.</p><ul><li>Prevents CGS clawback for vendor</li><li>Permits VAT recovery on sale costs</li></ul><div class="callout warn">⚠️ The purchaser intends to use the land for <strong>exempt or partially exempt activities</strong> — an irrecoverable VAT cost arises. The purchaser may refuse the JOTT.</div><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required (Purchaser completes page 3)<br/>• VAT clause in Contract for Sale<br/>• Purchaser self-accounts under reverse charge</div>` },
+        jottNoCost: { tag: "Exempt → JOTT → 13.5% (No Cost)", tagColor: "var(--color-success)", tagBackground: "var(--color-success-soft)", legislationRefs: ["s94_5", "s94_6"], html: `<p>The land is undeveloped with no development agreement, so <strong>the sale is exempt in the first instance</strong>.</p><p>The <strong>JOTT</strong> renders it taxable. The purchaser self-accounts at <strong>13.5%</strong> under the reverse charge.</p><ul><li>Prevents CGS clawback for vendor</li><li>Permits VAT recovery on sale costs</li></ul><div class="callout good">✓ The purchaser uses the land for <strong>fully taxable purposes</strong> — no VAT cost. The purchaser should not object.</div><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required (Purchaser completes page 3)<br/>• VAT clause in Contract for Sale<br/>• Purchaser self-accounts under reverse charge</div>` },
+        noJottClawback: { tag: "Exempt — No JOTT — Clawback", tagColor: "var(--color-danger)", tagBackground: "var(--color-danger-soft)", legislationRefs: ["s94_2", "s94_5"], html: `<p>The sale is <strong>exempt from VAT</strong>. As VAT was recovered on acquisition, <strong>a CGS clawback will arise</strong>.</p><div class="callout warn">⚠️ The clawback can be avoided via the <strong>JOTT</strong>, but it will not be exercised. Consider adjusting the sale price.</div><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required<br/>• No VAT clause (include "the transfer is not subject to VAT")<br/>• Vendor <strong>cannot</strong> recover VAT on sale costs</div>` },
+        noJottNoClawback: { tag: "Exempt — No JOTT — No Clawback", tagColor: "var(--color-success)", tagBackground: "var(--color-success-soft)", legislationRefs: ["s94_2"], html: `<p>The sale is <strong>exempt from VAT</strong>. No VAT was recovered on acquisition, so <strong>no CGS clawback arises</strong>.</p><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required<br/>• No VAT clause (include "the transfer is not subject to VAT")<br/>• Vendor <strong>cannot</strong> recover VAT on sale costs</div>` },
+      };
+
+      /* ----------------------------------------------------------------
+   B5. TOOL: COMMERCIAL PROPERTY
+   ---------------------------------------------------------------- */
+
+      const COMMERCIAL_PROPERTY_QUESTIONS = {
+        cp1: { title: "Is the property a completed commercial property?", actionableHint: "Can the property be used for its designed purpose with utility services connected — even if minor finishing remains?", legislationRef: "s94_1", glossaryTerms: ["completed"], infoPreview: 'The definition of "completed" under s94(1) is specific and can differ from a practical/commercial view.', infoDetail: `<strong>Section 94(1) VATCA 2010</strong> defines "<em>completed</em>" as meaning the development has reached a state where the goods can effectively be used for their designed purposes and utility services are connected — apart from finishing or fitting work normally done by the end user.<br/><br/>If the property is <strong>not</strong> completed, it may be "incomplete" (partially developed) and subject to different rules.`, yesLabel: "Yes, it is a completed commercial property", noLabel: "No, it is not completed" },
+        cp2_tob: { title: "Does the transfer of the property qualify for VAT Transfer of Business relief?", actionableHint: "Is the property being sold with a letting agreement, licence to occupy, or other assets constituting an independent business — to a VAT-registered buyer?", legislationRef: "s20_2c", glossaryTerms: ["transfer of business", "taxable person"], infoPreview: "TOB relief = not a supply for VAT = no VAT charge. But CGS implications depend on whether the underlying sale would be taxable or exempt.", infoDetail: `<strong>Section 20(2)(c) VATCA 2010</strong> provides that the transfer of a totality of assets (or part thereof) of a business to another taxable person is deemed <strong>not</strong> to be a supply for VAT purposes.<br/><br/>Current Revenue guidance provides that TOB relief may apply to the transfer of property subject to an existing letting agreement, agreement to lease, or licence to occupy — as those assets are capable of constituting an independent business.<br/><br/>However, the transfer of property <strong>of itself</strong> without additional assets (e.g. a letting agreement) cannot come within the scope of TOB relief.`, yesLabel: "Yes, it qualifies for TOB relief", noLabel: "No, it does not qualify for TOB relief" },
+        cp3_underlying: { title: "In the absence of TOB relief, would the underlying sale be subject to VAT?", actionableHint: "If TOB didn't exist — would this be a taxable sale (e.g. completed <5 years, JOTT in place) or exempt?", legislationRef: "s94_2", glossaryTerms: ["capital goods scheme", "adjustment period"], infoPreview: "This determines whether CGS obligations pass to purchaser or a new period starts.", infoDetail: `Even where TOB relief applies, it is necessary to understand the <strong>underlying VAT treatment</strong> for CGS purposes.<br/><br/>If the underlying sale would be <strong>taxable</strong>: vendor's CGS obligations do <strong>not</strong> pass to purchaser; a new CGS adjustment period commences for the purchaser.<br/><br/>If the underlying sale would be <strong>exempt</strong>: the purchaser "steps into the shoes" of the vendor and inherits the vendor's CGS obligations.`, yesLabel: "Yes, the sale would be subject to VAT", noLabel: "No, the sale would not be subject to VAT" },
+        cp_incomplete_confirm: { title: 'Confirm: you are advising on an "incomplete" property?', actionableHint: 'Development has occurred in the last 20 years but has not reached "completed" status under VAT law.', glossaryTerms: ["development", "completed"], infoPreview: "If this doesn't describe the property, you may need the Land Sale tool instead.", infoDetail: `An "incomplete" property is one where development has occurred within the last 20 years but the property has not yet reached the state of "<em>completed</em>" within the VAT meaning.<br/><br/>If this does not describe the property, please review your answer to the first question.`, yesLabel: "Yes, I am advising on an incomplete property", noLabel: "No, this does not relate to an incomplete property" },
+        cp_no_tob_5yr: { title: "Was the property completed within the last 5 years?", actionableHint: 'Check the date of the most recent "completion" — is it within 5 years of the proposed sale?', legislationRef: "s94_2", glossaryTerms: ["completed"], infoPreview: "Completed >5 years ago = generally exempt. Completed <5 years ago = generally taxable at 13.5%.", infoDetail: `Under <strong>s94(2)(b)</strong>, a supply of completed immovable goods is exempt where the most recent completion occurred <strong>more than 5 years</strong> prior to the supply and no development has occurred in that 5-year period.<br/><br/>If completed within the last 5 years, the supply is generally <strong>taxable at 13.5%</strong> (subject to the 24-month occupation rule for second/subsequent supplies).`, yesLabel: "Yes, completed within last 5 years", noLabel: "No, completed more than 5 years ago" },
+        cp_no_tob_jott: { title: "Will the Joint Option to Tax (JOTT) be exercised?", actionableHint: "Are both parties VAT-registered and willing to sign a JOTT by the 15th of the month following sale?", legislationRef: "s94_5", glossaryTerms: ["joint option for taxation", "taxable person"], infoPreview: "JOTT prevents vendor CGS clawback — but purchaser must self-account for 13.5%.", infoDetail: `Both parties must be <em>taxable persons</em> carrying on business in the State. The agreement must be in writing by the 15th of the month following supply.<br/><br/>Where exercised, the <strong>purchaser</strong> self-accounts for VAT at 13.5% under the reverse charge mechanism.<br/><br/>The JOTT can prevent a CGS clawback for the vendor.`, yesLabel: "Yes, JOTT will be exercised", noLabel: "No, JOTT will not be exercised" },
+      };
+
+      const COMMERCIAL_PROPERTY_TRAIL_LABELS = { cp1: "Completed", cp2_tob: "TOB Relief", cp3_underlying: "Underlying VAT", cp_incomplete_confirm: "Incomplete", cp_no_tob_5yr: "Completed <5 yrs", cp_no_tob_jott: "JOTT" };
+
+      function getCommercialPropertyFlow(answers) {
+        const flow = ["cp1"];
+        if (answers.cp1 === undefined) return flow;
+        if (answers.cp1 === "Yes") {
+          flow.push("cp2_tob");
+          if (answers.cp2_tob === undefined) return flow;
+          if (answers.cp2_tob === "Yes") { flow.push("cp3_underlying"); return flow; }
+          flow.push("cp_no_tob_5yr");
+          if (answers.cp_no_tob_5yr === undefined) return flow;
+          if (answers.cp_no_tob_5yr === "Yes") return flow;
+          flow.push("cp_no_tob_jott");
+          return flow;
+        }
+        flow.push("cp_incomplete_confirm");
+        return flow;
+      }
+
+      function getCommercialPropertyOutcome(answers) {
+        if (answers.cp1 === "Yes" && answers.cp2_tob === "Yes" && answers.cp3_underlying === "Yes") return "tob_taxable";
+        if (answers.cp1 === "Yes" && answers.cp2_tob === "Yes" && answers.cp3_underlying === "No") return "tob_exempt";
+        if (answers.cp1 === "Yes" && answers.cp2_tob === "No" && answers.cp_no_tob_5yr === "Yes") return "no_tob_taxable";
+        if (answers.cp1 === "Yes" && answers.cp2_tob === "No" && answers.cp_no_tob_5yr === "No" && answers.cp_no_tob_jott === "Yes") return "no_tob_exempt_jott";
+        if (answers.cp1 === "Yes" && answers.cp2_tob === "No" && answers.cp_no_tob_5yr === "No" && answers.cp_no_tob_jott === "No") return "no_tob_exempt_no_jott";
+        if (answers.cp1 === "No" && answers.cp_incomplete_confirm === "Yes") return "incomplete";
+        if (answers.cp1 === "No" && answers.cp_incomplete_confirm === "No") return "review_first";
+        return null;
+      }
+
+      const COMMERCIAL_PROPERTY_OUTCOMES = {
+        tob_taxable: { tag: "TOB Relief — Underlying Taxable", tagColor: "var(--color-success)", tagBackground: "var(--color-success-soft)", legislationRefs: ["s20_2c", "s94_2", "s64_6b"], html: `<p>In accordance with <strong>Section 20(2)(c) VATCA 2010</strong>, VAT Transfer of Business ("TOB") relief applies where there is a transfer of a business, or part of a business, capable of being operated on an independent basis to an accountable person.</p><p>The relief provides that the transfer is <strong>not a supply for VAT purposes</strong> (i.e. not subject to VAT).</p><div class="callout good">✓ On the basis the property is being sold subject to and with the benefit of a lease in place, and is being sold to a VAT-registered purchaser, <strong>TOB relief should apply</strong>.</div><p><strong>Capital Goods Scheme implications:</strong></p><p>Where the sale would be <strong>taxable in the absence of TOB relief</strong>, the vendor's CGS obligations do <strong>not</strong> pass to the purchaser. Instead, a <strong>new CGS adjustment period</strong> commences for the purchaser on acquisition.</p><div class="callout info"><strong>VAT recovery on sale costs</strong><br/>Where TOB relief applies, VAT on sale-related costs is treated as a general overhead of the letting business. Recovery is permissible where the underlying letting is <strong>taxable</strong>.</div><div class="callout warn">⚠️ <strong>Consider s64(6)(b)</strong> — where VAT was restricted on acquisition/development and an uplift in recovery arises due to the underlying taxable sale.</div>` },
+        tob_exempt: { tag: "TOB Relief — Underlying Exempt", tagColor: "var(--pwc-orange)", tagBackground: "var(--pwc-orange-soft)", legislationRefs: ["s20_2c", "s94_2"], html: `<p>In accordance with <strong>Section 20(2)(c) VATCA 2010</strong>, VAT Transfer of Business ("TOB") relief applies. The transfer is <strong>not a supply for VAT purposes</strong>.</p><p><strong>Capital Goods Scheme implications:</strong></p><p>Where the sale would be <strong>exempt in the absence of TOB relief</strong>, the purchaser <strong>"steps into the shoes"</strong> of the vendor and <strong>inherits the vendor's CGS obligations</strong>.</p><div class="callout warn">⚠️ The vendor <strong>must provide the purchaser with a CGS record</strong> in respect of the property. The purchaser continues the vendor's CGS adjustment period.</div><div class="callout info"><strong>VAT recovery on sale costs</strong><br/>Recovery depends on whether the underlying letting is taxable or exempt. Where subject to a <strong>legacy lease</strong>, Revenue's view is that VAT on sale costs is <strong>not deductible</strong>.</div>` },
+        no_tob_taxable: { tag: "VAT @ 13.5%", tagColor: "var(--pwc-orange)", tagBackground: "var(--pwc-orange-soft)", legislationRefs: ["s94_2"], html: `<p>The property was completed within the last 5 years and TOB relief does not apply. The sale is <strong>subject to VAT at 13.5%</strong>.</p><div class="callout warn">⚠️ Consider whether <strong>s94(2)(c)</strong> applies — the 24-month occupation rule for second/subsequent supplies.</div><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion (or by 15th of following month)<br/>• VAT in Vendor's return (Box T1)<br/>• Vendor entitled to VAT recovery on sale costs<br/>• PCVEs required<br/>• VAT charging clause in Contract for Sale</div>` },
+        no_tob_exempt_jott: { tag: "Exempt → JOTT → 13.5%", tagColor: "#7c3aed", tagBackground: "#f5f3ff", legislationRefs: ["s94_2", "s94_5", "s94_6"], html: `<p>The property was completed more than 5 years ago and TOB relief does not apply. The sale is <strong>exempt in the first instance</strong>.</p><p>The <strong>JOTT</strong> renders the supply taxable. The purchaser self-accounts at <strong>13.5%</strong> under the reverse charge mechanism.</p><ul><li>Prevents CGS clawback for the vendor</li><li>Permits VAT recovery on sale costs</li></ul><div class="callout info"><strong>Practical steps</strong><br/>• Written agreement by 15th of month following supply<br/>• PCVEs required (Purchaser completes page 3)<br/>• VAT clause in Contract for Sale<br/>• Purchaser self-accounts under reverse charge</div>` },
+        no_tob_exempt_no_jott: { tag: "Exempt — No JOTT", tagColor: "var(--color-success)", tagBackground: "var(--color-success-soft)", legislationRefs: ["s94_2", "s94_5"], html: `<p>The property was completed more than 5 years ago, TOB relief does not apply, and the JOTT will not be exercised. The sale is <strong>exempt from VAT</strong>.</p><div class="callout warn">⚠️ A <strong>CGS clawback</strong> may arise if the vendor previously recovered VAT on acquisition/development within the adjustment period.</div><div class="callout info"><strong>Practical steps</strong><br/>• PCVEs required<br/>• No VAT clause (include "the transfer is not subject to VAT")<br/>• Vendor <strong>cannot</strong> recover VAT on sale costs</div>` },
+        incomplete: { tag: "VAT @ 13.5% (Incomplete)", tagColor: "var(--pwc-orange)", tagBackground: "var(--pwc-orange-soft)", legislationRefs: ["s94_2"], html: `<p>The sale of incomplete property — i.e. property that has been developed in the last 20 years but is not "<em>completed</em>" within the VAT meaning — is subject to VAT at <strong>13.5%</strong>.</p><div class="callout info"><strong>Practical steps</strong><br/>• VAT invoice on completion (or by 15th of following month)<br/>• VAT in Vendor's return (Box T1)<br/>• Vendor entitled to VAT recovery on sale costs<br/>• PCVEs required<br/>• VAT charging clause in Contract for Sale</div>` },
+        review_first: { tag: "⚠️ Review Required", tagColor: "var(--color-danger)", tagBackground: "var(--color-danger-soft)", legislationRefs: [], isCatchAll: true, html: `<p>You indicated that the property is <strong>not completed</strong> but also that you are <strong>not advising on an incomplete property</strong>.</p><p>Please review your response to the first question or edit your answers above. Alternatively, if you're advising on the <strong>sale of undeveloped land</strong>, please use the <strong>Land Sale</strong> tool instead.</p><div class="callout warn">⚠️ Press <strong>Start Over</strong> to reset, or click <strong>✏️ Edit</strong> on any question above to change an answer.</div>` },
+      };
+
+      /* ----------------------------------------------------------------
+   B6. TOOL: RELEVANT CONTRACTS TAX (RCT) — NEW
+   ---------------------------------------------------------------- */
+
+      const RCT_QUESTIONS = {
+        rct1: {
+          title: "Is the person making the payment a principal contractor?",
+          actionableHint:
+            "Check if the payer falls within one of the categories in s530A(1) TCA 1997 — e.g. carrying on construction, land development, meat processing, forestry, or a connected person.",
+          legislationRef: "s530A_1",
+          glossaryTerms: ["principal contractor"],
+          infoPreview:
+            "The payer must be a 'principal contractor' per s530A(1) for RCT to apply. The categories are wide-ranging.",
+          infoDetail: `<strong>Section 530A(1) TCA 1997</strong> defines "principal contractor" broadly. It includes:<br/><br/>• A person who is a contractor under another construction contract and uses subcontractors<br/>• A person carrying on a business that includes the erection of buildings, development of land, manufacture/extraction of materials for construction<br/>• A person carrying on meat processing or forestry operations<br/>• A person <em>connected</em> with a company in any of the above businesses (per s10(7) TCA 1997)<br/>• Local authorities, government ministers, statutory boards, utility undertakings, telecom installers<br/><br/>Note: A person connected with a construction/land development company is <strong>not</strong> required to operate RCT on minor repair or improvement work on their own or let premises.`,
+          yesLabel: "Yes, they are a principal contractor",
+          noLabel: "No, they are not a principal contractor",
+        },
+        rct2: {
+          title: "Is the contract between the parties a relevant contract?",
+          actionableHint:
+            "Is the subcontractor liable to carry out relevant operations, be answerable for operations by others, or furnish/arrange labour? A contract of employment is excluded.",
+          legislationRef: "s530_1",
+          glossaryTerms: ["relevant contract"],
+          infoPreview:
+            "A 'relevant contract' per s530(1) is a contract for relevant operations — NOT a contract of employment.",
+          infoDetail: `<strong>Section 530(1) TCA 1997</strong> defines a "relevant contract" as a contract whereby a subcontractor is liable to a principal to:<br/><br/>• Carry out relevant operations, or<br/>• Be answerable for the carrying out of operations by others, or<br/>• Furnish his own labour or the labour of others in the course of relevant operations.<br/><br/>A <strong>contract of employment is specifically excluded</strong>. If the worker is an employee, PAYE is operated in the normal way.<br/><br/>When the principal notifies Revenue via the eRCT system, they must confirm the contract is not a contract of employment.`,
+          yesLabel: "Yes, it is a relevant contract",
+          noLabel: "No, it is not a relevant contract",
+        },
+        rct3: {
+          title: "Does the work consist of relevant operations?",
+          actionableHint:
+            "Relevant operations = construction operations, forestry operations, or meat processing operations. The definitions are very broad — check s530(1) carefully.",
+          legislationRef: "s530_1",
+          glossaryTerms: ["relevant operations"],
+          infoPreview:
+            "Relevant operations include construction, forestry, and meat processing — each has its own wide-ranging definition.",
+          infoDetail: `<strong>"Relevant operations"</strong> are defined in s530(1) TCA 1997 as:<br/><br/><strong>Construction operations</strong> — construction, alteration, repair, extension, demolition of buildings/structures; site clearance; earth moving; excavation; tunnelling; laying foundations; scaffolding; landscaping; haulage of materials; installation of heating, lighting, air conditioning, sanitation, telecom systems; external/internal cleaning of buildings during construction.<br/><br/><strong>Forestry operations</strong> — planting, thinning, lopping, felling of trees; haulage of trees; processing of wood in sawmills.<br/><br/><strong>Meat processing operations</strong> — slaughter of cattle, sheep, pigs, poultry; cutting, boning, packaging of carcasses; cold storage; cleaning of establishments; loading/unloading; catching of poultry; rendering; grading/transporting day-old chicks; haulage.<br/><br/>The RCT system applies regardless of the residency of the parties or where the contract is executed, provided the operations are carried out in the State (including the Continental Shelf).`,
+          yesLabel: "Yes, the work consists of relevant operations",
+          noLabel: "No, the work does not consist of relevant operations",
+        },
+        rct4: {
+          title: "Is the subcontractor registered with Revenue and tax compliant?",
+          actionableHint:
+            "Check the subcontractor's registration status. Revenue will advise the applicable rate via the eRCT system when you submit the contract notification.",
+          legislationRef: "s530E_1",
+          glossaryTerms: ["deduction authorisation"],
+          infoPreview:
+            "The RCT rate depends on the subcontractor's compliance status: 0% (strong compliance), 20% (substantial compliance), or 35% (default/unregistered).",
+          infoDetail: `<strong>Section 530E(1) TCA 1997</strong> sets out three withholding rates:<br/><br/>• <strong>0%</strong> — subcontractor has a strong tax compliance record for the previous 3 years and satisfies all conditions in s530G TCA 1997<br/>• <strong>20%</strong> — subcontractor is registered for tax with a record of substantial compliance<br/>• <strong>35%</strong> — default rate where the subcontractor is not registered with Revenue, or there are serious compliance issues<br/><br/>Revenue will issue a <strong>deduction authorisation</strong> specifying the rate and amount to deduct. RCT is deducted from the <strong>VAT-exclusive</strong> payment.`,
+          type: "choice",
+          choices: [
+            {
+              value: "zeroRate",
+              label: "Registered — strong compliance (qualifies for 0%)",
+              shortLabel: "0% Rate",
+              icon: "✅",
+            },
+            {
+              value: "standardRate",
+              label: "Registered — substantial compliance (20% rate)",
+              shortLabel: "20% Rate",
+              icon: "📋",
+            },
+            {
+              value: "higherRate",
+              label: "Not registered / serious compliance issues (35% rate)",
+              shortLabel: "35% Rate",
+              icon: "⚠️",
+            },
+          ],
+        },
+        rct5_zero_confirm: {
+          title: "Does the subcontractor satisfy all conditions for the 0% rate under s530G?",
+          actionableHint:
+            "Fixed place of business, proper records, complied with Tax/VAT/CGT Acts for 3 years, and (if non-resident) comparable compliance abroad.",
+          legislationRef: "s530G",
+          glossaryTerms: [],
+          infoPreview:
+            "Section 530G sets out five conditions the subcontractor must satisfy for Revenue to approve the 0% rate.",
+          infoDetail: `<strong>Section 530G TCA 1997</strong> requires Revenue to be satisfied that the subcontractor:<br/><br/>(a) Is, or is about to become, a subcontractor engaged in a business of carrying on relevant operations<br/>(b) Carries on business from a <strong>fixed place of business in a permanent building</strong> with adequate stock, equipment and facilities<br/>(c) Does/will keep <strong>business records properly and accurately</strong><br/>(d) Has <strong>complied with all obligations</strong> under the Tax Acts, VAT Acts and CGT Acts for the <strong>previous 3 years</strong> (returns, payments, accounts)<br/>(e) If <strong>non-resident</strong> at any time in the previous 3 years — has complied with comparable obligations in that country`,
+          yesLabel: "Yes, all s530G conditions are met",
+          noLabel: "No, some conditions are not met",
+        },
+        rct6_partnership: {
+          title: "Is the subcontractor a partnership?",
+          actionableHint:
+            "If the subcontractor is a partnership, the RCT rate applied is the highest rate applicable to any individual partner.",
+          glossaryTerms: [],
+          infoPreview:
+            "For partnerships, the RCT rate is the highest rate that would apply to any individual partner.",
+          infoDetail: `Under the eRCT rules, the rate of RCT applying to payments to partnerships shall be the <strong>highest rate</strong> that would apply to any of the individual partners.<br/><br/>For example, if one partner qualifies for 0% but another only qualifies for 20%, the <strong>20% rate</strong> will apply to payments to the partnership.`,
+          yesLabel: "Yes, it is a partnership",
+          noLabel: "No, it is not a partnership",
+        },
+      };
+
+      const RCT_TRAIL_LABELS = {
+        rct1: "Principal",
+        rct2: "Relevant Contract",
+        rct3: "Relevant Ops",
+        rct4: "Sub. Status",
+        rct5_zero_confirm: "0% Conditions",
+        rct6_partnership: "Partnership",
+      };
+
+      function getRctFlow(answers) {
+        const flow = ["rct1"];
+        if (answers.rct1 === undefined) return flow;
+
+        // Not a principal contractor — RCT does not apply
+        if (answers.rct1 === "No") return flow;
+
+        flow.push("rct2");
+        if (answers.rct2 === undefined) return flow;
+
+        // Not a relevant contract — RCT does not apply
+        if (answers.rct2 === "No") return flow;
+
+        flow.push("rct3");
+        if (answers.rct3 === undefined) return flow;
+
+        // Not relevant operations — RCT does not apply
+        if (answers.rct3 === "No") return flow;
+
+        // All 3 conditions met — RCT applies. Now determine rate.
+        flow.push("rct4");
+        if (answers.rct4 === undefined) return flow;
+
+        // If zero rate selected, confirm s530G conditions
+        if (answers.rct4 === "zeroRate") {
+          flow.push("rct5_zero_confirm");
+          if (answers.rct5_zero_confirm === undefined) return flow;
+          // After confirming, check partnership
+          flow.push("rct6_partnership");
+          return flow;
+        }
+
+        // For 20% and 35%, check partnership
+        flow.push("rct6_partnership");
+        return flow;
+      }
+
+      function getRctOutcome(answers) {
+        // Early exits — RCT does not apply
+        if (answers.rct1 === "No") return "not_principal";
+        if (answers.rct1 === "Yes" && answers.rct2 === "No") return "not_relevant_contract";
+        if (answers.rct1 === "Yes" && answers.rct2 === "Yes" && answers.rct3 === "No") return "not_relevant_ops";
+
+        // RCT applies — determine rate
+        if (answers.rct1 === "Yes" && answers.rct2 === "Yes" && answers.rct3 === "Yes") {
+          // Zero rate path
+          if (answers.rct4 === "zeroRate") {
+            if (answers.rct5_zero_confirm === "Yes" && answers.rct6_partnership !== undefined) {
+              return answers.rct6_partnership === "Yes" ? "rct_zero_partnership" : "rct_zero";
+            }
+            if (answers.rct5_zero_confirm === "No" && answers.rct6_partnership !== undefined) {
+              return answers.rct6_partnership === "Yes" ? "rct_twenty_partnership" : "rct_twenty_downgraded";
+            }
+            return null;
+          }
+          // 20% rate path
+          if (answers.rct4 === "standardRate" && answers.rct6_partnership !== undefined) {
+            return answers.rct6_partnership === "Yes" ? "rct_twenty_partnership" : "rct_twenty";
+          }
+          // 35% rate path
+          if (answers.rct4 === "higherRate" && answers.rct6_partnership !== undefined) {
+            return answers.rct6_partnership === "Yes" ? "rct_thirtyfive_partnership" : "rct_thirtyfive";
+          }
+        }
+
+        return null;
+      }
+
+      const RCT_OUTCOMES = {
+        not_principal: {
+          tag: "RCT Does Not Apply",
+          tagColor: "var(--color-success)",
+          tagBackground: "var(--color-success-soft)",
+          legislationRefs: ["s531_1", "s530A_1"],
+          html: `<p>The person making the payment is <strong>not a principal contractor</strong> within the meaning of <strong>s530A(1) TCA 1997</strong>.</p><p>Since RCT only applies where the payer is a principal contractor, <strong>RCT does not apply</strong> to this payment.</p><div class="callout info"><strong>Note:</strong> Normal income tax / corporation tax rules apply. If the payee provides services, consider whether <strong>PSWT</strong> (Professional Services Withholding Tax) may apply instead.</div>`,
+        },
+        not_relevant_contract: {
+          tag: "RCT Does Not Apply",
+          tagColor: "var(--color-success)",
+          tagBackground: "var(--color-success-soft)",
+          legislationRefs: ["s531_1", "s530_1"],
+          html: `<p>The contract between the parties is <strong>not a relevant contract</strong> within the meaning of <strong>s530(1) TCA 1997</strong>.</p><p>RCT requires a relevant contract to exist. This may be because:</p><ul><li>The arrangement is a <strong>contract of employment</strong> (specifically excluded) — operate PAYE instead</li><li>The subcontractor is not liable to carry out relevant operations</li></ul><div class="callout warn">⚠️ If the worker is an <strong>employee</strong>, a relevant contract does not exist. PAYE is operated on payments to the employee in the normal way.</div>`,
+        },
+        not_relevant_ops: {
+          tag: "RCT Does Not Apply",
+          tagColor: "var(--color-success)",
+          tagBackground: "var(--color-success-soft)",
+          legislationRefs: ["s531_1", "s530_1"],
+          html: `<p>The work to be carried out under the contract does <strong>not consist of relevant operations</strong> (construction, forestry, or meat processing operations).</p><p>Since all three conditions under <strong>s531(1) TCA 1997</strong> must be satisfied for RCT to apply, <strong>RCT does not apply</strong>.</p><div class="callout info"><strong>Note:</strong> The definitions of relevant operations in s530(1) are very broad. Please review the full statutory definitions carefully — they can include operations which might surprise you (e.g. haulage of materials, site clearance, cleaning of buildings).</div>`,
+        },
+        rct_zero: {
+          tag: "RCT @ 0%",
+          tagColor: "var(--color-success)",
+          tagBackground: "var(--color-success-soft)",
+          legislationRefs: ["s531_1", "s530E_1", "s530G"],
+          html: `<p><strong>RCT applies</strong> to this payment. All three conditions of <strong>s531(1) TCA 1997</strong> are met: the payer is a principal contractor, the contract is a relevant contract, and the work consists of relevant operations.</p><p>The subcontractor satisfies all conditions under <strong>s530G TCA 1997</strong> and qualifies for the <strong>0% withholding rate</strong>.</p><div class="callout good">✓ No tax is deducted from the payment. The principal must still complete the full eRCT process (contract notification, payment notification, deduction authorisation).</div><div class="callout info"><strong>eRCT Compliance Steps</strong><br/>1. <strong>Contract Notification</strong> — provide Revenue with subcontractor identity, estimated contract value, duration, location, labour-only status, and confirmation it is not an employment contract<br/>2. <strong>Payment Notification</strong> — notify Revenue of the gross payment amount before making the payment<br/>3. <strong>Deduction Authorisation</strong> — Revenue will issue authorisation confirming 0% rate<br/>4. <strong>Deduction Summary</strong> — Revenue will issue monthly/quarterly summary; pay any RCT by the 23rd of the following month</div><div class="callout info"><strong>Credit & Offset</strong><br/>As the 0% rate applies, no RCT credit arises for the subcontractor.</div>`,
+        },
+        rct_zero_partnership: {
+          tag: "RCT @ 0% (Partnership — check partners)",
+          tagColor: "var(--color-success)",
+          tagBackground: "var(--color-success-soft)",
+          legislationRefs: ["s531_1", "s530E_1", "s530G"],
+          html: `<p><strong>RCT applies</strong>. The subcontractor satisfies all s530G conditions for the <strong>0% rate</strong>.</p><div class="callout warn">⚠️ <strong>Partnership rule:</strong> The RCT rate applying to payments to partnerships is the <strong>highest rate applicable to any individual partner</strong>.<br/><br/>If all partners qualify for 0%, the 0% rate applies. If any partner only qualifies for 20% or 35%, that higher rate will be applied to the entire partnership payment.</div><div class="callout info"><strong>eRCT Compliance Steps</strong><br/>1. Contract Notification<br/>2. Payment Notification<br/>3. Deduction Authorisation<br/>4. Deduction Summary — payment by the 23rd of the following month</div>`,
+        },
+        rct_twenty: {
+          tag: "RCT @ 20%",
+          tagColor: "var(--pwc-orange)",
+          tagBackground: "var(--pwc-orange-soft)",
+          legislationRefs: ["s531_1", "s530E_1", "s530F", "s530P"],
+          html: `<p><strong>RCT applies</strong> at the <strong>20% standard rate</strong>. The subcontractor is registered for tax with a record of substantial compliance, but does not meet the higher threshold for the 0% rate.</p><p>RCT is deducted from the <strong>VAT-exclusive</strong> payment to the subcontractor.</p><div class="callout info"><strong>eRCT Compliance Steps</strong><br/>1. <strong>Contract Notification</strong> — provide Revenue with subcontractor details, estimated contract value, duration, location, labour-only status, and confirmation it is not an employment contract<br/>2. <strong>Payment Notification</strong> — notify Revenue of the gross amount before payment<br/>3. <strong>Deduction Authorisation</strong> — Revenue confirms 20% rate and amount to deduct. Provide a copy to the subcontractor<br/>4. <strong>Deduction Summary</strong> — pay RCT to the Collector General by the <strong>23rd day</strong> after the end of the return period</div><div class="callout info"><strong>Credit & Offset for the Subcontractor</strong><br/>• Revenue automatically credits RCT to the subcontractor's tax record (s530P(4))<br/>• RCT is treated as a payment on account of income/corporation tax<br/>• Excess RCT can be offset against VAT, PAYE/PRSI, CGT (s530P(5))<br/>• Remaining excess refundable after tax returns are filed<br/>• 4-year time limit applies to refund claims</div><div class="callout warn">⚠️ <strong>Penalties:</strong> If you make a payment <strong>without</strong> a deduction authorisation, a penalty of <strong>10%</strong> of the payment applies (s530F).</div>`,
+        },
+        rct_twenty_downgraded: {
+          tag: "RCT @ 20% (Downgraded from 0%)",
+          tagColor: "var(--pwc-orange)",
+          tagBackground: "var(--pwc-orange-soft)",
+          legislationRefs: ["s531_1", "s530E_1", "s530G", "s530P"],
+          html: `<p><strong>RCT applies</strong>. The subcontractor was initially thought to qualify for the <strong>0% rate</strong>, but <strong>does not satisfy all conditions</strong> under s530G TCA 1997.</p><p>The <strong>20% standard rate</strong> applies instead. RCT is deducted from the VAT-exclusive payment.</p><div class="callout warn">⚠️ Common reasons for failing s530G:<br/>• No fixed place of business in a permanent building<br/>• Incomplete business records<br/>• Non-compliance with Tax/VAT/CGT Acts in the previous 3 years<br/>• Non-resident subcontractor who has not complied with comparable obligations abroad</div><div class="callout info"><strong>eRCT Compliance Steps</strong><br/>1. Contract Notification<br/>2. Payment Notification<br/>3. Deduction Authorisation (Revenue will specify 20%)<br/>4. Deduction Summary — pay RCT by the 23rd of the following month</div><div class="callout info"><strong>Credit & Offset</strong><br/>• Revenue automatically credits RCT to the subcontractor's tax record<br/>• Excess can be offset against other taxes or refunded after filing</div>`,
+        },
+        rct_twenty_partnership: {
+          tag: "RCT @ 20% (Partnership)",
+          tagColor: "var(--pwc-orange)",
+          tagBackground: "var(--pwc-orange-soft)",
+          legislationRefs: ["s531_1", "s530E_1", "s530P"],
+          html: `<p><strong>RCT applies at 20%</strong>. The subcontractor is a partnership.</p><div class="callout warn">⚠️ <strong>Partnership rule:</strong> The RCT rate is the <strong>highest rate applicable to any individual partner</strong>. Ensure no partner triggers the 35% rate (unregistered or serious non-compliance).</div><div class="callout info"><strong>eRCT Compliance Steps</strong><br/>1. Contract Notification<br/>2. Payment Notification<br/>3. Deduction Authorisation (copy to the subcontractor partnership)<br/>4. Deduction Summary — pay by the 23rd of the following month</div><div class="callout info"><strong>Credit & Offset</strong><br/>• Revenue credits RCT to the partnership's tax record<br/>• Excess can be offset or refunded after filing · 4-year time limit applies</div>`,
+        },
+        rct_thirtyfive: {
+          tag: "RCT @ 35%",
+          tagColor: "var(--color-danger)",
+          tagBackground: "var(--color-danger-soft)",
+          legislationRefs: ["s531_1", "s530E_1", "s530F", "s530P"],
+          html: `<p><strong>RCT applies</strong> at the <strong>35% default rate</strong>. This rate applies because the subcontractor is either <strong>not registered</strong> with Revenue or there are <strong>serious compliance issues</strong>.</p><p>RCT is deducted from the <strong>VAT-exclusive</strong> payment to the subcontractor.</p><div class="callout warn">⚠️ <strong>35% is the highest withholding rate.</strong> The subcontractor should be advised to:<br/>• Register with Revenue if not already registered<br/>• Bring all tax affairs up to date (returns, payments, accounts)<br/>• Apply for a rate review once compliance is achieved<br/><br/>The subcontractor may apply to have the rate reduced to 20% or 0% once they meet the relevant conditions.</div><div class="callout info"><strong>eRCT Compliance Steps</strong><br/>1. <strong>Contract Notification</strong> — provide all required details to Revenue<br/>2. <strong>Payment Notification</strong> — notify Revenue of gross amount before payment<br/>3. <strong>Deduction Authorisation</strong> — Revenue confirms 35%. Provide copy to subcontractor<br/>4. <strong>Deduction Summary</strong> — pay RCT to Collector General by the <strong>23rd day</strong> after the return period end</div><div class="callout info"><strong>Credit & Offset for the Subcontractor</strong><br/>• Revenue credits RCT to the subcontractor's record (s530P(4))<br/>• RCT treated as payment on account of income/corporation tax<br/>• Excess can be offset against VAT, PAYE/PRSI, CGT (s530P(5))<br/>• Remaining excess refundable after tax returns filed · 4-year limit applies</div><div class="callout warn">⚠️ <strong>Penalties:</strong> If you make a payment <strong>without</strong> a deduction authorisation, a penalty of <strong>20%</strong> of the payment applies (s530F). For a completely unknown subcontractor, the penalty is <strong>35%</strong>.</div>`,
+        },
+        rct_thirtyfive_partnership: {
+          tag: "RCT @ 35% (Partnership)",
+          tagColor: "var(--color-danger)",
+          tagBackground: "var(--color-danger-soft)",
+          legislationRefs: ["s531_1", "s530E_1", "s530F", "s530P"],
+          html: `<p><strong>RCT applies at 35%</strong>. The subcontractor is a partnership, and the <strong>highest rate applicable to any partner</strong> is 35%.</p><div class="callout warn">⚠️ <strong>Partnership rule:</strong> The 35% rate applies because at least one partner is either not registered with Revenue or has serious compliance issues. All partners should be advised to bring their tax affairs up to date.</div><div class="callout info"><strong>eRCT Compliance Steps</strong><br/>1. Contract Notification<br/>2. Payment Notification<br/>3. Deduction Authorisation (copy to partnership)<br/>4. Deduction Summary — pay by the 23rd of the following month</div><div class="callout info"><strong>Credit & Offset</strong><br/>• Revenue credits RCT to the partnership's tax record<br/>• Excess can be offset or refunded after filing · 4-year time limit applies</div><div class="callout warn">⚠️ <strong>Penalty:</strong> Payment without a deduction authorisation = <strong>20%</strong> penalty (35% rate subcontractor).</div>`,
+        },
+      };
+
+      /* ================================================================
+   ================================================================
+
+   SECTION C — SHARED UI COMPONENTS
+
+   ================================================================
+   ================================================================ */
+
+      function BrandBar({ navigate, currentRoute }) {
+        const isHomePage = currentRoute === "/";
+        const currentTool = TOOL_REGISTRY.find((t) => t.route === currentRoute);
+
+        return (
+          <nav className="no-print" role="navigation" aria-label="Main navigation" style={{ background: "white", padding: "0 24px", display: "flex", alignItems: "center", height: 58, borderBottom: "1px solid var(--grey-200)", boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 16, maxWidth: "var(--max-width)", width: "100%", margin: "0 auto" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, cursor: "pointer", padding: "4px 0" }} onClick={() => navigate("/")} role="button" tabIndex={0} aria-label="Go to homepage" onKeyDown={(e) => e.key === "Enter" && navigate("/")}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACoCAMAAABt9SM9AAAA7VBMVEX///8AAADYVgStGwLzvibjchzbThjCIwPunDTBQwPmaaLojRTROQ1JSUlkZGSrCwDTl5L1xpftmCjrkC7zvIfh4eHiehDrmhnzvBP43KCgoKDMTATpzMi7u7u9PAPFcmv01c4/Pz/feEzurCPaRRe8VUvkWZrZPwC/AADUTQTMMgrmjVp+fn7to2e3HwPgW2KVlZX2zqn65e4iIiLNbUzu2tnKysrytnbl5eX76dpTU1OJiYmtra3T09P32sHOJQBvb28aGhotLS1cXFztoGLKaEzmixjjS5PeTlbAZFzgtbH16ukzMzMTExPCwsIiZe+6AAAGM0lEQVR4nO2bfYPTRBCHExXfoEFOilosGhQQLRIslNA2ml4VX2j7/T+OlybZzuzO9jIebVL8PX8c7WS72Xma3exuShAAAAAAAABQ8OxWA1613cqO8PLscq7/2nYrO8LLs48v5QyySiBLAWQpgCwFkKXgyeeX8/rZq5K2G9s2P11rwO+3C14+a7uxbdNI1pOtrNuQBVnNgSwFkKUAshRAlgLIUgBZCiBLAWQpgCwFkKUAshRAlgLIUgBZCiBLAWQpuP/4vcu5c33LF186fNV2+4/K/QaujKwPbCALsnxAlgLIUgBZCiBLAWQpgCwFkKXg+V0RyJJ4fu8TibuQJQBZCiBLAWQpgCwFkKUAshQ8F11Blsgf90TuPqZcu7Pl9XcOt36paTuRY/Dg5vsSP39E+bHkxvc2j54+rPiz7USOQTNZN0o+tHn89NOKh20ncgwgSwFkKYAsBZClALIUQJYCyFIAWQogSwFkKYAsBZClALIUQJYCyFLw4KbMD5TfKh45/PWubP79/U0D/vm6Ad96efGubCt7rhnOi7Zb2RHk0YgDWRWQpQCyFECWAshSAFkKMHVQ8FkT3rTdSgAAAAAAAAAAAAAAAAAAgBNmMoqiZWLeZvMkSebZ1etNZ+dh2JtLZxzkvXV4wSpKJlc/0dEYRuGWqHw7qd5eMEql8pNkuhiPxyGP9sNxCYknVT1rq57hNOREb+GLOTzpIN61uAgMxyyLmVV8ODo3x/ihlRsf7OqhtpJQYCp+Lx1iMluzr/ei/53bSaxM6Wyw5IdYXXMhTqxMTXAoqSrYHD7h/8wwt1ubB0shh3VZfOQeYdVJcXoJ1RcOP8VoQlrRYVtu8s5VVTLeFnfUclm5FKeyqkF+QSso7ij0S+huT5TNSORF8f2yMjFOZSXOSRdbN1RWdLzslTSXFRa3qiRe22FS2ViMU1mDIrAgAal7HzF9HVlBP6ZfdT7YZNlm0LOtxPVn0oyM4yS1AStuwlRWMZeKaKmqzzFZHZ9wUTGmF6T2NGg3C0pFWby0CSc8uKGF6hkwkyXNXjuEKCsIZjz93BzoS1IiXtrEiaxiviYWYrKGB831ynhk2eO5iUuyJqGncMJitAeHo7oMk9U/bLJXxSfL6llmMJFk2SO/qWMnq+hfC7FCKmtx2FyvjFcWH7PNGluQ5axeTB3mSC+wZhe7MlRWx8d3vyx+aZlDrqw0tDFVJDTCnK5NmWw36+j48L5PVkyTO6+jrqzyzjl14sHOz8Q+E1kqml2OqOMDVrBPFl8M1lFHVjkf6E2EsrWscueCVZfzVqRZ900F+2Sxm5dfVvky3Qhlg7gUuX3Ne+soOEX8svhWSh21Zc2q3IdC2Rl9y8f3d00Wnz3VUUtWWr8SZFUVVMsayAri7YuhKCusjwnVdXd/YR9+WWwl57kbloqKQcmVFfNLiF9Zq+AUaThmeeZZ5b9pIMgqByyzX2FPx46T3VvGL4tN4eUZfDm72M4MbFkTxwmXdRJPc2z8snIxNyqrT4TYslwlfNM6CU4Qv6wFzc1Eqax4+7dc0FmyykMDWp/1xOPwqb19vLLYGLO70/dDi2UZ57Jm9FCFtZHT8a0rEa8stu7dLUYcWdU0iskqvawDjvXBQ2d2ABrtZ5Flry2r7mlMFtNosLZycqE1Hb/cfLJYZiRtS5bZrqOyyh0IN3HL88w+PrM6bufwyMp8WVmyzO3OeSgvLGgGVhF2JfdHdqR7yLLYYBzT8lxWbuK2LPahmtg2WnfidB67+rqHKIs92+Eb41zWLm7Lks9my7pY9+SjUbRwv65O4shKN3xCNOblmSyyD2zJ8kzQnXupxQnJkrCHXJruOYlzWYPAwyW2TmiAF3BuaWy5Q+JM1p6c99padnzFuFeWsIAjybL7HZVlz0Y5kXOaill3f3FU4Ze1FGeIRBaLU1mXJJ3Zv6QoiDo+H91CZcXJKF9O43gazby/VE7P45IVz26ziuUDYiX8B5e9Wdefrlb4dx0OzJv+ZDMcbiYn8QysojVZpwhkKYAsBZClALIUQJYCyFIAWQogSwFkNSddEVm9zi/726M/d3dLlif1X3CPx9wxVdF2w7qIT9b+rbv/KbiyFGQDD203DAAAAAAAnCj/AhlhHIAgkO1JAAAAAElFTkSuQmCC" alt="PwC logo" style={{ height: 28, width: "auto", display: "block" }} />
+                </div>
+                <div style={{ width: 1, height: 24, background: "var(--grey-200)" }} />
+                <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--grey-500)", letterSpacing: ".2px" }}>Tax Technology &amp; Transformation</div>
+              </div>
+              <div style={{ width: 1, height: 28, background: "var(--grey-200)", margin: "0 4px" }} />
+              <button onClick={() => navigate("/")} style={{ background: "none", border: "none", color: "var(--grey-500)", fontSize: "0.78rem", fontWeight: 500, cursor: "pointer", transition: "color .2s", fontFamily: "inherit" }} onMouseOver={(e) => (e.target.style.color = "var(--pwc-orange)")} onMouseOut={(e) => (e.target.style.color = "var(--grey-500)")}>Tax Tools</button>
+              {!isHomePage && currentTool && (
+                <>
+                  <span style={{ fontSize: "0.72rem", color: "var(--grey-300)", margin: "0 2px" }}></span>
+                  <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--grey-700)" }}>{currentTool.title}</span>
+                </>
+              )}
+              {!isHomePage && (
+                <button onClick={() => navigate("/")} aria-label="Back to all tools" style={{ marginLeft: "auto", padding: "7px 18px", background: "var(--grey-50)", border: "1.5px solid var(--grey-200)", borderRadius: 10, fontSize: "0.74rem", fontWeight: 600, color: "var(--grey-500)", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, transition: "all .25s", fontFamily: "inherit" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = "var(--pwc-orange)"; e.currentTarget.style.color = "var(--pwc-orange)"; e.currentTarget.style.background = "var(--pwc-orange-soft)"; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = "var(--grey-200)"; e.currentTarget.style.color = "var(--grey-500)"; e.currentTarget.style.background = "var(--grey-50)"; }}>← All Tools</button>
+              )}
+            </div>
+          </nav>
+        );
+      }
+
+      function PageHero({ badge, title, description }) {
+        return (
+          <header style={{ background: "#ffe8d4", padding: "44px 44px 40px", borderRadius: 22, marginBottom: 28, position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08)" }}>
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, var(--pwc-orange), var(--pwc-orange-light), var(--pwc-orange))" }} />
+            <div style={{ position: "absolute", bottom: 0, left: 0, width: "35%", height: 3, background: "var(--pwc-orange)", opacity: 0.5 }} />
+            <div style={{ position: "relative" }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 14px", background: "rgba(208,74,2,0.15)", borderRadius: 8, marginBottom: 18, fontSize: "0.72rem", fontWeight: 600, color: "var(--pwc-orange-light)", textTransform: "uppercase", letterSpacing: 0.8, border: "1px solid rgba(208,74,2,0.2)" }}>{badge}</div>
+              <h1 style={{ fontSize: "1.9rem", fontWeight: 800, color: "black", marginBottom: 12, lineHeight: 1.25, letterSpacing: "-0.03em", maxWidth: 560 }}>{title}</h1>
+              <p style={{ color: "black", fontSize: "0.9rem", maxWidth: 540, lineHeight: 1.7, fontWeight: 400 }}>{description}</p>
+            </div>
+          </header>
+        );
+      }
+
+      function ProgressBar({ answeredCount, totalCount, isComplete, onRestart }) {
+        const percentage = isComplete ? 100 : (answeredCount / Math.max(totalCount, 1)) * 85;
+        return (
+          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 26, padding: "0 4px" }} role="progressbar" aria-valuenow={answeredCount} aria-valuemin={0} aria-valuemax={totalCount}>
+            {answeredCount > 0 && (
+              <button onClick={onRestart} aria-label="Restart flow" style={{ background: "none", border: "1.5px solid var(--grey-200)", borderRadius: 8, padding: "5px 14px", fontSize: "0.72rem", fontWeight: 600, color: "var(--grey-500)", cursor: "pointer", whiteSpace: "nowrap", fontFamily: "inherit", transition: "all .25s", display: "inline-flex", alignItems: "center", gap: 5 }} onMouseOver={(e) => { e.currentTarget.style.borderColor = "var(--pwc-orange)"; e.currentTarget.style.color = "var(--pwc-orange)"; e.currentTarget.style.background = "var(--pwc-orange-soft)"; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = "var(--grey-200)"; e.currentTarget.style.color = "var(--grey-500)"; e.currentTarget.style.background = "none"; }}>↺ Restart</button>
+            )}
+            <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "var(--grey-400)", textTransform: "uppercase", letterSpacing: 0.8, whiteSpace: "nowrap" }}>Progress</span>
+            <div style={{ background: "var(--grey-200)", borderRadius: "var(--radius-full)", height: 5, flex: 1, overflow: "hidden", position: "relative" }}>
+              <div style={{ background: isComplete ? "linear-gradient(90deg, var(--color-success), #22c55e)" : "linear-gradient(90deg, var(--pwc-orange), var(--pwc-orange-light))", height: "100%", borderRadius: "var(--radius-full)", transition: "width .6s var(--ease-out-expo)", width: `${percentage}%`, position: "relative" }}>
+                {!isComplete && percentage > 5 && (<div style={{ position: "absolute", right: 0, top: -1, width: 8, height: 8, borderRadius: "var(--radius-full)", background: "white", border: "2px solid var(--pwc-orange)", boxShadow: "0 0 8px rgba(208,74,2,0.3)" }} />)}
+              </div>
+            </div>
+            <span style={{ fontSize: "0.72rem", fontWeight: 600, color: isComplete ? "var(--color-success)" : "var(--grey-400)", whiteSpace: "nowrap" }}>{isComplete ? "✓ Complete" : `${answeredCount} of ~${totalCount}`}</span>
+          </div>
+        );
+      }
+
+      function Footer() {
+        return (
+          <footer style={{ marginTop: 40, padding: "18px 24px", background: "white", border: "1px solid var(--grey-200)", borderRadius: 14, fontSize: "0.75rem", color: "var(--grey-400)", textAlign: "center", lineHeight: 1.65 }}>
+            This tool is for informational purposes only and does not constitute tax advice. Based on TCA 1997, VATCA 2010 and Finance Act 2025. © {new Date().getFullYear()} PricewaterhouseCoopers. All rights reserved.
+          </footer>
+        );
+      }
+
+      function GlossaryTerm({ termKey }) {
+        const [isOpen, setIsOpen] = useState(false);
+        const glossaryEntry = GLOSSARY_DATABASE[termKey];
+        if (!glossaryEntry) return <span>{termKey}</span>;
+        return (
+          <span className="glossary-tooltip" onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)} onClick={() => setIsOpen((prev) => !prev)}>
+            <span className="glossary-term" role="button" tabIndex={0} aria-label={`Define: ${glossaryEntry.term}`}>"{glossaryEntry.term}"</span>
+            {isOpen && (
+              <div className="glossary-tooltip__popup" role="tooltip">
+                <div style={{ fontWeight: 700, marginBottom: 6, fontSize: "0.82rem" }}>{glossaryEntry.term}</div>
+                <div style={{ opacity: 0.6, fontSize: "0.7rem", marginBottom: 8 }}>{glossaryEntry.source}</div>
+                <div style={{ lineHeight: 1.75 }}>{glossaryEntry.definition}</div>
+              </div>
+            )}
+          </span>
+        );
+      }
+
+      function LegislationLink({ legislationKey, isOpen, onToggle }) {
+        const entry = LEGISLATION_DATABASE[legislationKey];
+        if (!entry) return null;
+        return (
+          <button onClick={onToggle} aria-expanded={isOpen} style={{ background: isOpen ? "var(--pwc-orange-dark)" : "var(--grey-50)", border: `1px solid ${isOpen ? "var(--pwc-dark)" : "var(--grey-200)"}`, color: isOpen ? "white" : "var(--grey-600)", padding: "6px 14px", borderRadius: 10, fontSize: "0.74rem", fontWeight: 600, cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 10, transition: "all .25s", fontFamily: "inherit" }}>
+            📖 {isOpen ? "Hide" : "View"} s{entry.section} TCA/VATCA
+          </button>
+        );
+      }
+
+      function LegislationPanel({ legislationKey, onClose }) {
+        const entry = LEGISLATION_DATABASE[legislationKey];
+        if (!entry) return null;
+        return (
+          <div className="legislation-panel anim-fade-up" style={{ marginTop: 14 }}>
+            <div className="legislation-panel__header">
+              <span>📖 {entry.title}</span>
+              <button onClick={onClose} aria-label="Close legislation panel" style={{ background: "rgba(255,255,255,0.1)", border: "none", color: "white", width: 28, height: 28, borderRadius: 8, cursor: "pointer", fontSize: "0.8rem", display: "flex", alignItems: "center", justifyContent: "center", transition: "background .2s" }} onMouseOver={(e) => (e.target.style.background = "rgba(255,255,255,0.2)")} onMouseOut={(e) => (e.target.style.background = "rgba(255,255,255,0.1)")}>✕</button>
+            </div>
+            <div className="legislation-panel__body" dangerouslySetInnerHTML={{ __html: entry.text }} />
+          </div>
+        );
+      }
+
+      function InfoExpander({ preview, detail }) {
+        const [isExpanded, setIsExpanded] = useState(false);
+        if (!detail) return null;
+        return (
+          <div style={{ marginBottom: 10 }}>
+            {preview && (<div style={{ fontSize: "0.78rem", color: "var(--grey-500)", lineHeight: 1.6, marginBottom: 6, fontStyle: "italic" }}>{preview}</div>)}
+            <button onClick={() => setIsExpanded(!isExpanded)} aria-expanded={isExpanded} style={{ background: "none", border: "none", color: "var(--pwc-orange)", fontSize: "0.78rem", cursor: "pointer", padding: "2px 0", display: "flex", alignItems: "center", gap: 5, fontWeight: 500, marginBottom: 8, opacity: 0.85, transition: "all .2s", fontFamily: "inherit" }} onMouseOver={(e) => (e.target.style.opacity = 1)} onMouseOut={(e) => (e.target.style.opacity = 0.85)}>
+              <span style={{ display: "inline-block", transition: "transform .25s var(--ease-out-expo)", transform: isExpanded ? "rotate(90deg)" : "rotate(0)", fontSize: "0.7rem" }}>▶</span>
+              {isExpanded ? "Hide detail" : "Read more"}
+            </button>
+            {isExpanded && (<div className="anim-fade-up" style={{ background: "var(--pwc-warm-grey)", borderRadius: "var(--radius-md)", padding: "16px 18px", marginBottom: 12, fontSize: "0.8rem", color: "var(--grey-600)", border: "1px solid var(--grey-200)", lineHeight: 1.8 }} dangerouslySetInnerHTML={{ __html: detail }} />)}
+          </div>
+        );
+      }
+
+      function QuestionNumberBadge({ number, isAnswered, isYes, isActive }) {
+        const getBackground = () => {
+          if (isAnswered) return isYes ? "var(--color-success)" : "var(--color-danger)";
+          if (isActive) return "var(--pwc-orange)";
+          return "var(--grey-300)";
+        };
+        return (
+          <div aria-hidden="true" style={{ width: 34, height: 34, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", fontSize: isAnswered ? "1rem" : "0.78rem", fontWeight: 700, flexShrink: 0, color: "white", background: getBackground(), transition: "all .35s var(--ease-out-expo)", animation: isAnswered ? "checkMark .4s var(--ease-out-expo)" : "none", boxShadow: isActive && !isAnswered ? "0 2px 12px rgba(208,74,2,0.25)" : "none" }}>
+            {isAnswered ? (isYes ? "✓" : "✗") : number}
+          </div>
+        );
+      }
+
+      function YesNoButtons({ currentValue, yesLabel, noLabel, onSelectYes, onSelectNo }) {
+        const isYes = currentValue === "Yes";
+        const isNo = currentValue === "No";
+        const baseStyle = { padding: "13px 18px", borderRadius: 12, border: "1.5px solid", fontSize: "0.84rem", fontWeight: 500, cursor: "pointer", flex: 1, textAlign: "center", fontFamily: "inherit", transition: "all .3s var(--ease-out-expo)", position: "relative", overflow: "hidden" };
+        return (
+          <div style={{ display: "flex", gap: 10 }} role="radiogroup">
+            <button role="radio" aria-checked={isYes} onClick={onSelectYes} style={{ ...baseStyle, background: isYes ? "var(--color-success-soft)" : "white", borderColor: isYes ? "var(--color-success)" : "var(--grey-200)", color: isYes ? "var(--color-success)" : "var(--grey-600)", boxShadow: isYes ? "0 4px 16px rgba(22,163,74,0.12)" : "0 1px 3px rgba(0,0,0,0.04)", transform: isYes ? "scale(1.02)" : "scale(1)" }} onMouseOver={(e) => { if (!isYes) { e.currentTarget.style.borderColor = "var(--color-success)"; e.currentTarget.style.background = "#fafff7"; } }} onMouseOut={(e) => { if (!isYes) { e.currentTarget.style.borderColor = "var(--grey-200)"; e.currentTarget.style.background = "white"; } }}>✓ {yesLabel}</button>
+            <button role="radio" aria-checked={isNo} onClick={onSelectNo} style={{ ...baseStyle, background: isNo ? "var(--color-danger-soft)" : "white", borderColor: isNo ? "var(--color-danger)" : "var(--grey-200)", color: isNo ? "#b91c1c" : "var(--grey-600)", boxShadow: isNo ? "0 4px 16px rgba(220,38,38,0.1)" : "0 1px 3px rgba(0,0,0,0.04)", transform: isNo ? "scale(1.02)" : "scale(1)" }} onMouseOver={(e) => { if (!isNo) { e.currentTarget.style.borderColor = "var(--color-danger)"; e.currentTarget.style.background = "#fff8f8"; } }} onMouseOut={(e) => { if (!isNo) { e.currentTarget.style.borderColor = "var(--grey-200)"; e.currentTarget.style.background = "white"; } }}>✗ {noLabel}</button>
+          </div>
+        );
+      }
+
+      function ChoiceButtons({ choices, currentValue, onSelect }) {
+        return (
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }} role="radiogroup">
+            {choices.map((choice) => {
+              const isSelected = currentValue === choice.value;
+              return (
+                <button key={choice.value} role="radio" aria-checked={isSelected} onClick={() => onSelect(choice.value)} style={{ padding: "13px 18px", borderRadius: 12, border: "1.5px solid", fontSize: "0.84rem", fontWeight: 500, cursor: "pointer", flex: 1, minWidth: 160, textAlign: "left", fontFamily: "inherit", transition: "all .3s var(--ease-out-expo)", background: isSelected ? "var(--pwc-orange-soft)" : "white", borderColor: isSelected ? "var(--pwc-orange)" : "var(--grey-200)", color: isSelected ? "var(--pwc-orange-dark)" : "var(--grey-600)", boxShadow: isSelected ? "0 4px 16px rgba(208,74,2,0.1)" : "0 1px 3px rgba(0,0,0,0.04)", display: "flex", alignItems: "center", gap: 10, transform: isSelected ? "scale(1.02)" : "scale(1)" }} onMouseOver={(e) => { if (!isSelected) { e.currentTarget.style.borderColor = "var(--pwc-orange)"; e.currentTarget.style.background = "var(--pwc-orange-softer)"; } }} onMouseOut={(e) => { if (!isSelected) { e.currentTarget.style.borderColor = "var(--grey-200)"; e.currentTarget.style.background = "white"; } }}>
+                  <span style={{ fontSize: "1.1rem" }}>{choice.icon}</span>
+                  {choice.label}
+                </button>
+              );
+            })}
+          </div>
+        );
+      }
+
+      function QuestionCard({ questionId, displayNumber, questionConfig, currentAnswer, isActive, isAnswered, onAnswer, onEdit }) {
+        const [openLegislationKey, setOpenLegislationKey] = useState(null);
+        const isYesAnswer = questionConfig.type === "choice" ? questionConfig.choices[0] && currentAnswer === questionConfig.choices[0].value : currentAnswer === "Yes";
+        const getBorderColor = () => { if (isActive && !isAnswered) return "var(--pwc-orange)"; if (isAnswered && isYesAnswer) return "var(--color-success-muted)"; if (isAnswered) return "var(--color-danger-border)"; return "transparent"; };
+        const getLeftBorderColor = () => { if (isActive && !isAnswered) return "var(--pwc-orange)"; if (isAnswered && isYesAnswer) return "var(--color-success)"; if (isAnswered) return "var(--color-danger)"; return "var(--grey-200)"; };
+        let cardClass = "question-card";
+        if (isActive && !isAnswered) cardClass += " is-active";
+        if (!isActive && !isAnswered) cardClass += " is-inactive";
+        return (
+          <div className={cardClass} style={{ border: `1.5px solid ${getBorderColor()}`, borderLeft: `4px solid ${getLeftBorderColor()}` }}>
+            <div style={{ padding: "18px 22px", display: "flex", alignItems: "flex-start", gap: 14 }}>
+              <QuestionNumberBadge number={displayNumber} isAnswered={isAnswered} isYes={isYesAnswer} isActive={isActive} />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: "0.92rem", fontWeight: 600, color: "var(--pwc-black)", lineHeight: 1.5, letterSpacing: "-0.01em" }}>{questionConfig.title}</div>
+                {questionConfig.actionableHint && (isActive || isAnswered) && (<div style={{ fontSize: "0.78rem", color: "var(--grey-500)", marginTop: 4, lineHeight: 1.55, fontStyle: "italic" }}>💡 {questionConfig.actionableHint}</div>)}
+                {questionConfig.glossaryTerms && questionConfig.glossaryTerms.length > 0 && (isActive || isAnswered) && (
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
+                    {questionConfig.glossaryTerms.map((termKey) => (<span key={termKey} style={{ display: "inline-flex" }}><GlossaryTerm termKey={termKey} /></span>))}
+                  </div>
+                )}
+              </div>
+            </div>
+            {(isActive || isAnswered) && (
+              <div style={{ padding: "0 22px 20px", paddingLeft: 70 }}>
+                <InfoExpander preview={questionConfig.infoPreview} detail={questionConfig.infoDetail} />
+                {questionConfig.legislationRef && (
+                  <>
+                    <LegislationLink legislationKey={questionConfig.legislationRef} isOpen={openLegislationKey === questionConfig.legislationRef} onToggle={() => setOpenLegislationKey(openLegislationKey === questionConfig.legislationRef ? null : questionConfig.legislationRef)} />
+                    {openLegislationKey === questionConfig.legislationRef && (<LegislationPanel legislationKey={questionConfig.legislationRef} onClose={() => setOpenLegislationKey(null)} />)}
+                  </>
+                )}
+                <div style={{ marginTop: openLegislationKey ? 14 : 4 }}>
+                  {questionConfig.type === "choice" ? (
+                    <ChoiceButtons choices={questionConfig.choices} currentValue={currentAnswer} onSelect={(value) => onAnswer(questionId, value)} />
+                  ) : (
+                    <YesNoButtons currentValue={currentAnswer} yesLabel={questionConfig.yesLabel} noLabel={questionConfig.noLabel} onSelectYes={() => onAnswer(questionId, "Yes")} onSelectNo={() => onAnswer(questionId, "No")} />
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      }
+
+      function DecisionPath({ flow, answersState, questionsConfig, trailLabels }) {
+        const answeredSteps = flow.filter((qId) => answersState[qId] !== undefined);
+        if (answeredSteps.length === 0) return null;
+        return (
+          <div className="decision-path" role="navigation" aria-label="Decision path">
+            {answeredSteps.map((questionId, index) => {
+              const answer = answersState[questionId];
+              const question = questionsConfig[questionId];
+              const label = trailLabels[questionId] || questionId;
+              const isYes = question.type === "choice" ? question.choices[0] && answer === question.choices[0].value : answer === "Yes";
+              const displayValue = question.type === "choice" ? question.choices.find((c) => c.value === answer)?.shortLabel || answer : answer;
+              return (
+                <Fragment key={questionId}>
+                  {index > 0 && <span className="decision-path__arrow">→</span>}
+                  <span className="decision-path__step">{label}: <span className={`decision-path__value ${isYes ? "is-yes" : "is-no"}`}>{displayValue}</span></span>
+                </Fragment>
+              );
+            })}
+          </div>
+        );
+      }
+
+      function AnswerPanel({ answersState, questionFlow, questionsConfig, getOutcomeFn, outcomesDatabase, trailLabels, toolTitle, onCopyLink, onExportPdf }) {
+        const outcomeKey = getOutcomeFn(answersState);
+        const outcomeData = outcomeKey ? outcomesDatabase[outcomeKey] : null;
+        const [animationKey, setAnimationKey] = useState(0);
+        const [openLegislationKey, setOpenLegislationKey] = useState(null);
+        const previousOutcome = useRef(null);
+        useEffect(() => { if (outcomeKey !== previousOutcome.current) { setAnimationKey((k) => k + 1); setOpenLegislationKey(null); previousOutcome.current = outcomeKey; } }, [outcomeKey]);
+        const hasAnyAnswer = Object.keys(answersState).length > 0;
+        return (
+          <div className="answer-panel" style={{ position: "sticky", top: 24, borderRadius: 20, overflow: "hidden", background: "white", boxShadow: "0 1px 4px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06)", border: "1px solid var(--grey-200)", maxHeight: "calc(100vh - 48px)", display: "flex", flexDirection: "column", transition: "box-shadow .3s" }}>
+            <div style={{ background: "#ffe8d4", padding: "18px 24px", display: "flex", alignItems: "center", gap: 12, flexShrink: 0, position: "relative", overflow: "hidden" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, var(--pwc-orange), var(--pwc-orange-light), var(--pwc-orange))" }} />
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(208,74,2,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1rem", border: "1px solid rgba(208,74,2,0.3)" }}>📋</div>
+              <div>
+                <div style={{ color: "black", fontSize: "0.95rem", fontWeight: 700, letterSpacing: "-0.01em" }}>Analysis</div>
+                <div style={{ color: "black", fontSize: "0.72rem", fontWeight: 500, marginTop: 1 }}>{outcomeData ? "Outcome determined" : hasAnyAnswer ? "In progress…" : "Awaiting your input"}</div>
+              </div>
+              {outcomeData && (<div style={{ marginLeft: "auto", width: 10, height: 10, borderRadius: "var(--radius-full)", background: "var(--color-success)", boxShadow: "0 0 8px rgba(22,163,74,0.5)" }} />)}
+            </div>
+            <div style={{ padding: 22, overflowY: "auto", flex: 1 }}>
+              {hasAnyAnswer && (<DecisionPath flow={questionFlow} answersState={answersState} questionsConfig={questionsConfig} trailLabels={trailLabels} />)}
+              {!outcomeData && !hasAnyAnswer && (
+                <div style={{ textAlign: "center", padding: "36px 16px" }}>
+                  <div style={{ width: 72, height: 72, borderRadius: 20, margin: "0 auto 20px", background: "var(--pwc-warm-grey)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.8rem", animation: "float 4s ease-in-out infinite" }}>🔍</div>
+                  <p style={{ fontSize: "0.95rem", fontWeight: 600, color: "var(--grey-700)", marginBottom: 8 }}>No data yet</p>
+                  <p style={{ fontSize: "0.84rem", color: "var(--grey-400)", lineHeight: 1.7, maxWidth: 280, margin: "0 auto" }}>Answer the questions on the left and the analysis will build here in real time.</p>
+                  <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 24 }}>{[0, 1, 2].map((i) => (<div key={i} style={{ width: 6, height: 6, borderRadius: "var(--radius-full)", background: "var(--pwc-orange)", opacity: 0.2, animation: `dotPulse 1.4s ${i * 0.16}s ease-in-out infinite` }} />))}</div>
+                </div>
+              )}
+              {!outcomeData && hasAnyAnswer && (
+                <div style={{ textAlign: "center", padding: "32px 16px" }}>
+                  <div style={{ width: 48, height: 3, borderRadius: "var(--radius-full)", margin: "0 auto 24px", background: "linear-gradient(90deg, transparent, var(--pwc-orange), transparent)", backgroundSize: "200% 100%", animation: "shimmer 2.4s ease-in-out infinite", opacity: 0.5 }} />
+                  <p style={{ fontSize: "0.88rem", fontWeight: 600, color: "var(--grey-600)", marginBottom: 8, letterSpacing: "-0.01em" }}>Analysis in progress</p>
+                  <p style={{ fontSize: "0.8rem", color: "var(--grey-400)", lineHeight: 1.7, maxWidth: 260, margin: "0 auto" }}>Continue answering to determine the outcome.</p>
+                  <div style={{ width: 32, height: 1, borderRadius: "var(--radius-full)", margin: "28px auto 0", background: "var(--grey-300)", animation: "pulseWidth 3s ease-in-out infinite", opacity: 0.4 }} />
+                </div>
+              )}
+              {outcomeData && (
+                <div key={animationKey} style={{ animation: "completePop .4s var(--ease-out-expo) forwards" }}>
+                  <span style={{ display: "inline-block", padding: "6px 16px", borderRadius: 10, fontSize: "0.76rem", fontWeight: 700, marginBottom: 18, textTransform: "uppercase", letterSpacing: 0.3, background: outcomeData.tagBackground, color: outcomeData.tagColor, border: `1px solid ${outcomeData.tagColor}22` }}>{outcomeData.tag}</span>
+                  <div className="answer-content" dangerouslySetInnerHTML={{ __html: outcomeData.html }} />
+                  {outcomeData.isCatchAll && (<div className="callout info" style={{ marginTop: 20 }}><strong>Need help?</strong> Your scenario may require bespoke advice. Contact your PwC engagement team for tailored guidance.</div>)}
+                  {outcomeData.legislationRefs && outcomeData.legislationRefs.length > 0 && (
+                    <div style={{ marginTop: 20, paddingTop: 18, borderTop: "1px solid var(--grey-200)" }}>
+                      <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--grey-500)", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 10 }}>Relevant Legislation</div>
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>{outcomeData.legislationRefs.map((ref) => (<Fragment key={ref}><LegislationLink legislationKey={ref} isOpen={openLegislationKey === ref} onToggle={() => setOpenLegislationKey(openLegislationKey === ref ? null : ref)} /></Fragment>))}</div>
+                      {openLegislationKey && (<LegislationPanel legislationKey={openLegislationKey} onClose={() => setOpenLegislationKey(null)} />)}
+                    </div>
+                  )}
+                  <div style={{ marginTop: 24, paddingTop: 18, borderTop: "1px solid var(--grey-200)", display: "flex", gap: 10, flexWrap: "wrap" }}>
+                    <button onClick={onCopyLink} style={{ padding: "10px 20px", borderRadius: 10, border: "1.5px solid var(--grey-200)", background: "white", color: "var(--grey-600)", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, transition: "all .25s", fontFamily: "inherit", flex: 1, justifyContent: "center" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = "var(--pwc-orange)"; e.currentTarget.style.color = "var(--pwc-orange)"; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = "var(--grey-200)"; e.currentTarget.style.color = "var(--grey-600)"; }}>🔗 Copy Link</button>
+                    <button onClick={onExportPdf} style={{ padding: "10px 20px", borderRadius: 10, border: "1.5px solid var(--pwc-orange)", background: "var(--pwc-orange-soft)", color: "var(--pwc-orange)", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, transition: "all .25s", fontFamily: "inherit", flex: 1, justifyContent: "center" }} onMouseOver={(e) => { e.currentTarget.style.background = "var(--pwc-orange)"; e.currentTarget.style.color = "white"; }} onMouseOut={(e) => { e.currentTarget.style.background = "var(--pwc-orange-soft)"; e.currentTarget.style.color = "var(--pwc-orange)"; }}>📄 Export PDF</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      function MobileBottomSheet({ isOpen, onClose, children, answeredCount, totalCount, isComplete }) {
+        return (
+          <>
+            <div className="mobile-summary-bar" onClick={onClose} role="button" tabIndex={0} aria-label="Open analysis panel">
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{ fontSize: "1rem" }}>📋</span>
+                <div>
+                  <div style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--pwc-black)" }}>{isComplete ? "Analysis Complete" : "Analysis"}</div>
+                  <div style={{ fontSize: "0.72rem", color: "var(--grey-400)" }}>{isComplete ? "Tap to view outcome" : `${answeredCount} of ~${totalCount} answered`}</div>
+                </div>
+              </div>
+              <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--pwc-orange)", padding: "6px 14px", background: "var(--pwc-orange-soft)", borderRadius: 8 }}>View ↑</span>
+            </div>
+            <div className={`mobile-sheet-overlay ${isOpen ? "is-open" : ""}`} onClick={onClose} />
+            <div className={`mobile-sheet ${isOpen ? "is-open" : ""}`}>
+              <div className="mobile-sheet__handle" />
+              <div style={{ padding: "0 20px 20px" }}>{children}</div>
+            </div>
+          </>
+        );
+      }
+
+      function StartOverButton({ onClick }) {
+        return (
+          <div style={{ textAlign: "center", marginTop: 20 }} className="no-print">
+            <button onClick={onClick} style={{ padding: "10px 28px", background: "white", color: "var(--grey-500)", border: "1.5px solid var(--grey-200)", borderRadius: 12, fontSize: "0.82rem", fontWeight: 600, cursor: "pointer", transition: "all .25s", fontFamily: "inherit" }} onMouseOver={(e) => { e.currentTarget.style.borderColor = "var(--pwc-orange)"; e.currentTarget.style.color = "var(--pwc-orange)"; e.currentTarget.style.background = "var(--pwc-orange-soft)"; }} onMouseOut={(e) => { e.currentTarget.style.borderColor = "var(--grey-200)"; e.currentTarget.style.color = "var(--grey-500)"; e.currentTarget.style.background = "white"; }}>↻ Start Over</button>
+          </div>
+        );
+      }
+
+      /* ================================================================
+   ================================================================
+
+   SECTION D — PAGE COMPONENTS
+
+   ================================================================
+   ================================================================ */
+
+      function HomePage({ navigate }) {
+        return (
+          <main style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "28px 24px 80px" }}>
+            <header style={{ background: "#ffe8d4", padding: "56px 52px 52px", borderRadius: 22, marginBottom: 36, position: "relative", overflow: "hidden", boxShadow: "0 8px 32px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08)" }}>
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, var(--pwc-orange), var(--pwc-orange-light), var(--pwc-orange))" }} />
+              <div style={{ position: "absolute", bottom: 0, left: 0, width: "40%", height: 3, background: "var(--pwc-orange)", opacity: 0.4 }} />
+              <div style={{ position: "relative" }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "5px 14px", background: "rgba(208,74,2,0.15)", borderRadius: 8, marginBottom: 22, fontSize: "0.72rem", fontWeight: 600, color: "var(--pwc-orange-light)", textTransform: "uppercase", letterSpacing: 0.8, border: "1px solid rgba(208,74,2,0.2)" }}>🏠 Tax · Tool Suite</div>
+                <h1 style={{ fontSize: "2.4rem", fontWeight: 900, color: "black", marginBottom: 14, lineHeight: 1.15, letterSpacing: "-0.04em", maxWidth: 600 }}>Tax Decision Tools</h1>
+                <p style={{ color: "black", fontSize: "0.94rem", maxWidth: 560, lineHeight: 1.75, fontWeight: 400 }}>Interactive decision tools for Irish tax on property transactions, withholding tax, and more. Select a tool below to get started.</p>
+              </div>
+            </header>
+            <div style={{ marginBottom: 16, padding: "0 4px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <h2 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--pwc-black)", letterSpacing: "-0.02em" }}>Tools</h2>
+              <span style={{ fontSize: "0.72rem", fontWeight: 500, color: "var(--grey-400)", textTransform: "uppercase", letterSpacing: 0.6 }}>TCA 1997 · VATCA 2010 · Finance Act 2025</span>
+            </div>
+            <div className="home-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+              {TOOL_REGISTRY.map((tool, index) => {
+                const isLive = !!tool.route;
+                return (
+                  <div key={tool.id} className={`tool-tile ${!isLive ? "is-disabled" : ""}`} style={{ animation: `staggerIn .5s var(--ease-out-expo) ${index * 0.08}s both` }} onClick={() => isLive && navigate(tool.route)} role="button" tabIndex={isLive ? 0 : -1} aria-label={`Open ${tool.title} tool`} onKeyDown={(e) => e.key === "Enter" && isLive && navigate(tool.route)}>
+                    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
+                      <div className="tool-tile__icon" style={{ background: tool.iconBackground }}>{tool.icon}</div>
+                      <span style={{ fontSize: "0.64rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.6, padding: "3px 10px", borderRadius: 6, background: isLive ? "var(--color-success-soft)" : "var(--grey-50)", color: tool.tagColor, border: `1px solid ${isLive ? "var(--color-success-muted)" : "var(--grey-200)"}` }}>{tool.tag}</span>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--pwc-black)", letterSpacing: "-0.01em", lineHeight: 1.3 }}>{tool.title}</div>
+                      <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "var(--pwc-orange)", textTransform: "uppercase", letterSpacing: 0.4, marginTop: 4 }}>{tool.subtitle}</div>
+                    </div>
+                    <p style={{ fontSize: "0.8rem", color: "var(--grey-500)", lineHeight: 1.7, flex: 1 }}>{tool.description}</p>
+                    {tool.useWhen && (
+                      <div style={{ fontSize: "0.72rem", color: "var(--grey-400)", lineHeight: 1.6, borderTop: "1px solid var(--grey-200)", paddingTop: 12, marginTop: 4 }}>
+                        <div style={{ marginBottom: 4 }}><span style={{ fontWeight: 600, color: "var(--grey-500)" }}>Use when:</span> {tool.useWhen}</div>
+                        {tool.estimatedTime && (<div><span style={{ fontWeight: 600, color: "var(--grey-500)" }}>⏱</span> {tool.estimatedTime}</div>)}
+                      </div>
+                    )}
+                    {isLive && (<div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.76rem", fontWeight: 600, color: "var(--pwc-orange)" }}>Open tool <span>→</span></div>)}
+                  </div>
+                );
+              })}
+            </div>
+            <Footer />
+          </main>
+        );
+      }
+
+      function ToolPage({ badge, title, description, toolRoute, questionsConfig, getFlowFn, getOutcomeFn, outcomesDatabase, trailLabels, initialAnswerState }) {
+        const [answersState, setAnswersState] = useState(initialAnswerState || {});
+        const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
+        const { showToast, ToastElement } = useToast();
+        const questionFlow = useMemo(() => getFlowFn(answersState), [answersState, getFlowFn]);
+        const outcomeKey = getOutcomeFn(answersState);
+        const outcomeData = outcomeKey ? outcomesDatabase[outcomeKey] : null;
+        const nextUnansweredId = questionFlow.find((qId) => answersState[qId] === undefined);
+        const answeredCount = questionFlow.filter((qId) => answersState[qId] !== undefined).length;
+        const isComplete = outcomeKey !== null;
+
+        useEffect(() => { const encoded = encodeStateToHash(toolRoute, answersState); if (window.location.hash.slice(1) !== encoded) { window.history.replaceState(null, "", `#${encoded}`); } }, [answersState, toolRoute]);
+
+        const handleAnswer = useCallback((questionId, value) => {
+          setAnswersState((prev) => {
+            const next = { ...prev, [questionId]: value };
+            const newFlow = getFlowFn(next);
+            const currentIndex = newFlow.indexOf(questionId);
+            Object.keys(next).forEach((key) => { if (key === questionId) return; const keyIndex = newFlow.indexOf(key); if (keyIndex === -1 || keyIndex > currentIndex) { delete next[key]; } });
+            return next;
+          });
+        }, [getFlowFn]);
+
+        const handleEdit = useCallback((questionId) => {
+          setAnswersState((prev) => {
+            const next = { ...prev };
+            const currentFlow = getFlowFn(prev);
+            const editIndex = currentFlow.indexOf(questionId);
+            currentFlow.forEach((qId, index) => { if (index >= editIndex) { delete next[qId]; } });
+            return next;
+          });
+          setTimeout(() => { const element = document.getElementById(`question-${questionId}`); if (element) { element.scrollIntoView({ behavior: "smooth", block: "center" }); } }, 100);
+        }, [getFlowFn]);
+
+        const handleStartOver = useCallback(() => { setAnswersState({}); setMobileSheetOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }, []);
+
+        const handleCopyLink = useCallback(() => {
+          const url = window.location.href;
+          navigator.clipboard.writeText(url).then(() => { showToast("🔗 Link copied to clipboard"); }).catch(() => { const textArea = document.createElement("textarea"); textArea.value = url; document.body.appendChild(textArea); textArea.select(); document.execCommand("copy"); document.body.removeChild(textArea); showToast("🔗 Link copied to clipboard"); });
+        }, [showToast]);
+
+        const handleExportPdf = useCallback(() => {
+          if (!outcomeData) return;
+          const answeredSteps = questionFlow.filter((qId) => answersState[qId] !== undefined);
+          const pathHtml = answeredSteps.map((qId) => { const answer = answersState[qId]; const label = trailLabels[qId] || qId; const question = questionsConfig[qId]; const displayValue = question.type === "choice" ? question.choices.find((c) => c.value === answer)?.shortLabel || answer : answer; return `<span class="path-step">${label}: <strong>${displayValue}</strong></span>`; }).join('<span class="path-arrow"> → </span>');
+          const outcomeHtml = `<div class="outcome-tag">${outcomeData.tag}</div>${outcomeData.html}`;
+          exportToPdf(title, pathHtml, outcomeHtml);
+          showToast("📄 PDF export opened in new tab");
+        }, [outcomeData, questionFlow, answersState, trailLabels, questionsConfig, title, showToast]);
+
+        let displayNumber = 0;
+
+        const mobilePanelContent = (
+          <>
+            {Object.keys(answersState).length > 0 && (<DecisionPath flow={questionFlow} answersState={answersState} questionsConfig={questionsConfig} trailLabels={trailLabels} />)}
+            {outcomeData ? (
+              <div>
+                <span style={{ display: "inline-block", padding: "6px 16px", borderRadius: 10, fontSize: "0.76rem", fontWeight: 700, marginBottom: 18, textTransform: "uppercase", letterSpacing: 0.3, background: outcomeData.tagBackground, color: outcomeData.tagColor, border: `1px solid ${outcomeData.tagColor}22` }}>{outcomeData.tag}</span>
+                <div className="answer-content" dangerouslySetInnerHTML={{ __html: outcomeData.html }} />
+                {outcomeData.isCatchAll && (<div className="callout info" style={{ marginTop: 20 }}><strong>Need help?</strong> Your scenario may require bespoke advice. Contact your PwC engagement team for tailored guidance.</div>)}
+                <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+                  <button onClick={handleCopyLink} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "1.5px solid var(--grey-200)", background: "white", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>🔗 Copy Link</button>
+                  <button onClick={handleExportPdf} style={{ flex: 1, padding: "10px", borderRadius: 10, border: "1.5px solid var(--pwc-orange)", background: "var(--pwc-orange-soft)", color: "var(--pwc-orange)", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>📄 Export</button>
+                </div>
+              </div>
+            ) : (<div style={{ textAlign: "center", padding: "20px 0" }}><p style={{ fontSize: "0.85rem", color: "var(--grey-400)" }}>Continue answering questions to see the analysis.</p></div>)}
+          </>
+        );
+
+        return (
+          <main style={{ maxWidth: "var(--max-width)", margin: "0 auto", padding: "28px 24px 120px" }}>
+            {ToastElement}
+            <PageHero badge={badge} title={title} description={description} />
+            <ProgressBar answeredCount={answeredCount} totalCount={questionFlow.length} isComplete={isComplete} onRestart={handleStartOver} />
+            <div className="main-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, alignItems: "start" }}>
+              <div>
+                {questionFlow.map((questionId) => {
+                  displayNumber++;
+                  const isAnswered = answersState[questionId] !== undefined;
+                  const isActive = questionId === nextUnansweredId || isAnswered;
+                  return (<div key={questionId} id={`question-${questionId}`}><QuestionCard questionId={questionId} displayNumber={displayNumber} questionConfig={questionsConfig[questionId]} currentAnswer={answersState[questionId]} isActive={isActive} isAnswered={isAnswered} onAnswer={handleAnswer} onEdit={() => handleEdit(questionId)} /></div>);
+                })}
+                {answeredCount > 0 && (<StartOverButton onClick={handleStartOver} />)}
+              </div>
+              <AnswerPanel answersState={answersState} questionFlow={questionFlow} questionsConfig={questionsConfig} getOutcomeFn={getOutcomeFn} outcomesDatabase={outcomesDatabase} trailLabels={trailLabels} toolTitle={title} onCopyLink={handleCopyLink} onExportPdf={handleExportPdf} />
+            </div>
+            <MobileBottomSheet isOpen={mobileSheetOpen} onClose={() => setMobileSheetOpen(!mobileSheetOpen)} answeredCount={answeredCount} totalCount={questionFlow.length} isComplete={isComplete}>{mobilePanelContent}</MobileBottomSheet>
+            <Footer />
+          </main>
+        );
+      }
+
+      /* ================================================================
+   ================================================================
+
+   SECTION E — APPLICATION ROOT
+
+   ================================================================
+   ================================================================ */
+
+      function App() {
+        const { route, navigate, initialUrlState } = useRouter();
+
+        const renderPage = () => {
+          switch (route) {
+            case "/land-sale":
+              return (
+                <ToolPage key="land-sale" badge="🏗️ Land Sale · Decision Tool" title="Land Sale — VAT Treatment" description="Walk through the questions below to determine the VAT treatment on a sale of land. Hover over highlighted terms for definitions. Click ✏️ Edit on any answered question to change it." toolRoute="/land-sale" questionsConfig={LAND_SALE_QUESTIONS} getFlowFn={getLandSaleFlow} getOutcomeFn={getLandSaleOutcome} outcomesDatabase={LAND_SALE_OUTCOMES} trailLabels={LAND_SALE_TRAIL_LABELS} initialAnswerState={initialUrlState} />
+              );
+            case "/commercial-property":
+              return (
+                <ToolPage key="commercial-property" badge="🏢 Commercial Property · Sale Decision Tool" title="Commercial Property — VAT Treatment" description="Determine the VAT treatment on the sale of a completed or incomplete commercial property. Covers TOB relief, CGS implications, JOTT, and VAT recovery on sale costs." toolRoute="/commercial-property" questionsConfig={COMMERCIAL_PROPERTY_QUESTIONS} getFlowFn={getCommercialPropertyFlow} getOutcomeFn={getCommercialPropertyOutcome} outcomesDatabase={COMMERCIAL_PROPERTY_OUTCOMES} trailLabels={COMMERCIAL_PROPERTY_TRAIL_LABELS} initialAnswerState={initialUrlState} />
+              );
+            case "/rct":
+              return (
+                <ToolPage key="rct" badge="🔨 Relevant Contracts Tax · RCT Decision Tool" title="Relevant Contracts Tax (RCT)" description="Determine if RCT applies to a payment to a subcontractor, identify the correct withholding rate (0%, 20%, or 35%), and understand your eRCT compliance obligations under Chapter 2 of Part 18 TCA 1997." toolRoute="/rct" questionsConfig={RCT_QUESTIONS} getFlowFn={getRctFlow} getOutcomeFn={getRctOutcome} outcomesDatabase={RCT_OUTCOMES} trailLabels={RCT_TRAIL_LABELS} initialAnswerState={initialUrlState} />
+              );
+            default:
+              return <HomePage navigate={navigate} />;
+          }
+        };
+
+        return (
+          <div>
+            <BrandBar navigate={navigate} currentRoute={route} />
+            {renderPage()}
+          </div>
+        );
+      }
+
+      /* ================================================================
+   MOUNT
+   ================================================================ */
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
