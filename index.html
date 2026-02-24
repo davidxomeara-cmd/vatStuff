@@ -996,7 +996,7 @@
           useWhen:
             "Selling undeveloped land, sites with planning, or development sites",
           estimatedTime: "~2 min · 4–8 questions",
-          icon: "🏗️",
+          icon: "🏔️",
           iconBackground: "linear-gradient(135deg, #d04a02, #f26b2a)",
           tag: "Live",
           tagColor: "var(--color-success)",
@@ -2268,7 +2268,7 @@
           switch (route) {
             case "/land-sale":
               return (
-                <ToolPage key="land-sale" badge="🏗️ Land Sale · Decision Tool" title="Land Sale — VAT Treatment" description="Walk through the questions below to determine the VAT treatment on a sale of land. Hover over highlighted terms for definitions. Click ✏️ Edit on any answered question to change it." toolRoute="/land-sale" questionsConfig={LAND_SALE_QUESTIONS} getFlowFn={getLandSaleFlow} getOutcomeFn={getLandSaleOutcome} outcomesDatabase={LAND_SALE_OUTCOMES} trailLabels={LAND_SALE_TRAIL_LABELS} initialAnswerState={initialUrlState} />
+                <ToolPage key="land-sale" badge="🏔️ Land Sale · Decision Tool" title="Land Sale — VAT Treatment" description="Walk through the questions below to determine the VAT treatment on a sale of land. Hover over highlighted terms for definitions. Click ✏️ Edit on any answered question to change it." toolRoute="/land-sale" questionsConfig={LAND_SALE_QUESTIONS} getFlowFn={getLandSaleFlow} getOutcomeFn={getLandSaleOutcome} outcomesDatabase={LAND_SALE_OUTCOMES} trailLabels={LAND_SALE_TRAIL_LABELS} initialAnswerState={initialUrlState} />
               );
             case "/commercial-property":
               return (
