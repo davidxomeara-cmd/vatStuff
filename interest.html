@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interest Deductibility — Corporation Tax (Ireland)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --green: #16a34a;
+    --green-light: #dcfce7;
+    --green-bg: #f0fdf4;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --red-bg: #fef2f2;
+    --amber: #d97706;
+    --amber-light: #fef3c7;
+    --amber-bg: #fffbeb;
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+    --blue-bg: #eff6ff;
+    --purple: #7c3aed;
+    --purple-light: #ede9fe;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+    color: white;
+    padding: 64px 24px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(59,130,246,0.12) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(124,58,237,0.08) 0%, transparent 50%);
+    animation: float 20s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translate(0,0); }
+    50% { transform: translate(-2%, 2%); }
+  }
+  .hero-content { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    color: rgba(255,255,255,0.85);
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+  }
+  .hero p {
+    font-size: 17px;
+    color: rgba(255,255,255,0.7);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 780px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 12px 0;
+    transition: box-shadow 0.2s;
+  }
+  .progress-bar-wrap.scrolled { box-shadow: var(--shadow-md); }
+  .progress-inner { max-width: 780px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 16px; }
+  .progress-label { font-size: 13px; font-weight: 600; color: var(--gray-500); white-space: nowrap; }
+  .progress-track { flex: 1; height: 6px; background: var(--gray-200); border-radius: 100px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--blue), var(--purple)); border-radius: 100px; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+  .progress-pct { font-size: 13px; font-weight: 700; color: var(--blue); min-width: 36px; text-align: right; }
+
+  /* ── STEP CARDS ── */
+  .steps { padding: 48px 0 80px; }
+
+  .step-card {
+    background: white;
+    border-radius: var(--radius);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow);
+    padding: 0;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    opacity: 0.4;
+    transform: translateY(8px);
+    pointer-events: none;
+  }
+  .step-card.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    box-shadow: var(--shadow-lg);
+    border-color: var(--blue);
+  }
+  .step-card.completed {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: none;
+  }
+
+  .step-header {
+    padding: 24px 28px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .step-number {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--blue-light);
+    color: var(--blue);
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-card.completed .step-number { background: var(--green-light); color: var(--green); }
+  .step-card.completed .step-number::after { content: '✓'; }
+  .step-card.completed .step-number span { display: none; }
+  .step-card.outcome-reached .step-number { background: var(--green-light); color: var(--green); }
+
+  .step-title { font-size: 18px; font-weight: 700; color: var(--gray-900); margin-bottom: 2px; }
+  .step-subtitle { font-size: 14px; color: var(--gray-500); margin-top: 2px; }
+
+  .step-body { padding: 20px 28px 28px; }
+  .step-body p { font-size: 15px; color: var(--gray-600); margin-bottom: 20px; line-height: 1.7; }
+
+  /* ── LEGISLATION TAG ── */
+  .leg-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--purple-light);
+    color: var(--purple);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 14px 20px;
+    border: 2px solid var(--gray-200);
+    border-radius: 10px;
+    background: white;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-bg); }
+  .btn.selected-yes { border-color: var(--green); color: var(--green); background: var(--green-bg); }
+  .btn.selected-no { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+  .btn.selected-neutral { border-color: var(--blue); color: var(--blue); background: var(--blue-bg); }
+
+  /* ── OUTCOME BOX ── */
+  .outcome {
+    padding: 24px 28px;
+    border-radius: 0 0 var(--radius) var(--radius);
+    display: none;
+    animation: slideIn 0.3s ease;
+  }
+  @keyframes slideIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+  .outcome.show { display: block; }
+  .outcome.deductible { background: var(--green-bg); border-top: 2px solid var(--green); }
+  .outcome.non-deductible { background: var(--red-bg); border-top: 2px solid var(--red); }
+  .outcome.partial { background: var(--amber-bg); border-top: 2px solid var(--amber); }
+  .outcome h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .outcome.deductible h4 { color: var(--green); }
+  .outcome.non-deductible h4 { color: var(--red); }
+  .outcome.partial h4 { color: var(--amber); }
+  .outcome p { font-size: 14px; color: var(--gray-600); margin: 0; line-height: 1.65; }
+
+  /* ── INFO EXPAND ── */
+  .info-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--blue);
+    cursor: pointer;
+    padding: 4px 0;
+    margin-bottom: 16px;
+  }
+  .info-toggle:hover { text-decoration: underline; }
+  .info-toggle .arrow { transition: transform 0.2s; display: inline-block; }
+  .info-toggle.open .arrow { transform: rotate(90deg); }
+  .info-detail {
+    display: none;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    font-size: 13.5px;
+    color: var(--gray-600);
+    line-height: 1.7;
+  }
+  .info-detail.show { display: block; animation: slideIn 0.2s ease; }
+  .info-detail ul { padding-left: 18px; margin: 8px 0; }
+  .info-detail li { margin-bottom: 4px; }
+  .info-detail strong { color: var(--gray-700); }
+
+  /* ── FINAL RESULT ── */
+  .final-result {
+    display: none;
+    margin: 40px 0 20px;
+    padding: 36px 32px;
+    border-radius: var(--radius);
+    text-align: center;
+    animation: slideIn 0.4s ease;
+  }
+  .final-result.show { display: block; }
+  .final-result.deductible { background: var(--green-bg); border: 2px solid var(--green); }
+  .final-result.non-deductible { background: var(--red-bg); border: 2px solid var(--red); }
+  .final-result.partial { background: var(--amber-bg); border: 2px solid var(--amber); }
+  .final-result .result-icon { font-size: 48px; margin-bottom: 12px; }
+  .final-result h2 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+  .final-result.deductible h2 { color: var(--green); }
+  .final-result.non-deductible h2 { color: var(--red); }
+  .final-result.partial h2 { color: var(--amber); }
+  .final-result p { font-size: 15px; color: var(--gray-600); max-width: 520px; margin: 0 auto; line-height: 1.7; }
+  .final-result .result-path {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    font-size: 13px;
+    color: var(--gray-500);
+  }
+  .final-result .result-path strong { color: var(--gray-700); }
+
+  /* ── RESET ── */
+  .reset-btn {
+    display: none;
+    margin: 0 auto 60px;
+    padding: 14px 32px;
+    background: var(--gray-800);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .reset-btn.show { display: block; }
+  .reset-btn:hover { background: var(--gray-900); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+
+  /* ── REFERENCE SECTION ── */
+  .reference-section {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+  }
+  .ref-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 28px;
+  }
+  .ref-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 16px; color: var(--gray-900); }
+  .ref-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .ref-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--gray-50);
+    font-weight: 600;
+    color: var(--gray-600);
+    border-bottom: 2px solid var(--gray-200);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .ref-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--gray-100);
+    color: var(--gray-700);
+    vertical-align: top;
+  }
+  .ref-table tr:last-child td { border-bottom: none; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Irish Corporation Tax</div>
+    <h1>Is Your Interest Deductible?</h1>
+    <p>Walk through this interactive checklist to determine how — or whether — interest paid by a company qualifies for tax relief under TCA 1997.</p>
+  </div>
+</div>
+
+<!-- ═══════════ PROGRESS ═══════════ -->
+<div class="progress-bar-wrap" id="progressWrap">
+  <div class="progress-inner">
+    <span class="progress-label">Progress</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-pct" id="progressPct">0%</span>
+  </div>
+</div>
+
+<!-- ═══════════ STEPS ═══════════ -->
+<div class="container">
+  <div class="steps" id="stepsContainer">
+
+    <!-- ─── STEP 1 ─── -->
+    <div class="step-card active" id="step1">
+      <div class="step-header">
+        <div class="step-number"><span>1</span></div>
+        <div>
+          <div class="step-title">Purpose of the Borrowing</div>
+          <div class="step-subtitle">What were the borrowed funds used for?</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <p>The tax treatment of interest depends entirely on <strong>why</strong> the money was borrowed. Select the category that best describes the use of the funds.</p>
+        <button class="info-toggle" onclick="toggleInfo('info1')"><span class="arrow">›</span> Learn more about these categories</button>
+        <div class="info-detail" id="info1">
+          <ul>
+            <li><strong>Trading purposes</strong> — e.g. bank overdraft to purchase stock, fund working capital (s.81 TCA 1997)</li>
+            <li><strong>Rental property</strong> — purchase, improve or repair rented premises (s.97 TCA 1997)</li>
+            <li><strong>Acquire shares / lend to companies</strong> — invest in or lend to qualifying companies (s.247 TCA 1997)</li>
+            <li><strong>Qualifying financing</strong> — on-lend external borrowings to 75% subsidiaries for trade (s.76E TCA 1997)</li>
+          </ul>
+        </div>
+        <div class="btn-group">
+          <button class="btn" onclick="answer(1,'trade')">Trading purposes</button>
+          <button class="btn" onclick="answer(1,'rental')">Rental property</button>
+          <button class="btn" onclick="answer(1,'charge')">Acquire shares / lend to companies</button>
+          <button class="btn" onclick="answer(1,'qfc')">Qualifying financing company</button>
+          <button class="btn" onclick="answer(1,'other')">None of the above</button>
+        </div>
+      </div>
+      <div class="outcome non-deductible" id="outcome1"></div>
+    </div>
+
+    <!-- ─── STEP 2: TRADE ─── -->
+    <div class="step-card" id="step2-trade">
+      <div class="step-header">
+        <div class="step-number"><span>2</span></div>
+        <div>
+          <div class="step-title">Wholly & Exclusively for Trade?</div>
+          <div class="step-subtitle">s.81 TCA 1997 — Trading deduction test</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="leg-tag">📖 s.81 TCA 1997</div>
+        <p>Interest is allowed as a trading expense only if it was incurred <strong>wholly and exclusively</strong> for the purposes of the trade. See <em>MacAonghusa v Ringmahon Co</em> for guidance.</p>
+        <div class="btn-group">
+          <button class="btn" onclick="answer('2-trade','yes')">Yes — wholly &amp; exclusively</button>
+          <button class="btn" onclick="answer('2-trade','no')">No</button>
+        </div>
+      </div>
+      <div class="outcome" id="outcome2-trade"></div>
+    </div>
+
+    <!-- ─── STEP 2B: TRADE – connected lender ─── -->
+    <div class="step-card" id="step2b-trade">
+      <div class="step-header">
+        <div class="step-number"><span>3</span></div>
+        <div>
+          <div class="step-title">Is the Lender a Connected Company?</div>
+          <div class="step-subtitle">s.817C TCA 1997 — Unpaid interest restriction</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="leg-tag">📖 s.817C TCA 1997</div>
+        <p>Where interest is due on loans between <strong>connected companies</strong>, a deduction is only allowed to the extent the interest is actually <strong>paid</strong> (and thus taxed in the lender's hands). Unpaid interest accrued but not remitted is restricted until paid.</p>
+        <button class="info-toggle" onclick="toggleInfo('info2b')"><span class="arrow">›</span> What counts as "connected"?</button>
+        <div class="info-detail" id="info2b">
+          Under <strong>s.10 TCA 1997</strong>, a company is connected with another if one controls the other or both are under the control of the same person/company. The restriction does <strong>not</strong> apply if the lender is non-resident and not controlled by Irish residents (s.817C(2A)).
+        </div>
+        <div class="btn-group">
+          <button class="btn" onclick="answer('2b-trade','yes')">Yes — connected lender</button>
+          <button class="btn" onclick="answer('2b-trade','no')">No — unconnected (e.g. bank)</button>
+        </div>
+      </div>
+      <div class="outcome" id="outcome2b-trade"></div>
+    </div>
+
+    <!-- ─── STEP 2C: TRADE – s.840A ─── -->
+    <div class="step-card" id="step2c-trade">
+      <div class="step-header">
+        <div class="step-number"><span>4</span></div>
+        <div>
+          <div class="step-title">Was the Loan Used to Acquire Assets from a Connected Company?</div>
+          <div class="step-subtitle">s.840A TCA 1997 — Asset acquisition restriction</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="leg-tag">📖 s.840A TCA 1997</div>
+        <p>S.840A restricts interest deductions on loans from a connected company used to acquire assets from the same or another connected company. This applies across <strong>all Schedule D cases</strong> (Case I/II, III, IV, V).</p>
+        <button class="info-toggle" onclick="toggleInfo('info2c')"><span class="arrow">›</span> Exclusions from s.840A</button>
+        <div class="info-detail" id="info2c">
+          The restriction does <strong>not</strong> apply to:
+          <ul>
+            <li>Share capital in a company</li>
+            <li>Intangible assets qualifying under s.291A TCA 1997</li>
+            <li>Assets acquired as trading stock</li>
+            <li>Acquisition of a trade</li>
+            <li>Acquisition of a leased asset</li>
+            <li>Loans financed by a third party (subject to anti-avoidance)</li>
+            <li>Interest paid to a s.110 securitisation company</li>
+            <li>Loans from a qualifying financing company</li>
+          </ul>
+        </div>
+        <div class="btn-group">
+          <button class="btn" onclick="answer('2c-trade','yes')">Yes — asset from connected co.</button>
+          <button class="btn" onclick="answer('2c-trade','excluded')">Yes, but exclusion applies</button>
+          <button class="btn" onclick="answer('2c-trade','no')">No</button>
+        </div>
+      </div>
+      <div class="outcome" id="outcome2c-trade"></div>
+    </div>
+
+    <!-- ─── STEP 2: RENTAL ─── -->
+    <div class="step-card" id="step2-rental">
+      <div class="step-header">
+        <div class="step-number"><span>2</span></div>
+        <div>
+          <div class="step-title">Was the Loan Used to Purchase, Improve or Repair the Premises?</div>
+          <div class="step-subtitle">s.97 TCA 1997 — Rental interest deduction</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="leg-tag">📖 s.97 TCA 1997</div>
+        <p>Interest is deductible against Case V rental income only if the borrowed money was used to <strong>purchase, improve or repair</strong> the rented premises. Interest on loans for other purposes (e.g. defending a lawsuit) is <strong>not</strong> deductible.</p>
+        <div class="btn-group">
+          <button class="btn" onclick="answer('2-rental','yes')">Yes</button>
+          <button class="btn" onclick="answer('2-rental','no')">No</button>
+        </div>
+      </div>
+      <div class="outcome" id="outcome2-rental"></div>
+    </div>
+
+    <!-- ─── STEP 2B: RENTAL – RTB ─── -->
+    <div class="step-card" id="step2b-rental">
+      <div class="step-header">
+        <div class="step-number"><span>3</span></div>
+        <div>
+          <div class="step-title">Is the Tenancy Registered with the RTB?</div>
+          <div class="step-subtitle">Residential tenancy registration requirement</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <p>For residential rental properties, the tenancy must be registered with the <strong>Residential Tenancies Board (RTB)</strong>. Interest relief is denied for any property where the tenancy is not registered.</p>
+        <div class="btn-group">
+          <button class="btn" onclick="answer('2b-rental','yes')">Yes — registered / not applicable</button>
+          <button class="btn" onclick="answer('2b-rental','no')">No — not registered</button>
+        </div>
+      </div>
+      <div class="outcome" id="outcome2b-rental"></div>
+    </div>
+
+    <!-- ─── STEP 2: CHARGE (s.247) ─── -->
+    <div class="step-card" id="step2-charge">
+      <div class="step-header">
+        <div class="step-number"><span>2</span></div>
+        <div>
+          <div class="step-title">s.247 Requirements Checklist</div>
+          <div class="step-subtitle">s.247 TCA 1997 — Interest as a charge on income</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="leg-tag">📖 s.247 TCA 1997</div>
+        <p>All of the following conditions must be satisfied for interest to qualify as a charge on income. Check each that applies:</p>
+        <div id="chargeChecklist" style="margin-bottom: 20px;">
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="charge-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--green);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);"><strong>&gt; 5% ordinary share capital</strong> held at time interest is paid</span>
+          </label>
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="charge-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--green);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);"><strong>Common director</strong> from date of purchase to date of interest payment</span>
+          </label>
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="charge-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--green);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);">Target company exists <strong>wholly/mainly for trading, rental, or holding</strong> shares in such companies (s.247(2)(a))</span>
+          </label>
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="charge-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--green);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);">Funds used for <strong>business purposes</strong> by the target company</span>
+          </label>
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="charge-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--green);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);"><strong>No recovery of capital</strong> by investor (s.249 TCA 1997)</span>
+          </label>
+        </div>
+        <div class="btn-group">
+          <button class="btn" onclick="answer('2-charge','check')">Check conditions ↓</button>
+        </div>
+      </div>
+      <div class="outcome" id="outcome2-charge"></div>
+    </div>
+
+    <!-- ─── STEP 3: CHARGE – Anti-avoidance ─── -->
+    <div class="step-card" id="step3-charge">
+      <div class="step-header">
+        <div class="step-number"><span>3</span></div>
+        <div>
+          <div class="step-title">Anti-Avoidance: Circular Flows?</div>
+          <div class="step-subtitle">s.247(4A) TCA 1997</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="leg-tag">📖 s.247(4A) TCA 1997</div>
+        <p>Interest will <strong>not</strong> qualify as a charge where the borrower is connected with the lender <strong>and</strong> uses the funds to purchase shares of a company from a connected company. This prevents circular flows of borrowed money around a group.</p>
+        <button class="info-toggle" onclick="toggleInfo('info3c')"><span class="arrow">›</span> When the restriction doesn't apply</button>
+        <div class="info-detail" id="info3c">
+          The restriction does not apply if:
+          <ul>
+            <li>The funds are ultimately used for <strong>trading purposes</strong> (with no arrangements to repay the original loan); or</li>
+            <li>The borrowings create <strong>taxable income</strong> (e.g. interest income, but not dividend income).</li>
+          </ul>
+        </div>
+        <div class="btn-group">
+          <button class="btn" onclick="answer('3-charge','yes')">Yes — circular flow applies</button>
+          <button class="btn" onclick="answer('3-charge','no')">No — not circular / exception applies</button>
+        </div>
+      </div>
+      <div class="outcome" id="outcome3-charge"></div>
+    </div>
+
+    <!-- ─── STEP 4: CHARGE – s.247(4E) ─── -->
+    <div class="step-card" id="step4-charge">
+      <div class="step-header">
+        <div class="step-number"><span>4</span></div>
+        <div>
+          <div class="step-title">Connected Loan for Asset Acquisition?</div>
+          <div class="step-subtitle">s.247(4E) TCA 1997</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="leg-tag">📖 s.247(4E) TCA 1997</div>
+        <p>Interest is restricted where: a connected company lends to the investing company, which on-lends to another company that acquires assets from a company <strong>connected</strong> with the investing company at the time of first acquisition.</p>
+        <button class="info-toggle" onclick="toggleInfo('info4c')"><span class="arrow">›</span> Excluded assets</button>
+        <div class="info-detail" id="info4c">
+          The following assets are <strong>excluded</strong> from the restriction:
+          <ul>
+            <li>Share capital</li>
+            <li>Intangible assets under s.291A TCA 1997</li>
+            <li>Assets acquired as trading stock</li>
+          </ul>
+          Also excluded: loans to acquire a trade from a non-CT company, and leased assets not previously used by a CT company.
+        </div>
+        <div class="btn-group">
+          <button class="btn" onclick="answer('4-charge','yes')">Yes — restriction applies</button>
+          <button class="btn" onclick="answer('4-charge','no')">No / Exclusion applies</button>
+        </div>
+      </div>
+      <div class="outcome" id="outcome4-charge"></div>
+    </div>
+
+    <!-- ─── STEP 5: DISTRIBUTION CHECK ─── -->
+    <div class="step-card" id="step5-dist">
+      <div class="step-header">
+        <div class="step-number"><span>5</span></div>
+        <div>
+          <div class="step-title">Is the Interest Treated as a Distribution?</div>
+          <div class="step-subtitle">s.130(2)(d) TCA 1997</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="leg-tag">📖 s.130 TCA 1997</div>
+        <p>Certain interest payments are <strong>deemed distributions</strong> and are therefore non-deductible. Does any of the following apply?</p>
+        <button class="info-toggle" onclick="toggleInfo('info5')"><span class="arrow">›</span> Distribution triggers</button>
+        <div class="info-detail" id="info5">
+          Interest is treated as a distribution where:
+          <ul>
+            <li>The loan is <strong>convertible into unquoted shares</strong> (s.130(2)(d)(ii))</li>
+            <li>Interest is <strong>dependent on company results</strong> (s.130(2)(d)(iii)(I))</li>
+            <li>Interest exceeds a <strong>commercial rate of return</strong> (s.130(2)(d)(iii)(II))</li>
+            <li>Interest on securities held by a <strong>non-resident parent/subsidiary</strong> (s.130(2)(d)(iv)) — but see elections below</li>
+          </ul>
+          <strong>Exemption:</strong> s.130(2B) exempts non-trade interest paid to EU/UK resident companies from s.130(2)(d)(iv).<br>
+          <strong>Election:</strong> s.452 allows an election to treat trade interest under s.130(2)(d)(iv) as non-distribution (deductible).
+        </div>
+        <div class="btn-group">
+          <button class="btn" onclick="answer('5-dist','yes')">Yes — deemed distribution</button>
+          <button class="btn" onclick="answer('5-dist','election')">Yes, but s.452 election available</button>
+          <button class="btn" onclick="answer('5-dist','no')">No</button>
+        </div>
+      </div>
+      <div class="outcome" id="outcome5-dist"></div>
+    </div>
+
+    <!-- ─── STEP 6: GENERAL EXCLUSIONS ─── -->
+    <div class="step-card" id="step6-gen">
+      <div class="step-header">
+        <div class="step-number"><span>6</span></div>
+        <div>
+          <div class="step-title">Final Checks — General Exclusions</div>
+          <div class="step-subtitle">s.243 TCA 1997</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="leg-tag">📖 s.243 TCA 1997</div>
+        <p>Even where interest otherwise qualifies, relief is denied if any of the following apply. Do any of these apply?</p>
+        <div id="genChecklist" style="margin-bottom: 20px;">
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="gen-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--red);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);">Interest is <strong>charged to capital</strong> (s.243(6)(a))</span>
+          </label>
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="gen-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--red);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);">Interest is <strong>not ultimately borne</strong> by the paying company (s.243(6)(a))</span>
+          </label>
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="gen-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--red);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);"><strong>Non-yearly interest</strong> paid to a non-State / non-EU institution (s.243(4))</span>
+          </label>
+        </div>
+        <div class="btn-group">
+          <button class="btn" onclick="answer('6-gen','check')">Confirm &amp; get result ↓</button>
+        </div>
+      </div>
+      <div class="outcome" id="outcome6-gen"></div>
+    </div>
+
+    <!-- ─── STEP 2: QFC ─── -->
+    <div class="step-card" id="step2-qfc">
+      <div class="step-header">
+        <div class="step-number"><span>2</span></div>
+        <div>
+          <div class="step-title">Qualifying Financing Company Conditions</div>
+          <div class="step-subtitle">s.76E TCA 1997</div>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="leg-tag">📖 s.76E TCA 1997</div>
+        <p>Check all conditions that are met:</p>
+        <div id="qfcChecklist" style="margin-bottom: 20px;">
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="qfc-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--green);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);">Company holds <strong>≥ 75% direct shareholding</strong> in subsidiary (or intermediate holding co.)</span>
+          </label>
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="qfc-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--green);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);">Only activity is <strong>onward lending</strong> (+ ancillary activities)</span>
+          </label>
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="qfc-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--green);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);">Subsidiary is a <strong>trading company</strong> resident in Ireland / EU / EEA / DTA country</span>
+          </label>
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="qfc-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--green);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);">Lender is <strong>unconnected</strong> and holds ≤ 5% of share capital</span>
+          </label>
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="qfc-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--green);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);">Relevant loan is <strong>arm's length</strong> and used for <strong>trading purposes only</strong></span>
+          </label>
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="qfc-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--green);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);">Loan is <strong>matched</strong> with external loan at or about the time borrowed</span>
+          </label>
+          <label class="checklist-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--gray-200);border-radius:8px;margin-bottom:8px;cursor:pointer;transition:all 0.2s;background:white;">
+            <input type="checkbox" class="qfc-check" style="margin-top:3px;width:18px;height:18px;accent-color:var(--green);flex-shrink:0;">
+            <span style="font-size:14px;color:var(--gray-700);">Payment is for <strong>bona fide commercial reasons</strong></span>
+          </label>
+        </div>
+        <div class="btn-group">
+          <button class="btn" onclick="answer('2-qfc','check')">Check conditions ↓</button>
+        </div>
+      </div>
+      <div class="outcome" id="outcome2-qfc"></div>
+    </div>
+
+  </div><!-- /steps -->
+
+  <!-- ─── FINAL RESULT ─── -->
+  <div class="final-result" id="finalResult">
+    <div class="result-icon" id="resultIcon"></div>
+    <h2 id="resultTitle"></h2>
+    <p id="resultText"></p>
+    <div class="result-path"><strong>Path taken:</strong> <span id="resultPath"></span></div>
+  </div>
+
+  <button class="reset-btn" id="resetBtn" onclick="resetAll()">↻ Start Again</button>
+</div>
+
+<!-- ═══════════ REFERENCE ═══════════ -->
+<div class="reference-section">
+  <div class="ref-card">
+    <h3>📚 Quick Reference — Interest Deductibility Routes</h3>
+    <table class="ref-table">
+      <thead>
+        <tr>
+          <th>Route</th>
+          <th>Legislation</th>
+          <th>Relief Type</th>
+          <th>Key Condition</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Trading expense</strong></td>
+          <td>s.81 TCA 1997</td>
+          <td>Case I / II deduction</td>
+          <td>Wholly &amp; exclusively for trade</td>
+        </tr>
+        <tr>
+          <td><strong>Rental expense</strong></td>
+          <td>s.97 TCA 1997</td>
+          <td>Case V deduction</td>
+          <td>Loan to purchase / improve / repair premises</td>
+        </tr>
+        <tr>
+          <td><strong>Charge on income</strong></td>
+          <td>s.247 TCA 1997</td>
+          <td>Charge deduction</td>
+          <td>&gt;5% shares, common director, qualifying company</td>
+        </tr>
+        <tr>
+          <td><strong>Qualifying financing co.</strong></td>
+          <td>s.76E TCA 1997</td>
+          <td>Case III / IV (margin only @ 25%)</td>
+          <td>75% subsidiary, arm's length, trading use</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // ═══════════ STATE ═══════════
+  const state = { answers: {}, path: [], currentStep: 'step1' };
+  const totalSteps = 6;
+  let completedSteps = 0;
+
+  // ═══════════ PROGRESS ═══════════
+  function updateProgress(pct) {
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent = Math.round(pct) + '%';
+  }
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('progressWrap').classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  // ═══════════ INFO TOGGLES ═══════════
+  function toggleInfo(id) {
+    const el = document.getElementById(id);
+    const btn = el.previousElementSibling;
+    el.classList.toggle('show');
+    btn.classList.toggle('open');
+  }
+
+  // ═══════════ HELPERS ═══════════
+  function showCard(id) {
+    const card = document.getElementById(id);
+    if (!card) return;
+    card.classList.add('active');
+    card.style.display = '';
+    setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 150);
+  }
+
+  function completeCard(id) {
+    const card = document.getElementById(id);
+    card.classList.remove('active');
+    card.classList.add('completed');
+    completedSteps++;
+  }
+
+  function showOutcome(id, type, title, text) {
+    const el = document.getElementById(id);
+    el.className = 'outcome show ' + type;
+    el.innerHTML = '<h4>' + title + '</h4><p>' + text + '</p>';
+  }
+
+  function markButton(stepId, value, type) {
+    const card = document.getElementById(stepId);
+    const btns = card.querySelectorAll('.btn');
+    btns.forEach(b => {
+      b.classList.remove('selected-yes','selected-no','selected-neutral');
+      b.disabled = true;
+      b.style.opacity = '0.5';
+    });
+    btns.forEach(b => {
+      const bText = b.textContent.toLowerCase();
+      if (
+        (value === 'yes' && (bText.startsWith('yes') || bText.includes('wholly'))) ||
+        (value === 'no' && bText.startsWith('no')) ||
+        (value === 'trade' && bText.includes('trading')) ||
+        (value === 'rental' && bText.includes('rental')) ||
+        (value === 'charge' && bText.includes('acquire shares')) ||
+        (value === 'qfc' && bText.includes('qualifying')) ||
+        (value === 'other' && bText.includes('none')) ||
+        (value === 'election' && bText.includes('election')) ||
+        (value === 'excluded' && bText.includes('exclusion')) ||
+        (value === 'check' && bText.includes('check')) ||
+        (value === 'check' && bText.includes('confirm'))
+      ) {
+        b.style.opacity = '1';
+        if (type === 'yes') b.classList.add('selected-yes');
+        else if (type === 'no') b.classList.add('selected-no');
+        else b.classList.add('selected-neutral');
+      }
+    });
+  }
+
+  function showFinal(type, icon, title, text) {
+    updateProgress(100);
+    const fr = document.getElementById('finalResult');
+    fr.className = 'final-result show ' + type;
+    document.getElementById('resultIcon').textContent = icon;
+    document.getElementById('resultTitle').textContent = title;
+    document.getElementById('resultText').textContent = text;
+    document.getElementById('resultPath').textContent = state.path.join(' → ');
+    document.getElementById('resetBtn').classList.add('show');
+    setTimeout(() => fr.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200);
+  }
+
+  // ═══════════ MAIN ANSWER HANDLER ═══════════
+  function answer(step, value) {
+    state.answers[step] = value;
+
+    switch(step) {
+
+      // ──── STEP 1: Purpose ────
+      case 1:
+        markButton('step1', value, 'neutral');
+        completeCard('step1');
+        state.path.push({trade:'Trading expense',rental:'Rental expense',charge:'Charge on income',qfc:'Qualifying financing co.',other:'No qualifying purpose'}[value]);
+        updateProgress(16);
+
+        if (value === 'trade') showCard('step2-trade');
+        else if (value === 'rental') showCard('step2-rental');
+        else if (value === 'charge') showCard('step2-charge');
+        else if (value === 'qfc') showCard('step2-qfc');
+        else {
+          showOutcome('outcome1', 'non-deductible', '✗ Non-deductible', 'If the borrowing does not fall within any of the recognised categories, the interest is not deductible for corporation tax.');
+          showFinal('non-deductible', '🚫', 'Interest is NOT Deductible', 'The borrowed funds do not fall within any qualifying category for corporation tax relief (s.81, s.97, s.247, or s.76E TCA 1997).');
+        }
+        break;
+
+      // ──── TRADE PATH ────
+      case '2-trade':
+        markButton('step2-trade', value, value === 'yes' ? 'yes' : 'no');
+        completeCard('step2-trade');
+        state.path.push(value === 'yes' ? 'Wholly & exclusively ✓' : 'Not wholly & exclusively ✗');
+        updateProgress(33);
+        if (value === 'yes') {
+          showOutcome('outcome2-trade', 'deductible', '✓ Passes trading expense test', 'Interest qualifies as a Case I/II deduction. Proceeding to connected party checks…');
+          showCard('step2b-trade');
+        } else {
+          showOutcome('outcome2-trade', 'non-deductible', '✗ Fails trading expense test', 'Interest not incurred wholly and exclusively for trade is not deductible under s.81.');
+          showFinal('non-deductible', '🚫', 'Interest is NOT Deductible', 'The interest was not incurred wholly and exclusively for the purposes of the trade, and therefore fails the s.81 TCA 1997 test.');
+        }
+        break;
+
+      case '2b-trade':
+        markButton('step2b-trade', value, value === 'no' ? 'yes' : 'neutral');
+        completeCard('step2b-trade');
+        state.path.push(value === 'yes' ? 'Connected lender (s.817C)' : 'Unconnected lender');
+        updateProgress(50);
+        if (value === 'yes') {
+          showOutcome('outcome2b-trade', 'partial', '⚠ Partial restriction possible', 'Deduction limited to interest actually paid & taxed in lender\'s hands (s.817C). Unpaid interest carried forward.');
+        } else {
+          showOutcome('outcome2b-trade', 'deductible', '✓ No s.817C restriction', 'No connected-party unpaid interest restriction applies.');
+        }
+        showCard('step2c-trade');
+        break;
+
+      case '2c-trade':
+        markButton('step2c-trade', value, value === 'no' || value === 'excluded' ? 'yes' : 'no');
+        completeCard('step2c-trade');
+        updateProgress(66);
+        if (value === 'yes') {
+          state.path.push('s.840A restriction applies');
+          showOutcome('outcome2c-trade', 'non-deductible', '✗ s.840A restriction', 'Interest deduction denied on loan from connected company to acquire assets from connected company.');
+          showFinal('non-deductible', '🚫', 'Interest is NOT Deductible', 'S.840A TCA 1997 denies the deduction for interest on a connected-company loan used to acquire assets from a connected company.');
+        } else {
+          state.path.push(value === 'excluded' ? 's.840A exclusion applies ✓' : 'No s.840A issue ✓');
+          showOutcome('outcome2c-trade', 'deductible', '✓ No s.840A restriction', 'Proceeding to distribution check…');
+          showCard('step5-dist');
+        }
+        break;
+
+      // ──── RENTAL PATH ────
+      case '2-rental':
+        markButton('step2-rental', value, value === 'yes' ? 'yes' : 'no');
+        completeCard('step2-rental');
+        state.path.push(value === 'yes' ? 'Purchase/improve/repair ✓' : 'Other purpose ✗');
+        updateProgress(33);
+        if (value === 'yes') {
+          showOutcome('outcome2-rental', 'deductible', '✓ Qualifies under s.97', 'Interest qualifies for deduction against Case V rental income. Checking RTB registration…');
+          showCard('step2b-rental');
+        } else {
+          showOutcome('outcome2-rental', 'non-deductible', '✗ Fails s.97 test', 'Loan was not used to purchase, improve or repair the rented premises.');
+          showFinal('non-deductible', '🚫', 'Interest is NOT Deductible', 'The borrowed funds were not used to purchase, improve or repair the rented premises as required by s.97 TCA 1997.');
+        }
+        break;
+
+      case '2b-rental':
+        markButton('step2b-rental', value, value === 'yes' ? 'yes' : 'no');
+        completeCard('step2b-rental');
+        state.path.push(value === 'yes' ? 'RTB registered ✓' : 'RTB not registered ✗');
+        updateProgress(50);
+        if (value === 'yes') {
+          showOutcome('outcome2b-rental', 'deductible', '✓ Registration satisfied', 'Proceeding to distribution & general checks…');
+          showCard('step5-dist');
+        } else {
+          showOutcome('outcome2b-rental', 'non-deductible', '✗ RTB not registered', 'Interest relief denied for unregistered residential tenancies.');
+          showFinal('non-deductible', '🚫', 'Interest is NOT Deductible', 'The residential tenancy is not registered with the RTB, so interest relief under s.97 is denied for that property.');
+        }
+        break;
+
+      // ──── CHARGE PATH ────
+      case '2-charge': {
+        const checks = document.querySelectorAll('.charge-check');
+        const allChecked = Array.from(checks).every(c => c.checked);
+        const countChecked = Array.from(checks).filter(c => c.checked).length;
+        markButton('step2-charge', 'check', allChecked ? 'yes' : 'no');
+        completeCard('step2-charge');
+        state.path.push('s.247 conditions: ' + countChecked + '/5');
+        updateProgress(33);
+        if (allChecked) {
+          showOutcome('outcome2-charge', 'deductible', '✓ All s.247 conditions met', 'Proceeding to anti-avoidance checks…');
+          showCard('step3-charge');
+        } else {
+          showOutcome('outcome2-charge', 'non-deductible', '✗ s.247 conditions not fully met', 'Not all conditions satisfied — interest does not qualify as a charge on income.');
+          showFinal('non-deductible', '🚫', 'Interest is NOT Deductible as a Charge', 'One or more conditions under s.247 TCA 1997 are not satisfied. Review the >5% shareholding, common director, qualifying company purpose, business use, and recovery of capital requirements.');
+        }
+        break;
+      }
+
+      case '3-charge':
+        markButton('step3-charge', value, value === 'no' ? 'yes' : 'no');
+        completeCard('step3-charge');
+        state.path.push(value === 'yes' ? 'Circular flow ✗' : 'No circular flow ✓');
+        updateProgress(50);
+        if (value === 'yes') {
+          showOutcome('outcome3-charge', 'non-deductible', '✗ Circular flow restriction', 'S.247(4A) denies the interest charge where connected borrower purchases shares from connected company.');
+          showFinal('non-deductible', '🚫', 'Interest is NOT Deductible', 'S.247(4A) TCA 1997 prevents the interest qualifying as a charge on income due to circular flows of funds within the group.');
+        } else {
+          showOutcome('outcome3-charge', 'deductible', '✓ No circular flow issue', 'Checking s.247(4E) restriction…');
+          showCard('step4-charge');
+        }
+        break;
+
+      case '4-charge':
+        markButton('step4-charge', value, value === 'no' ? 'yes' : 'no');
+        completeCard('step4-charge');
+        state.path.push(value === 'yes' ? 's.247(4E) restriction ✗' : 'No s.247(4E) issue ✓');
+        updateProgress(66);
+        if (value === 'yes') {
+          showOutcome('outcome4-charge', 'non-deductible', '✗ s.247(4E) restriction', 'Interest restricted on connected loan used for asset acquisition from connected company.');
+          showFinal('non-deductible', '🚫', 'Interest is NOT Deductible', 'S.247(4E) TCA 1997 restricts the interest deduction on the connected-company loan used to acquire assets from a connected company.');
+        } else {
+          showOutcome('outcome4-charge', 'deductible', '✓ No s.247(4E) issue', 'Proceeding to distribution & general checks…');
+          showCard('step5-dist');
+        }
+        break;
+
+      // ──── QFC PATH ────
+      case '2-qfc': {
+        const qfcChecks = document.querySelectorAll('.qfc-check');
+        const qfcAll = Array.from(qfcChecks).every(c => c.checked);
+        const qfcCount = Array.from(qfcChecks).filter(c => c.checked).length;
+        markButton('step2-qfc', 'check', qfcAll ? 'yes' : 'no');
+        completeCard('step2-qfc');
+        state.path.push('s.76E conditions: ' + qfcCount + '/7');
+        updateProgress(50);
+        if (qfcAll) {
+          showOutcome('outcome2-qfc', 'deductible', '✓ All s.76E conditions met', 'Interest on external loan deductible against interest earned from subsidiary — taxed at 25% on margin only.');
+          showFinal('deductible', '✅', 'Interest is Deductible (Margin Taxed at 25%)', 'Under s.76E TCA 1997, the qualifying financing company can deduct external loan interest against the interest charged to the qualifying subsidiary. Corporation tax at 25% applies to the margin only.');
+        } else {
+          showOutcome('outcome2-qfc', 'non-deductible', '✗ s.76E conditions not fully met', 'Not all qualifying financing company conditions are satisfied.');
+          showFinal('non-deductible', '🚫', 'QFC Relief Not Available', 'One or more conditions under s.76E TCA 1997 are not satisfied. The qualifying financing company regime does not apply. Consider whether another route to deductibility exists.');
+        }
+        break;
+      }
+
+      // ──── DISTRIBUTION CHECK ────
+      case '5-dist':
+        markButton('step5-dist', value, value === 'no' || value === 'election' ? 'yes' : 'no');
+        completeCard('step5-dist');
+        updateProgress(83);
+        if (value === 'yes') {
+          state.path.push('Deemed distribution ✗');
+          showOutcome('outcome5-dist', 'non-deductible', '✗ Treated as a distribution', 'Interest treated as a distribution under s.130 is not deductible. DWT at 20% applies.');
+          showFinal('non-deductible', '🚫', 'Interest is NOT Deductible', 'The interest is deemed a distribution under s.130(2)(d) TCA 1997 and is therefore not deductible. Dividend Withholding Tax at 20% must be applied.');
+        } else if (value === 'election') {
+          state.path.push('s.452 election available ✓');
+          showOutcome('outcome5-dist', 'deductible', '✓ s.452 election removes distribution treatment', 'With the election, interest is treated as a normal deductible expense. Proceeding to final checks…');
+          showCard('step6-gen');
+        } else {
+          state.path.push('Not a distribution ✓');
+          showOutcome('outcome5-dist', 'deductible', '✓ Not a distribution', 'Proceeding to final general exclusion checks…');
+          showCard('step6-gen');
+        }
+        break;
+
+      // ──── GENERAL EXCLUSIONS ────
+      case '6-gen': {
+        const genChecks = document.querySelectorAll('.gen-check');
+        const anyChecked = Array.from(genChecks).some(c => c.checked);
+        markButton('step6-gen', 'check', anyChecked ? 'no' : 'yes');
+        completeCard('step6-gen');
+        if (anyChecked) {
+          const reasons = [];
+          const labels = ['Charged to capital', 'Not ultimately borne by company', 'Non-yearly interest to non-State/EU'];
+          Array.from(genChecks).forEach((c, i) => { if (c.checked) reasons.push(labels[i]); });
+          state.path.push('General exclusion: ' + reasons.join(', '));
+          showOutcome('outcome6-gen', 'non-deductible', '✗ General exclusion applies', 'Interest is denied due to: ' + reasons.join('; ') + '.');
+          showFinal('non-deductible', '🚫', 'Interest is NOT Deductible', 'One or more general exclusions under s.243 TCA 1997 apply: ' + reasons.join('; ') + '.');
+        } else {
+          state.path.push('No general exclusions ✓');
+          showOutcome('outcome6-gen', 'deductible', '✓ No general exclusions apply', 'All checks passed.');
+          const route = state.answers[1];
+          const msgs = {
+            trade: 'Interest qualifies as a deductible trading expense under s.81 TCA 1997 (Case I/II).' + (state.answers['2b-trade'] === 'yes' ? ' Note: s.817C restriction may limit the deduction to interest actually paid to the connected lender.' : ''),
+            rental: 'Interest qualifies as a deductible rental expense under s.97 TCA 1997 (Case V).',
+            charge: 'Interest qualifies as a deductible charge on income under s.247 TCA 1997.'
+          };
+          showFinal(
+            state.answers['2b-trade'] === 'yes' ? 'partial' : 'deductible',
+            state.answers['2b-trade'] === 'yes' ? '⚠️' : '✅',
+            state.answers['2b-trade'] === 'yes' ? 'Interest is Deductible (with Restrictions)' : 'Interest IS Deductible',
+            msgs[route] || 'Interest qualifies for tax relief.'
+          );
+        }
+        break;
+      }
+    }
+  }
+
+  // ═══════════ RESET ═══════════
+  function resetAll() {
+    state.answers = {}; state.path = []; completedSteps = 0;
+    updateProgress(0);
+    document.querySelectorAll('.step-card').forEach(c => {
+      c.classList.remove('active','completed','outcome-reached');
+      c.style.display = '';
+      c.querySelectorAll('.btn').forEach(b => { b.disabled = false; b.style.opacity = '1'; b.classList.remove('selected-yes','selected-no','selected-neutral'); });
+      c.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+    });
+    document.querySelectorAll('.outcome').forEach(o => { o.className = 'outcome'; o.innerHTML = ''; });
+    document.querySelectorAll('.info-detail').forEach(d => d.classList.remove('show'));
+    document.querySelectorAll('.info-toggle').forEach(t => t.classList.remove('open'));
+    document.getElementById('step1').classList.add('active');
+    document.getElementById('finalResult').className = 'final-result';
+    document.getElementById('resetBtn').classList.remove('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
+
+This interactive document transforms the chapter's interest deductibility rules into a guided decision-tree experience. Here's what it includes:
+
+Structure & Flow:
+
+
+
+
+
+A 6-step guided checklist that dynamically shows only the relevant questions based on user answers
+
+
+
+4 distinct paths mirroring the chapter's deductibility routes: Trading expense (s.81), Rental expense (s.97), Charge on income (s.247), and Qualifying financing company (s.76E)
+
+
+
+Anti-avoidance checks woven into each path — s.817C (unpaid interest), s.840A (connected asset acquisition), s.247(4A) (circular flows), s.247(4E) (asset restrictions)
+
+
+
+A distribution check (s.130) and general exclusions (s.243) as final gates
+
+Design Features:
+
+
+
+
+
+Sticky progress bar tracking completion
+
+
+
+Colour-coded outcomes: green (deductible), red (non-deductible), amber (partial/restricted)
+
+
+
+Expandable "Learn more" panels with detailed legislative references
+
+
+
+Interactive checklists for multi-condition tests (s.247 and s.76E)
+
+
+
+A final result card showing the verdict and the full decision path taken
+
+
+
+A quick-reference table at the bottom summarising all four routes
+
+You can copy this HTML into any browser to use it immediately — no dependencies required.
